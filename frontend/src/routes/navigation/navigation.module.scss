@@ -1,0 +1,46 @@
+.header-navigation {
+  display: flex;
+  justify-content: space-between;
+  color: #fefefe;
+  padding: 0 1rem;
+  background-color: #463a8b;
+  align-items: center;
+}
+
+.left-region-header-navigation {
+  display: flex;
+  align-items: center;
+}
+.left-region-list-of-entities {
+  display: flex;
+  align-items: center;
+}
+.left-region-list-of-entities a {
+  padding: 12px;
+  text-transform: uppercase;
+  margin-top: 12px;
+  color: #fefefe;
+}
+.lista-navegacao {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  max-width: 320px;
+  margin-bottom: 0;
+}
+
+.item-navegacao a {
+  color: #fefefe;
+
+  margin-bottom: 0;
+  text-transform: uppercase;
+}
+.adagio_logo {
+  height: 80px;
+  box-shadow: none;
+}
+
+.user_navigation_icon,
+.bell_navigation {
+  cursor: pointer;
+}

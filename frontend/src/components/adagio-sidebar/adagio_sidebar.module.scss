@@ -1,0 +1,37 @@
+.navigation_sidebar {
+  width: 24vw;
+  padding: 0;
+}
+
+.hamburger_icon {
+  cursor: pointer;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.nav_options {
+  list-style: none;
+  border-top: 1px solid #bbb;
+  width: 100%;
+  padding: 0;
+  padding-top: 15px;
+  margin-top: 10px;
+}
+
+.nav_options li {
+  padding-bottom: 15px;
+  padding-left: 15px;
+  width: 100%;
+  color: #000;
+}
+
+.calendar_export_link {
+  border-top: 1px solid #bbb;
+  padding-top: 15px;
+}
+
+.nav_options li span {
+  margin-left: 15px;
+  color: #000;
+}
