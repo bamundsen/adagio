@@ -1,5 +1,6 @@
 .navigation_sidebar {
-  width: 24vw;
+  max-width: 24vw;
+
   padding: 0;
 }
 
@@ -34,4 +35,35 @@
 .nav_options li span {
   margin-left: 15px;
   color: #000;
+}
+
+@media (min-width: 510px) and (max-width: 730px) {
+  .navigation_sidebar {
+    max-width: 100vw;
+    display: flex;
+  }
+  .nav_options {
+    border: none;
+    padding: 0;
+    display: flex;
+  }
+  .nav_options li {
+    padding: 0;
+    border: none;
+  }
+  .hamburger_icon {
+    padding-right: 15px;
+  }
+}
+
+@media (max-width: 509px) {
+  .navigation_sidebar {
+    max-width: 100vw;
+  }
+}
+
+@media (min-width: 731px) and (max-width: 1030px) {
+  .navigation_sidebar {
+    max-width: 32vw;
+  }
 }

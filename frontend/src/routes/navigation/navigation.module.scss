@@ -2,7 +2,10 @@
   display: flex;
   justify-content: space-between;
   color: #fefefe;
+
   padding: 0 1rem;
+  margin-right: 0;
+  width: 100%;
   background-color: #463a8b;
   align-items: center;
 }
@@ -25,7 +28,7 @@
   display: flex;
   align-items: center;
   list-style: none;
-  max-width: 320px;
+  max-width: auto;
   margin-bottom: 0;
 }
 
@@ -35,6 +38,7 @@
   margin-bottom: 0;
   text-transform: uppercase;
 }
+
 .adagio_logo {
   height: 80px;
   box-shadow: none;
@@ -43,4 +47,19 @@
 .user_navigation_icon,
 .bell_navigation {
   cursor: pointer;
+}
+
+@media (max-width: 583px) {
+  .user-name-login {
+    display: none;
+  }
+}
+
+@media (max-width: 375px) {
+  .user-navigation-icon {
+    margin-right: 40px;
+  }
+  .item-container-icon-user {
+    margin-right: 60px;
+  }
 }

@@ -11,10 +11,11 @@ import {} from "react-router-dom";
 import { useContext } from "react";
 import { BsFileEaselFill } from "react-icons/bs";
 import { AuthContext } from "../../contexts/auth.context";
-
+import useWindowDimensions from "../../utils/useWindowDimensions.utils";
 
 const FormRegister = () => {
-  const {setUser, setIsAuthenticated} = useContext(AuthContext);
+  const windowDimensions = useWindowDimensions();
+  const { setUser, setIsAuthenticated } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [cpf, setCpf] = useState("");
@@ -67,6 +68,9 @@ const FormRegister = () => {
               <Form.Group
                 className={`mb-3 ${styles.name_register_form}`}
                 controlId="formBasicName"
+                style={{
+                  width: `${windowDimensions.width > 730 ? "80%" : "100%"}`,
+                }}
               >
                 Nome:
                 <InputGroup className={"mt-2"}>
@@ -82,10 +86,21 @@ const FormRegister = () => {
                 </InputGroup>
               </Form.Group>
 
-              <div className={`${styles.set_register_form}`}>
+              <div
+                className={`${styles.set_register_form}`}
+                style={{
+                  flexDirection: `${
+                    windowDimensions.width >= 580 ? "row" : "column"
+                  }`,
+                  width: `${windowDimensions.width >= 580 ? "95%" : "100%"}`,
+                }}
+              >
                 <Form.Group
                   className={`mb-3 ${styles.member_register_form}`}
                   controlId="formBasicUsername"
+                  style={{
+                    width: `${windowDimensions.width > 580 ? "48%" : "100%"}`,
+                  }}
                 >
                   Nome de usuário:
                   <InputGroup className={"mt-2"}>
@@ -104,6 +119,9 @@ const FormRegister = () => {
                 <Form.Group
                   className={`mb-3 ${styles.member_register_form}`}
                   controlId="formBasicCpf"
+                  style={{
+                    width: `${windowDimensions.width > 580 ? "48%" : "100%"}`,
+                  }}
                 >
                   CPF:
                   <InputGroup className={"mt-2"}>
@@ -120,10 +138,21 @@ const FormRegister = () => {
                 </Form.Group>
               </div>
 
-              <div className={`${styles.set_register_form}`}>
+              <div
+                className={`${styles.set_register_form}`}
+                style={{
+                  flexDirection: `${
+                    windowDimensions.width > 730 ? "row" : "column"
+                  }`,
+                  width: `${windowDimensions.width >= 580 ? "95%" : "100%"}`,
+                }}
+              >
                 <Form.Group
                   className={`mb-3 ${styles.member_register_form}`}
                   controlId="formBasicEmail"
+                  style={{
+                    width: `${windowDimensions.width > 730 ? "48%" : "100%"}`,
+                  }}
                 >
                   Email:
                   <InputGroup className={"mt-2"}>
@@ -142,6 +171,9 @@ const FormRegister = () => {
                 <Form.Group
                   className={`mb-3 ${styles.member_register_form}`}
                   controlId="formBasicTelefone"
+                  style={{
+                    width: `${windowDimensions.width > 730 ? "48%" : "100%"}`,
+                  }}
                 >
                   Telefone:
                   <InputGroup className={"mt-2"}>
@@ -158,10 +190,21 @@ const FormRegister = () => {
                 </Form.Group>
               </div>
 
-              <div className={`${styles.set_register_form}`}>
+              <div
+                className={`${styles.set_register_form}`}
+                style={{
+                  flexDirection: `${
+                    windowDimensions.width > 730 ? "row" : "column"
+                  }`,
+                  width: `${windowDimensions.width >= 580 ? "95%" : "100%"}`,
+                }}
+              >
                 <Form.Group
                   className={`mb-3 ${styles.member_register_form}`}
                   controlId="formBasicPassword"
+                  style={{
+                    width: `${windowDimensions.width > 730 ? "48%" : "100%"}`,
+                  }}
                 >
                   Senha:
                   <InputGroup className={"mt-2"}>
@@ -180,6 +223,9 @@ const FormRegister = () => {
                 <Form.Group
                   className={`mb-3 ${styles.member_register_form}`}
                   controlId="formBasicConfirmPassword"
+                  style={{
+                    width: `${windowDimensions.width > 730 ? "48%" : "100%"}`,
+                  }}
                 >
                   Confirmação de senha:
                   <InputGroup className={"mt-2"}>

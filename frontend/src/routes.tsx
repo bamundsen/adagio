@@ -7,13 +7,6 @@ import axios from "axios";
 import Home from "./routes/home/home.component";
 
 const ApplicationRoutes = () => {
-  const [userData, setUserData] = useState({});
-  const userDataAux = useRef<any>();
-
-  useEffect(() => {
-    // userDataAux.current = userData;
-  }, [userData]);
-
   return (
     <Routes>
       <Route path="/" element={<Navigation />}>

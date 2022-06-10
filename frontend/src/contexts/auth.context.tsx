@@ -48,11 +48,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   // }, []);
 
   useEffect(() => {
-    console.log(user);
-  }, [user]);
-
-  useEffect(() => {
-    processUser();
+    if (user === null) processUser();
   });
 
   useEffect(() => {
@@ -92,13 +88,15 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
         }
       })
       .catch((erro) => {
-        console.log("erro: ", erro, localStorage.getItem("accessToken"));
+        // console.log("erro: ", erro, localStorage.getItem("accessToken"));
       });
   };
 
   const signout = async () => {
-    await apiUse.logout();
+    localStorage.setItem("accessToken", "");
+    // await apiUse.logout();
     setUser(null);
+    setIsAuthenticated(false);
   };
 
   const value: AuthContextType = {

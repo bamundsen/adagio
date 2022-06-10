@@ -1,9 +1,9 @@
 .set_register_form {
-    display:flex;
-    width:95%;
-    justify-content:space-between;
+  display: flex;
+  width: 95%;
+  justify-content: space-between;
 }
-
+/*
 .name_register_form{
     width: 80%;
 }
@@ -12,10 +12,27 @@
     width: 48%;
     
 }
-
+*/
 .buttons_area_register {
-    width:85%;
-    padding-top: 25px;
-    display:flex;
-    justify-content: space-around;
+  width: 85%;
+  padding-top: 25px;
+  display: flex;
+  justify-content: space-around;
+}
+
+@media (max-width: 420px) {
+  input::placeholder {
+    font-size: 13px;
+  }
+  .buttons_area_register {
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}
+@media (max-width: 320px) {
+  .buttons_area_register {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
