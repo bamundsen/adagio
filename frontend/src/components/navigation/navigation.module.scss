@@ -2,10 +2,11 @@
   display: flex;
   justify-content: space-between;
   color: #fefefe;
-
+  transition: all ease 0.2s;
   padding: 0 1rem;
   margin-right: 0;
   width: 100%;
+  height: 14vh;
   background-color: #463a8b;
   align-items: center;
 }
@@ -61,5 +62,11 @@
   }
   .item-container-icon-user {
     margin-right: 60px;
+  }
+}
+
+@media (max-width: 280px) {
+  .user-navigation-icon {
+    padding-right: 0;
   }
 }

@@ -16,14 +16,14 @@ const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
   const returnItemDependsOnCategory = (item: any) => {
     if (item.category.toLowerCase() === "calendar_export") {
       return (
-        <Link to={item.link}>
+        <Link className={`${styles.link_nav}`} to={item.link}>
           <img src={CalendarSideBar} alt={"export calendar option"} />
           <span>{item.label}</span>
         </Link>
       );
     } else if (item.category.toLowerCase() === "create_register_option") {
       return (
-        <Link to={item.link}>
+        <Link className={`${styles.link_nav}`} to={item.link}>
           <img src={LinkSideBarIcon} alt={"create register option"} />
           <span>{item.label}</span>
         </Link>
@@ -39,7 +39,9 @@ const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
     <nav
       className={`${styles.navigation_sidebar}`}
       style={{
-        maxWidth: `${hideSideBar ? `150px` : ""}`,
+        minWidth: `${hideSideBar ? "50px" : ""}`,
+
+        width: `${hideSideBar ? "50px" : ""}`,
       }}
     >
       <img
@@ -57,13 +59,13 @@ const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
         {windowDimensions.width <= 490 ? (
           <>
             <li>
-              <Link to={"/projetos"}>
+              <Link className={`${styles.link_nav}`} to={"/projetos"}>
                 <img src={LinkSideBarIcon} alt={"create register option"} />
                 <span>{"Projetos"}</span>
               </Link>
             </li>
             <li>
-              <Link to={"/calendário"}>
+              <Link className={`${styles.link_nav}`} to={"/calendário"}>
                 <img src={LinkSideBarIcon} alt={"create register option"} />
                 <span>{"Calendário"}</span>
               </Link>

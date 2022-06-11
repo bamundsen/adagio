@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Navigation from "./routes/navigation/navigation.component";
+import Navigation from "./components/navigation/navigation.component";
 import FormLogin from "./routes/form-login/form_login.component";
 import FormRegister from "./routes/form-register/form_register.component";
 import { useEffect, useRef, useState } from "react";

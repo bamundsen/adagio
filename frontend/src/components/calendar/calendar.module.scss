@@ -1,0 +1,12 @@
+.calendar_set {
+  width: 100%;
+  height: calc(100vh - 14vh);
+
+  .calendar_content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    justify-items: center;
+
+    // background: #ebebeb;
+  }
+}

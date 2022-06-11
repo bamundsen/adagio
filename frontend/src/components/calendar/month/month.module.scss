@@ -1,0 +1,35 @@
+.month_card {
+  margin: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: white;
+
+  .month_card_header {
+    text-align: center;
+    font-weight: bold;
+    padding-bottom: 10px;
+    color: #143296;
+
+    .icon_arrow_calendar {
+      cursor: pointer;
+    }
+  }
+
+  .month_card_week_days {
+    border-bottom: 1px solid #ccc;
+    color: #143296;
+
+    .month_card_week_day {
+      display: inline-block;
+      width: 30px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 0.9em;
+      margin: 1px;
+    }
+  }
+
+  .month_card_week {
+    margin: 2px;
+  }
+}
