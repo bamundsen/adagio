@@ -48,7 +48,55 @@ router.post("/", async (req, res) => {
     await Tasks.create(task);
 
     res.json(task);
-  } catch (err) {}
+  } catch (err) {
+    res.status(400).json({
+      status: err,
+    });
+  }
+});
+
+router.put("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const taskBody = req.body;
+
+    const task = await Tasks.findByPk(parseInt(id));
+
+    if (task) {
+      await Tasks.update(taskBody, {
+        where: {
+          id: id,
+        },
+      });
+    }
+    res.json({ task });
+  } catch (err) {
+    res.status(400).json({
+      status: err,
+    });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const task = await Tasks.findByPk(parseInt(id));
+
+    if (task) {
+      await Tasks.destroy({
+        where: {
+          id: id,
+        },
+      });
+    }
+
+    res.json({ status: "success" });
+  } catch (err) {
+    res.status(400).json({
+      status: err,
+    });
+  }
 });
 
 module.exports = router;

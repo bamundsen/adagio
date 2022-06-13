@@ -51,4 +51,48 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.put("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const projectBody = req.body;
+
+    const project = await Projects.findByPk(parseInt(id));
+
+    if (project) {
+      await Projects.update(projectBody, {
+        where: {
+          id: id,
+        },
+      });
+    }
+
+    res.json({ project });
+  } catch (err) {
+    res.status(400).json({
+      status: err,
+    });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const project = await Projects.findByPk(parseInt(id));
+
+    if (project) {
+      await Projects.destroy({
+        where: {
+          id: id,
+        },
+      });
+    }
+
+    res.json({ status: "success" });
+  } catch (err) {
+    res.status(400).json({
+      status: err,
+    });
+  }
+});
 module.exports = router;

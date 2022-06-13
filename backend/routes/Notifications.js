@@ -28,4 +28,48 @@ router.post("/", async (req, res) => {
   } catch (err) {}
 });
 
+router.put("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const notificationBody = req.body;
+
+    const notification = await Notifications.findByPk(parseInt(id));
+
+    if (notification) {
+      Notifications.update(notificationBody, {
+        where: {
+          id: id,
+        },
+      });
+    }
+
+    res.json({ notification });
+  } catch (err) {
+    res.status(400).json({
+      status: err,
+    });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const notification = await Notifications.findByPk(parseInt(id));
+
+    if (notification) {
+      await Notifications.destroy({
+        where: {
+          id: id,
+        },
+      });
+    }
+
+    res.json({ status: "success" });
+  } catch (err) {
+    res.status(400).json({
+      status: err,
+    });
+  }
+});
 module.exports = router;
