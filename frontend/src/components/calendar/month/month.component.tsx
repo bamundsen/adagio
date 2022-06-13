@@ -12,6 +12,8 @@ interface MonthProps {
   isToShowOneMonth?: boolean;
   month: string;
   monthAux: string;
+  setCurrentMonth?: React.Dispatch<React.SetStateAction<number>>;
+  currentMonth?: number;
   currentYear: number;
 }
 
@@ -19,21 +21,34 @@ const Month = ({
   month,
   currentYear,
   monthAux,
+  currentMonth,
+  setCurrentMonth,
   occupiedDates,
   isToShowOneMonth,
   setOccupiedDates,
 }: MonthProps) => {
   const [value, setValue] = useState(
-    moment().locale("pt").month(month).year(currentYear)
+    moment().locale("en").month(month).year(currentYear)
   );
 
   const [calendar, setCalendar] = useState<any[]>([]);
 
   const weekDays = ["D", "S", "T", "Q", "Q", "S", "S"];
   const weekDaysForOneMonth = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
   useEffect(() => {
+    // setValue(value.year(currentYear));
+
+    updateCalendar();
+  }, [value]);
+
+  useEffect(() => {
+    setValue(moment().locale("en").month(month).year(currentYear));
+  }, [month]);
+
+  const updateCalendar = () => {
     const startDay = value.clone().startOf("month").startOf("week");
-    const endDay = value.clone().endOf("month").startOf("week");
+    const endDay = value.clone().endOf("month").endOf("week");
     const day = startDay.clone().subtract(1, "day");
     const arrayCalendar: any[] = [];
     while (day.isBefore(endDay, "day")) {
@@ -45,10 +60,30 @@ const Month = ({
     }
 
     setCalendar([...arrayCalendar]);
-  }, [value]);
+  };
 
-  useEffect(() => {}, [calendar]);
+  const decrementCurrentMonth = () => {
+    console.log(currentMonth);
+    if (
+      currentMonth !== undefined &&
+      setCurrentMonth &&
+      currentMonth - 1 >= 0
+    ) {
+      console.log("decrementa");
+      setCurrentMonth(currentMonth - 1);
+    }
+  };
 
+  const incrementCurrentMonth = () => {
+    if (
+      currentMonth !== undefined &&
+      setCurrentMonth &&
+      currentMonth + 1 <= 11
+    ) {
+      console.log("incrementa");
+      setCurrentMonth(currentMonth + 1);
+    }
+  };
   return (
     <div
       className={`${style.month_card}`}
@@ -73,19 +108,21 @@ const Month = ({
         {isToShowOneMonth ? (
           <>
             <img
+              onClick={decrementCurrentMonth}
               className={style.icon_arrow_calendar}
               src={ArrowToLeft}
               alt={"arrow to left of calendar"}
             />
-            {month + ` ${currentYear}`}
+            {monthAux + ` ${currentYear}`}
             <img
+              onClick={incrementCurrentMonth}
               className={style.icon_arrow_calendar}
               src={ArrowToRight}
               alt={"arrow to right of calendar"}
             />
           </>
         ) : (
-          month + ` ${currentYear}`
+          monthAux + ` ${currentYear}`
         )}
       </div>
       <div
@@ -98,6 +135,7 @@ const Month = ({
         {isToShowOneMonth
           ? weekDaysForOneMonth.map((value) => (
               <div
+                key={value + month}
                 className={`${style.month_card_week_day}`}
                 style={{ flex: "1" }}
               >

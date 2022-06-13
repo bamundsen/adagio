@@ -20,9 +20,9 @@ const Day = ({
   isToShowOneMonth,
 }: DayProps) => {
   const [stateOfDay, setStateOfDay] = useState("");
-  const dayToCompare = day._d;
+  const [dayToCompare, setDayToCompare] = useState(day._d);
   useEffect(() => {
-    const currentMonth = new Date(monthAux + ",01," + year).getMonth();
+    const currentMonth = new Date(month + ",01," + year).getMonth();
 
     // if (dayToCompare.getMonth() === 5) {
     //   setOccupiedDates([...occupiedDates, dayToCompare]);
@@ -30,7 +30,7 @@ const Day = ({
     if (dayToCompare.getMonth() !== currentMonth) {
       setStateOfDay("nonPertenceMonth");
     }
-  }, []);
+  }, [month, year, dayToCompare]);
 
   const verifyStateAndReturnCss = () => {
     if (
