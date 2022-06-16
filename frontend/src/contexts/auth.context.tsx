@@ -1,7 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import { User } from "../types/user";
-import { useApi, api } from "../hooks/useApi";
-import axios from "axios";
+import { userApi, api } from "../hooks/api";
 
 export type AuthContextType = {
   user: User | null;
@@ -18,7 +17,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const apiUse = useApi();
+  const apiUser = userApi();
 
   // useEffect(() => {
   //   (async () => {
@@ -59,37 +58,37 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     }
   }, []);
 
-  const signin = async (login: string, password: string) => {
-    const data = await apiUse.signin(login, password);
+  const setUserAndIsAuthenticatedAndToken = (
+    user: any,
+    isAuthenticated: boolean,
+    token: string
+  ) => {
+    setUser(user);
+    setIsAuthenticated(true);
+    localStorage.setItem("accessToken", token);
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  };
 
-    if (data.data.user && data.data.token) {
-      setUser(data.data.user);
-      setIsAuthenticated(true);
-      localStorage.setItem("accessToken", data.data.token);
-      api.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${data.data.token}`;
+  const signin = async (login: string, password: string) => {
+    const data = await apiUser.signin(login, password);
+
+    if (data.user && data.token) {
+      setUserAndIsAuthenticatedAndToken(data.user, true, data.token);
       return true;
     }
     return false;
   };
 
-  const processUser = () => {
-    axios
-      .get("http://localhost:8092/verifiyIfIsAuthenticatedAndReturn", {
-        headers: {
-          accessToken: localStorage.getItem("accessToken") || "",
-        },
-      })
-      .then((response) => {
-        if (response) {
-          setUser(response.data.userData);
-          setIsAuthenticated(true);
-        }
-      })
-      .catch((erro) => {
-        // console.log("erro: ", erro, localStorage.getItem("accessToken"));
-      });
+  const processUser = async () => {
+    const data = await apiUser.validateToken(
+      localStorage.getItem("accessToken")
+    );
+
+    console.log(data);
+    if (data.user && data.token) {
+      setUserAndIsAuthenticatedAndToken(data.user, true, data.token);
+    } else {
+    }
   };
 
   const signout = async () => {
