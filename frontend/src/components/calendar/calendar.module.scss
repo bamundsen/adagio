@@ -1,6 +1,6 @@
 .calendar_set {
   width: 100%;
-  height: calc(100vh - 14vh);
+  min-height: calc(100vh - 14vh);
 
   .calendar_content {
     display: grid;

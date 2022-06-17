@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import { User } from "../types/user";
-import { userApi, api } from "../hooks/api";
+import { userApi } from "../hooks/api";
+import { api } from "../hooks/base_api";
 
 export type AuthContextType = {
   user: User | null;
@@ -19,33 +20,6 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
 
   const apiUser = userApi();
 
-  // useEffect(() => {
-  //   (async () => {
-  //     axios
-  //       .get("http://localhost:8092/verifiyIfIsAuthenticatedAndReturn", {
-  //         headers: {
-  //           accessToken: localStorage.getItem("accessToken") || "",
-  //         },
-  //       })
-  //       .then((response) => {
-  //         console.log(
-  //           "response: ",
-  //           response.data.userData,
-  //           localStorage.getItem("accessToken")
-  //         );
-
-  //         if (response) {
-  //           // userDataAux.current = response.data.userData;
-  //           setUser(response.data.userData);
-  //           setIsAuthenticated(true);
-  //         }
-  //       })
-  //       .catch((erro) => {
-  //         console.log("erro: ", erro, localStorage.getItem("accessToken"));
-  //       });
-  //   })();
-  // }, []);
-
   useEffect(() => {
     if (user === null) processUser();
   });
@@ -61,19 +35,20 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const setUserAndIsAuthenticatedAndToken = (
     user: any,
     isAuthenticated: boolean,
-    token: string
+    token: string,
+    tipo: string
   ) => {
     setUser(user);
-    setIsAuthenticated(true);
+    setIsAuthenticated(isAuthenticated);
     localStorage.setItem("accessToken", token);
-    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    api.defaults.headers.common["Authorization"] = `${tipo} ${token}`;
   };
 
   const signin = async (login: string, password: string) => {
     const data = await apiUser.signin(login, password);
 
-    if (data.user && data.token) {
-      setUserAndIsAuthenticatedAndToken(data.user, true, data.token);
+    if (data.user && data.token && data.tipo) {
+      setUserAndIsAuthenticatedAndToken(data.user, true, data.token, data.tipo);
       return true;
     }
     return false;
@@ -85,9 +60,11 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     );
 
     console.log(data);
-    if (data.user && data.token) {
-      setUserAndIsAuthenticatedAndToken(data.user, true, data.token);
+    if (data.user && data.token && data.tipo) {
+      setUserAndIsAuthenticatedAndToken(data.user, true, data.token, data.tipo);
     } else {
+      setIsAuthenticated(false);
+      setUser(null);
     }
   };
 

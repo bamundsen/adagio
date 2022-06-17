@@ -32,8 +32,9 @@ const months = [
   "November",
   "December",
 ];
+
 const Calendar = () => {
-  const [currentYear, setCurrentYear] = useState(2022);
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [occupiedDates, setOccupiedDates] = useState<any[]>([]);
   const [isToShowOneMonth, setIsToShowOneMonth] = useState(true);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
@@ -42,23 +43,6 @@ const Calendar = () => {
   useEffect(() => {
     setMonthToSend(months[currentMonth]);
   }, [currentMonth]);
-
-  /*
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  */
 
   return (
     <section className={`${styles.calendar_set}`}>
@@ -77,6 +61,7 @@ const Calendar = () => {
             occupiedDates={occupiedDates}
             setOccupiedDates={setOccupiedDates}
             month={monthToSend}
+            setCurrentYear={setCurrentYear}
             currentMonth={currentMonth}
             setCurrentMonth={setCurrentMonth}
             isToShowOneMonth={isToShowOneMonth}

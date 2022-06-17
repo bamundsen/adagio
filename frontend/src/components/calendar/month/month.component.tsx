@@ -12,6 +12,7 @@ interface MonthProps {
   isToShowOneMonth?: boolean;
   month: string;
   monthAux: string;
+  setCurrentYear?: React.Dispatch<React.SetStateAction<number>>;
   setCurrentMonth?: React.Dispatch<React.SetStateAction<number>>;
   currentMonth?: number;
   currentYear: number;
@@ -22,6 +23,7 @@ const Month = ({
   currentYear,
   monthAux,
   currentMonth,
+  setCurrentYear,
   setCurrentMonth,
   occupiedDates,
   isToShowOneMonth,
@@ -71,6 +73,14 @@ const Month = ({
     ) {
       console.log("decrementa");
       setCurrentMonth(currentMonth - 1);
+    } else if (
+      setCurrentMonth &&
+      setCurrentYear &&
+      currentMonth !== undefined &&
+      currentMonth - 1 === -1
+    ) {
+      setCurrentYear(currentYear - 1);
+      setCurrentMonth(11);
     }
   };
 
@@ -82,28 +92,46 @@ const Month = ({
     ) {
       console.log("incrementa");
       setCurrentMonth(currentMonth + 1);
+    } else if (
+      currentMonth !== undefined &&
+      setCurrentMonth &&
+      setCurrentYear &&
+      currentMonth + 1 === 12
+    ) {
+      setCurrentYear(currentYear + 1);
+      setCurrentMonth(0);
     }
   };
+
   return (
     <div
       className={`${style.month_card}`}
-      style={{
-        width: isToShowOneMonth ? "88%" : "",
-        display: isToShowOneMonth ? "flex" : "",
-
-        border: isToShowOneMonth ? "none" : "",
-        boxShadow: isToShowOneMonth ? "none" : "",
-        flexDirection: isToShowOneMonth ? "column" : undefined,
-      }}
+      style={
+        isToShowOneMonth
+          ? {
+              width: "88%",
+              display: "flex",
+              height: "95%",
+              marginTop: "3%",
+              border: "none",
+              boxShadow: "none",
+              flexDirection: "column",
+            }
+          : undefined
+      }
     >
       <div
         className={`${style.month_card_header}`}
-        style={{
-          marginBottom: isToShowOneMonth ? "30px" : "",
-          display: isToShowOneMonth ? "flex" : "",
-          justifyContent: isToShowOneMonth ? "space-between" : "",
-          fontSize: isToShowOneMonth ? "1.5rem" : "",
-        }}
+        style={
+          isToShowOneMonth
+            ? {
+                marginBottom: "30px",
+                display: "flex",
+                justifyContent: "space-between",
+                fontSize: "1.5rem",
+              }
+            : undefined
+        }
       >
         {isToShowOneMonth ? (
           <>
@@ -127,10 +155,14 @@ const Month = ({
       </div>
       <div
         className={`${style.month_card_week_days}`}
-        style={{
-          display: isToShowOneMonth ? "flex" : "",
-          border: isToShowOneMonth ? "none" : "",
-        }}
+        style={
+          isToShowOneMonth
+            ? {
+                display: "flex",
+                border: "none",
+              }
+            : undefined
+        }
       >
         {isToShowOneMonth
           ? weekDaysForOneMonth.map((value) => (
@@ -150,10 +182,14 @@ const Month = ({
         <div
           className={`${style.month_card_week}`}
           key={week + `${Math.random() * 1} ${i}`}
-          style={{
-            display: isToShowOneMonth ? "flex" : "",
-            flex: isToShowOneMonth ? "1" : "",
-          }}
+          style={
+            isToShowOneMonth
+              ? {
+                  display: "flex",
+                  flex: "1",
+                }
+              : undefined
+          }
         >
           {week.map((day: any) => (
             <Day

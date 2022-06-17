@@ -1,8 +1,4 @@
-import axios from "axios";
-
-export const api = axios.create({
-  baseURL: "http://localhost:8079",
-});
+import { api } from "./base_api";
 
 export const userApi = () => ({
   validateToken: async (token: string | null) => {

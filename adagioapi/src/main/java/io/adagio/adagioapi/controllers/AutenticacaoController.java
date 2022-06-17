@@ -26,7 +26,7 @@ import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.repositories.UserRepository;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("${adagio.api.base_servico}/auth")
 public class AutenticacaoController {
 
 	@Autowired
@@ -42,7 +42,7 @@ public class AutenticacaoController {
 	public ResponseEntity<AccessData> autenticar(@RequestBody @Valid
 			LoginForm form){
 		UsernamePasswordAuthenticationToken dadosLogin=form.converter();
-		
+		System.out.println("BATEU AQUI");
 		try {
 			
 			Authentication authentication=authManager.authenticate(dadosLogin);

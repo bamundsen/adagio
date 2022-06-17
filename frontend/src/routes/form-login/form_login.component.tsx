@@ -24,6 +24,22 @@ const FormLogin = () => {
   const [rememberMe, setRememberMe] = useState(false);
 
   useEffect(() => {
+    if (localStorage.getItem("rememberMe") === "true") {
+      setRememberMe(true);
+
+      const usernameStorage: string | null = localStorage.getItem("username");
+      if (usernameStorage !== null) {
+        setLogin(usernameStorage);
+      }
+
+      console.log(
+        typeof localStorage.getItem("rememberMe"),
+        localStorage.getItem("rememberMe")
+      );
+    }
+  }, []);
+
+  useEffect(() => {
     if (!localStorage.getItem("accessToken")) {
       setUser(null);
       setIsAuthenticated(false);
@@ -33,6 +49,14 @@ const FormLogin = () => {
   const onSubmit = async (ev: any) => {
     ev.preventDefault();
     console.log(login, password, rememberMe);
+
+    if (rememberMe) {
+      localStorage.setItem("username", login);
+      localStorage.setItem("rememberMe", "true");
+    } else {
+      localStorage.setItem("username", "");
+      localStorage.setItem("rememberMe", "false");
+    }
 
     const wasSigned = await signin(login, password);
 
@@ -102,7 +126,7 @@ const FormLogin = () => {
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
                       <Form.Check
                         type="checkbox"
-                        label="Lembrar-me"
+                        label="Lembrar-me o usuário"
                         checked={rememberMe}
                         onChange={() => {
                           setRememberMe(!rememberMe);
