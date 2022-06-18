@@ -46,7 +46,7 @@ const Month = ({
 
   useEffect(() => {
     setValue(moment().locale("en").month(month).year(currentYear));
-  }, [month]);
+  }, [month, currentYear]);
 
   const updateCalendar = () => {
     const startDay = value.clone().startOf("month").startOf("week");

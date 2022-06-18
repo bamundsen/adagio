@@ -2,11 +2,52 @@
   width: 100%;
   min-height: calc(100vh - 14vh);
 
+  .calendar_set_change_options {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .calendar_set_change_month,
+  .calendar_set_change_year,
+  .calendar_set_change_format_button {
+    display: flex !important;
+    justify-content: center !important;
+    flex: 1;
+    padding: 10px;
+  }
+
+  .calendar_set_change_year {
+    min-width: 120px;
+    flex: 2;
+
+    .calendar_set_change_year_input {
+      width: "30%" !important;
+    }
+  }
+
   .calendar_content {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     justify-items: center;
 
     // background: #ebebeb;
+  }
+}
+
+@media (max-width: 550px) {
+  .calendar_set_change_options {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 295px) {
+  .calendar_set_change_year {
+    flex-direction: column;
+    align-items: center;
+    margin: 10px 0;
+  }
+
+  .calendar_set_change_year_input {
+    width: inherit;
   }
 }
