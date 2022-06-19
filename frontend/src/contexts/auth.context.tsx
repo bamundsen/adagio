@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import { User } from "../types/user";
-import { userApi } from "../hooks/api";
+import { userApi } from "../hooks/userApi";
 import { api } from "../hooks/base_api";
 
 export type AuthContextType = {
@@ -9,6 +9,14 @@ export type AuthContextType = {
   setUser: (user: User | null) => void;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   signin: (login: string, password: string) => Promise<boolean>;
+  register: (
+    login: string,
+    name: string,
+    email: string,
+    password: string,
+    phone: string,
+    cpf: string
+  ) => Promise<undefined | number>;
   signout: () => void;
 };
 
@@ -54,6 +62,21 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     return false;
   };
 
+  const register = async (
+    login: string,
+    name: string,
+    phone: string,
+    email: string,
+    cpf: string,
+    password: string
+  ) => {
+    const user: User = { login, name, phone, email, cpf, password };
+    const response = await apiUser.register(user);
+    console.log(response);
+
+    return response?.status;
+  };
+
   const processUser = async () => {
     const data = await apiUser.validateToken(
       localStorage.getItem("accessToken")
@@ -70,7 +93,6 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
 
   const signout = async () => {
     localStorage.setItem("accessToken", "");
-    // await apiUse.logout();
     setUser(null);
     setIsAuthenticated(false);
   };
@@ -81,6 +103,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     isAuthenticated,
     setIsAuthenticated,
     signin,
+    register,
     signout,
   };
 

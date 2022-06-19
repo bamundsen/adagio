@@ -15,7 +15,7 @@ import useWindowDimensions from "../../utils/useWindowDimensions.utils";
 
 const FormRegister = () => {
   const windowDimensions = useWindowDimensions();
-  const { setUser, setIsAuthenticated } = useContext(AuthContext);
+  const { setUser, setIsAuthenticated, register } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [cpf, setCpf] = useState("");
@@ -41,21 +41,25 @@ const FormRegister = () => {
     setConfirmedPassword("");
   };
 
-  const onSubmit = (ev: any) => {
+  const onSubmit = async (ev: any) => {
     ev.preventDefault();
     console.log(name, username, cpf, email, phone, password, confirmedPassword);
 
     if (password !== confirmedPassword) {
       alert("Os valoress de senha e confirmação de senha estão diferentes !");
     } else {
-      const data = { name, login: username, cpf, email, phone, password };
-      axios.post("http://localhost:8092/auth/register", data).then((ret) => {
-        if (ret.status === 200) {
-          alert(
-            "Cadastrado com sucesso ! Você pode ir para a tela de login e se autenticar"
-          );
-        }
-      });
+      const login = username;
+      const responseStatus = await register(
+        login,
+        name,
+        phone,
+        email,
+        cpf,
+        password
+      );
+
+      if (responseStatus === 201) alert("Usuário cadastrado com sucesso !");
+      else alert("Houve um erro ! Verifique os valores dos campos.");
     }
   };
 

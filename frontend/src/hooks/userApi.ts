@@ -1,3 +1,4 @@
+import { User } from "../types/user";
 import { api } from "./base_api";
 
 export const userApi = () => ({
@@ -23,8 +24,14 @@ export const userApi = () => ({
     }
   },
 
-  logout: async () => {
-    const response = await api.post("/auth/logout");
-    return response.data;
+  register: async (user: User) => {
+    try {
+      const response = await api.post("/auth/register", user);
+
+      console.log(response);
+      return response;
+    } catch (erro) {
+      console.log(erro);
+    }
   },
 });

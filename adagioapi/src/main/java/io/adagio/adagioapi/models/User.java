@@ -16,6 +16,8 @@ import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import io.adagio.adagioapi.dto.CadastroForm;
+
 @Entity
 @Table(name="usuarios")
 public class User implements UserDetails {
@@ -40,6 +42,16 @@ public class User implements UserDetails {
 	private String phone;
 
 
+	public User() {}
+	
+	public User(CadastroForm cadastroForm) {
+		this.login = cadastroForm.getLogin();
+		this.email = cadastroForm.getEmail();
+		this.name = cadastroForm.getName();
+		this.cpf = cadastroForm.getCpf();
+		this.password = cadastroForm.getPassword();
+		this.phone = cadastroForm.getPhone();
+	}
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
