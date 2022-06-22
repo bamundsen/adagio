@@ -1,10 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 import Navigation from "./components/navigation/navigation.component";
-import FormLogin from "./routes/form-login/form_login.component";
-import FormRegister from "./routes/form-register/form_register.component";
+import FormLogin from "./pages/form-login/form_login.component";
+import FormRegister from "./pages/form-register/form_register.component";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import Home from "./routes/home/home.component";
+import Home from "./pages/home/home.component";
 
 const ApplicationRoutes = () => {
   return (
