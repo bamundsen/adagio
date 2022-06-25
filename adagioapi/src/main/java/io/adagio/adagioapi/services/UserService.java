@@ -82,7 +82,7 @@ public class UserService  {
             throw new IllegalArgumentException("Refresh Token is invalid!");
         }
 
-        String currentUserLogin = tokenService.getLoginFromToken(accessToken);
+        String currentUserLogin = tokenService.getLoginFromToken(refreshToken);
         Optional<User> currentUser = userRepository.findByLogin(currentUserLogin);
         
         Token newAccessToken = tokenService.gerarTokenDeAcesso(currentUserLogin);
