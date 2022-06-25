@@ -85,7 +85,9 @@ public class AutenticacaoController {
     @PostMapping(value = "/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginResponse> refreshToken(@CookieValue(name = "accessToken", required = false) String accessToken,
                                                       @CookieValue(name = "refreshToken", required = false) String refreshToken) {
-        String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
+    	System.out.println("REFRESH TOKEN VINDO DO FRONT-END: "+ refreshToken);
+    	
+    	String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
         String decryptedRefreshToken = SecurityCipher.decrypt(refreshToken);
         return userService.refresh(decryptedAccessToken, decryptedRefreshToken);
     }

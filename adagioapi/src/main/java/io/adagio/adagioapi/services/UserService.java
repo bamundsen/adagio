@@ -86,9 +86,12 @@ public class UserService  {
         Optional<User> currentUser = userRepository.findByLogin(currentUserLogin);
         
         Token newAccessToken = tokenService.gerarTokenDeAcesso(currentUserLogin);
+        Token newRefreshToken = tokenService.gerarRefreshToken(currentUserLogin);
+        
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.createAccessTokenCookie(newAccessToken.getTokenValue(), newAccessToken.getDuration()).toString());
-
+        responseHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.createRefreshTokenCookie(newRefreshToken.getTokenValue(),newRefreshToken.getDuration()).toString());
+     
         LoginResponse loginResponse = new LoginResponse(LoginResponse.SuccessFailure.SUCCESS, 
         		"Auth successful.",currentUser.get(), newAccessToken.getTokenValue());
         

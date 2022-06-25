@@ -38,7 +38,7 @@ public class TokenService {
 				.setSubject(login)
 				.setIssuedAt(hoje)
 				.setExpiration(dataExpiracao)
-				.signWith(SignatureAlgorithm.HS256, secret)
+				.signWith(SignatureAlgorithm.HS512, secret)
 				.compact();
 		
 		System.out.println("|EITA,  O VALOR"+duracao);
@@ -57,7 +57,7 @@ public class TokenService {
 				.setSubject(login)
 				.setIssuedAt(hoje)
 				.setExpiration(dataExpiracao)
-				.signWith(SignatureAlgorithm.HS256, secret)
+				.signWith(SignatureAlgorithm.HS512, secret)
 				.compact();
 		System.out.println(LocalDateTime.ofInstant(dataExpiracao.toInstant(),
 				ZoneId.systemDefault()));
