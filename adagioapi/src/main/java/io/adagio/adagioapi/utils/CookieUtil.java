@@ -1,5 +1,8 @@
 package io.adagio.adagioapi.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.ResponseCookie;
@@ -19,8 +22,9 @@ public class CookieUtil {
     public HttpCookie createAccessTokenCookie(String token, Long duration) {
     	String  encryptedToken = SecurityCipher.encrypt(token);
     	
+    	System.out.println("duração: "+ duration);
     	return ResponseCookie.from(accessTokenCookieName, encryptedToken)
-    			.maxAge(duration)
+    			.maxAge(duration / 1000)
     			.httpOnly(true)
     			.path("/")
     			.build();
@@ -28,15 +32,24 @@ public class CookieUtil {
     
     public HttpCookie createRefreshTokenCookie(String token, Long duration) {
     	String  encryptedToken = SecurityCipher.encrypt(token);
-    	
+    
+    	System.out.println("duração: "+duration);
     	return ResponseCookie.from(refreshTokenCookieName, encryptedToken)
-    			.maxAge(duration)
+    			.maxAge(duration / 1000)
     			.httpOnly(true)
     			.path("/")
     			.build();
     }
     
-    public HttpCookie deleteAccessTokenCookie() {
-    	return ResponseCookie.from(accessTokenCookieName, "").maxAge(0).httpOnly(true).path("/").build();
+    public ResponseCookie deleteAccessTokenCookie() {
+    	
+    	return ResponseCookie.from(accessTokenCookieName, "")
+    			.maxAge(0).httpOnly(true).path("/").build();
+    }
+    
+    public ResponseCookie deleteRefreshTokenCookie() {
+    	
+    	return ResponseCookie.from(refreshTokenCookieName, "")
+		.maxAge(0).httpOnly(true).path("/").build();
     }
 }

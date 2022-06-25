@@ -30,9 +30,9 @@ public class TokenService {
 	
 	public Token gerarTokenDeAcesso(String login) {
 		Date hoje= new Date();
-		Long duracao = hoje.getTime()+Long.parseLong(expiration);
+		long duracao = hoje.getTime()+Long.parseLong(expiration);
 		Date dataExpiracao=new Date(duracao);
-		System.out.println("data expiração: "+dataExpiracao);
+		System.out.println("data expiração access: "+dataExpiracao);
 		String token = Jwts.builder()
 				.setIssuer("API do Adagio")
 				.setSubject(login)
@@ -41,13 +41,15 @@ public class TokenService {
 				.signWith(SignatureAlgorithm.HS256, secret)
 				.compact();
 		
-		return new Token(Token.TokenType.ACCESS,token,duracao,LocalDateTime.ofInstant(dataExpiracao.toInstant(),
+		System.out.println("|EITA,  O VALOR"+duracao);
+		return new Token(Token.TokenType.ACCESS,token,Long.parseLong(expiration),LocalDateTime.ofInstant(dataExpiracao.toInstant(),
 				ZoneId.systemDefault()));
 	}
 	
 	public Token gerarRefreshToken(String login) {
 		Date hoje= new Date();
-		Long duracao = hoje.getTime()+Long.parseLong(refresh_expiration);
+		System.out.println(refresh_expiration);
+		long duracao = hoje.getTime()+Long.parseLong(refresh_expiration);
 		Date dataExpiracao=new Date(duracao);
 		System.out.println("data expiração: "+dataExpiracao);
 		String token = Jwts.builder()
@@ -57,8 +59,11 @@ public class TokenService {
 				.setExpiration(dataExpiracao)
 				.signWith(SignatureAlgorithm.HS256, secret)
 				.compact();
+		System.out.println(LocalDateTime.ofInstant(dataExpiracao.toInstant(),
+				ZoneId.systemDefault()));
 		
-		return new Token(Token.TokenType.REFRESH,token,duracao,LocalDateTime.ofInstant(dataExpiracao.toInstant(),
+		System.out.println("|EITA,  O VALOR"+duracao);
+		return new Token(Token.TokenType.REFRESH,token,Long.parseLong(refresh_expiration),LocalDateTime.ofInstant(dataExpiracao.toInstant(),
 				ZoneId.systemDefault()));
 	}
 

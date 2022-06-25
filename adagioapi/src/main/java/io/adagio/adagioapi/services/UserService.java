@@ -40,7 +40,7 @@ public class UserService  {
 		System.out.println("CHEGA AQUI");
 		HttpHeaders responseHeaders = new HttpHeaders();
 		Token newAccessToken = new Token();
-		Token newRefreshToken;
+		Token newRefreshToken = new Token();
 		
 		if(!accessTokenIsValid && !refreshTokenIsValid) {
 			newAccessToken = tokenService.gerarTokenDeAcesso(user.getLogin());
@@ -59,9 +59,17 @@ public class UserService  {
 			newAccessToken = tokenService.gerarTokenDeAcesso(login);
 			newRefreshToken = tokenService.gerarRefreshToken(login);
 			
-			addAccessTokenCookie(responseHeaders, newRefreshToken);
+			addAccessTokenCookie(responseHeaders, newAccessToken);
 			addRefreshTokenCookie(responseHeaders, newRefreshToken);
 		}
+		
+		if(!refreshTokenIsValid && accessTokenIsValid) {
+			newRefreshToken = tokenService.gerarRefreshToken(login);
+			addRefreshTokenCookie(responseHeaders, newRefreshToken);
+		}
+		
+		System.out.println("refresh token duration: "+ newRefreshToken.getDuration());
+		System.out.println("access  token duration: "+ newAccessToken.getDuration());
 		
 		 LoginResponse loginResponse = new LoginResponse(LoginResponse.SuccessFailure.SUCCESS,
 				 "Auth successful.",user,newAccessToken.getTokenValue());
@@ -88,11 +96,13 @@ public class UserService  {
     }
     
 	private void addAccessTokenCookie(HttpHeaders httpHeaders, Token token ) {
+		System.out.println(token.getDuration());
 		httpHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.createAccessTokenCookie(token.getTokenValue(),
 				token.getDuration()).toString());
 	}
 	
 	private void addRefreshTokenCookie(HttpHeaders httpHeaders, Token token ) {
+		System.out.println(token.getDuration());
 		httpHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.createRefreshTokenCookie(token.getTokenValue(),
 				token.getDuration()).toString());
 	}
@@ -101,8 +111,10 @@ public class UserService  {
 	public ResponseEntity<?> logout() {
 		HttpHeaders responseHeaders = new HttpHeaders();
 		
-		Token token = new Token(null, cookieUtil.deleteAccessTokenCookie().getValue(), (long)0, null);
-		addAccessTokenCookie(responseHeaders,token);
+		Token accessToken = new Token(null, cookieUtil.deleteAccessTokenCookie().getValue(), (long)0, null);
+		Token refreshToken = new Token(null, cookieUtil.deleteRefreshTokenCookie().getValue(), (long)0, null);
+		addAccessTokenCookie(responseHeaders,accessToken);
+		addRefreshTokenCookie(responseHeaders, refreshToken);
 		
 		return ResponseEntity.ok().headers(responseHeaders).build();
 	}
