@@ -4,11 +4,12 @@ import { api } from "./base_api";
 export const userApi = () => ({
   validateToken: async () => {
     try {
+      console.log(api.defaults);
       const response = await api.post("/auth/refresh");
 
       api.defaults.headers.common[
         "Authorization"
-      ] = `Bearer ${response.data.token}`;
+      ] = `Bearer ${response.data.accessToken}`;
 
       console.log("Eia", response);
       return response;
@@ -20,6 +21,7 @@ export const userApi = () => ({
 
   signin: async (login: string, password: string) => {
     try {
+      console.log(api);
       const response = await api.post("/auth/login", {
         login,
         password,
@@ -27,7 +29,7 @@ export const userApi = () => ({
 
       api.defaults.headers.common[
         "Authorization"
-      ] = `Bearer ${response.data.token}`;
+      ] = `Bearer ${response.data.accessToken}`;
 
       console.log(response);
       return response;
@@ -51,6 +53,16 @@ export const userApi = () => ({
 
       console.log(response);
       return response;
+    } catch (erro) {
+      console.log(erro);
+    }
+  },
+
+  teste: async () => {
+    try {
+      console.log(api.defaults);
+      const response = await api.get("/teste");
+      console.log(response);
     } catch (erro) {
       console.log(erro);
     }

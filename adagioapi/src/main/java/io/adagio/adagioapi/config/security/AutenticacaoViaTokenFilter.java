@@ -23,14 +23,14 @@ import io.adagio.adagioapi.config.utils.SecurityCipher;
 import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.repositories.UserRepository;
 
-@Service
+
 public class AutenticacaoViaTokenFilter extends OncePerRequestFilter{
 
-    @Value("${adagio.jwt.cookie_name}")
-    private String accessTokenCookieName;
+//    @Value("${adagio.jwt.cookie_name}")
+    private String accessTokenCookieName="accessToken";
 
-    @Value("${adagio.jwt.refresh_cookie_name}")
-    private String refreshTokenCookieName;
+//    @Value("${adagio.jwt.refresh_cookie_name}")
+    private String refreshTokenCookieName="refreshToken";
     
 	@Autowired
 	private AutenticacaoService autenticacaoService;
@@ -87,9 +87,11 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter{
 	private String getJwtFromCookie(HttpServletRequest request) {
 	        Cookie[] cookies = request.getCookies();
 	        for (Cookie cookie : cookies) {
-	        	System.out.println("eita: "+cookie.getName());
+	        	System.out.println("SEIIIIIIIIIIIII");
+	        	System.out.println("eita: "+cookie.getName()+ ""+ accessTokenCookieName);
 	            if (accessTokenCookieName != null && accessTokenCookieName.equals(cookie.getName())) {
 	                String accessToken = cookie.getValue();
+	                System.out.println("value: "+accessToken);
 	                if (accessToken == null) return null;
 
 	                return SecurityCipher.decrypt(accessToken);

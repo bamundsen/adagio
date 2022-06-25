@@ -29,6 +29,9 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const apiUser = userApi();
 
   useEffect(() => {
+    teste();
+  });
+  useEffect(() => {
     if (user === null || isAuthenticated === false) {
       processUser().then((response) => {
         console.log(response);
@@ -42,6 +45,10 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     }
   }, [isAuthenticated, user]);
 
+  const teste = async () => {
+    const testeRes = await apiUser.teste();
+    console.log(testeRes);
+  };
   const processUser = async () => {
     const response: any = await apiUser.validateToken();
 

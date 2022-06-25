@@ -58,15 +58,12 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter{
 	// Configurações de Autorização
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and()
-		.csrf().disable()
-		.sessionManagement()
-		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		.and()
-		.exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint()).and()
-		.authorizeRequests()
+		http.cors().and().authorizeRequests()
 		.antMatchers("/api/v1/auth/*").permitAll()
 		.anyRequest().authenticated().and()
+		.csrf().disable()
+		.sessionManagement()
+		.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 		.addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, usuarioRepository),
 				UsernamePasswordAuthenticationFilter.class);
 						

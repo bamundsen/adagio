@@ -12,7 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class SecurityCipher {
 
-	  private static final String KEYVALUE = "secureKey";
+	  private static final String KEYVALUE = "dkfjdkjfdkfjy";
 	    private static SecretKeySpec secretKey;
 	    private static byte[] key;
 
