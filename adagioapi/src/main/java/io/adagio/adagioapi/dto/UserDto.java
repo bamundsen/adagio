@@ -7,10 +7,12 @@ public class UserDto {
 	private String login;
 	private String email;
 	private String name;
+	private String phone;
 	
 	public UserDto(User user) {
 		this.login = user.getLogin();
 		this.email = user.getEmail();
+		this.phone = user.getPhone();
 		this.name = user.getName();
 	}
 
@@ -26,5 +28,7 @@ public class UserDto {
 		return name;
 	}
 	
-	
+	public String getPhone() {
+		return phone;
+	}
 }

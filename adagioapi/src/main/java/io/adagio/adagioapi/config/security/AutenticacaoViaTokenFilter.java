@@ -5,20 +5,39 @@ import java.util.Optional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.adagio.adagioapi.config.utils.SecurityCipher;
 import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.repositories.UserRepository;
 
+@Service
 public class AutenticacaoViaTokenFilter extends OncePerRequestFilter{
 
+    @Value("${adagio.jwt.cookie_name}")
+    private String accessTokenCookieName;
+
+    @Value("${adagio.jwt.refresh_cookie_name}")
+    private String refreshTokenCookieName;
+    
+	@Autowired
+	private AutenticacaoService autenticacaoService;
+	
 	private TokenService tokenService;
 	private UserRepository usuarioRepository;
+	
 	public AutenticacaoViaTokenFilter(TokenService tokenService,
 			UserRepository usuarioRepository) {
 		this.tokenService = tokenService;
@@ -28,12 +47,13 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		String token = recuperarToken(request);
-		System.out.println("TOKEN:"+token);
-		boolean valido = tokenService.isTokenValid(token);
-		System.out.println("TOKEN VÁLIDO: "+valido);
-		if(valido) {
-			autenticarCliente(token);
+		try {
+			String jwt = getJwtToken(request,true);
+			if(StringUtils.hasText(jwt) && tokenService.isTokenValid(jwt)) {
+				autenticarCliente(jwt);
+			}
+		} catch(Exception ex) {
+			ex.printStackTrace();
 		}
 		
 		System.out.println("mas aqui chega");
@@ -41,8 +61,8 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter{
 	}
 
 	private void autenticarCliente(String token) {
-		Long idUsuario = tokenService.getIdUsuario(token);
-		Optional<User> usuarioOpt = usuarioRepository.findById(idUsuario);
+		String login = tokenService.getLoginFromToken(token);
+		Optional<User> usuarioOpt = usuarioRepository.findByLogin(login);
 		User usuario = usuarioOpt.orElse(null);
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(usuario,
 				null, usuario.getAuthorities());
@@ -52,13 +72,35 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter{
 		System.out.println("CHEGA AQUI");
 	}
 
-	private String recuperarToken(HttpServletRequest request) {
-		String token =request.getHeader("Authorization");
-		
-		if(token==null || token.isEmpty() || !token.startsWith("Bearer ")) {
-			return null;
+	private String getJwtFromRequest(HttpServletRequest request) {
+		String bearerToken = request.getHeader("Authorization");
+		if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+			String accessToken = bearerToken.substring(7);
+			if(accessToken == null) return null;
+			
+			return SecurityCipher.decrypt(accessToken);
 		}
 		
-		return token.replace("Bearer ","");
+		return null;
 	}
+	
+	private String getJwtFromCookie(HttpServletRequest request) {
+	        Cookie[] cookies = request.getCookies();
+	        for (Cookie cookie : cookies) {
+	        	System.out.println("eita: "+cookie.getName());
+	            if (accessTokenCookieName != null && accessTokenCookieName.equals(cookie.getName())) {
+	                String accessToken = cookie.getValue();
+	                if (accessToken == null) return null;
+
+	                return SecurityCipher.decrypt(accessToken);
+	            }
+	        }
+	        return null;
+	    }
+
+    private String getJwtToken(HttpServletRequest request, boolean fromCookie) {
+        if (fromCookie) return getJwtFromCookie(request);
+
+        return getJwtFromRequest(request);
+    }
 }

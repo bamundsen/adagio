@@ -29,34 +29,41 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const apiUser = userApi();
 
   useEffect(() => {
-    if (user === null) processUser();
-  });
-
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-
-    if (token) {
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    if (user === null || isAuthenticated === false) {
+      processUser().then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          setUserAndIsAuthenticatedAndToken(response.data.user, true);
+        } else {
+          setIsAuthenticated(false);
+          setUser(null);
+        }
+      });
     }
-  }, []);
+  }, [isAuthenticated, user]);
+
+  const processUser = async () => {
+    const response: any = await apiUser.validateToken();
+
+    return response;
+  };
 
   const setUserAndIsAuthenticatedAndToken = (
     user: any,
-    isAuthenticated: boolean,
-    token: string,
-    tipo: string
+    isAuthenticated: boolean
+    // token: string,
+    // tipo: string
   ) => {
     setUser(user);
     setIsAuthenticated(isAuthenticated);
-    localStorage.setItem("accessToken", token);
-    api.defaults.headers.common["Authorization"] = `${tipo} ${token}`;
   };
 
   const signin = async (login: string, password: string) => {
-    const data = await apiUser.signin(login, password);
+    const response: any = await apiUser.signin(login, password);
 
-    if (data.user && data.token && data.tipo) {
-      setUserAndIsAuthenticatedAndToken(data.user, true, data.token, data.tipo);
+    console.log(response);
+    if (response?.status === 200) {
+      setUserAndIsAuthenticatedAndToken(response.data.user, true);
       return true;
     }
     return false;
@@ -77,22 +84,8 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     return response?.status;
   };
 
-  const processUser = async () => {
-    const data = await apiUser.validateToken(
-      localStorage.getItem("accessToken")
-    );
-
-    console.log(data);
-    if (data.user && data.token && data.tipo) {
-      setUserAndIsAuthenticatedAndToken(data.user, true, data.token, data.tipo);
-    } else {
-      setIsAuthenticated(false);
-      setUser(null);
-    }
-  };
-
   const signout = async () => {
-    localStorage.setItem("accessToken", "");
+    await apiUser.logout();
     setUser(null);
     setIsAuthenticated(false);
   };

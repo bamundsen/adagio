@@ -50,10 +50,13 @@ const Navigation = () => {
   }, [isAuthenticated]);
 
   const verifyIfTokenWasDeleted = () => {
-    if (!localStorage.getItem("accessToken")) {
-      setUser(null);
-      setIsAuthenticated(false);
+    if (!isAuthenticated) {
+      setIsAuthenticated(true);
     }
+    // if (!localStorage.getItem("accessToken")) {
+    //   setUser(null);
+    //   setIsAuthenticated(false);
+    // }
   };
 
   const toggleDisplayDropDown = () => {

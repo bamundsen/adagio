@@ -1,4 +1,5 @@
 import moment from "moment";
+import { uid } from "react-uid";
 import "moment/locale/pt";
 import { useEffect, useState } from "react";
 import style from "./month.module.scss";
@@ -165,23 +166,28 @@ const Month = ({
         }
       >
         {isToShowOneMonth
-          ? weekDaysForOneMonth.map((value) => (
+          ? weekDaysForOneMonth.map((value, i) => (
               <div
-                key={value + month}
+                key={uid(value + i)}
                 className={`${style.month_card_week_day}`}
                 style={{ flex: "1" }}
               >
                 {value.toUpperCase()}
               </div>
             ))
-          : weekDays.map((value) => (
-              <div className={`${style.month_card_week_day}`}>{value}</div>
+          : weekDays.map((value, i) => (
+              <div
+                key={uid(value + i)}
+                className={`${style.month_card_week_day}`}
+              >
+                {value}
+              </div>
             ))}
       </div>
       {calendar.map((week: any, i) => (
         <div
           className={`${style.month_card_week}`}
-          key={week + `${Math.random() * 1} ${i}`}
+          key={uid(`${week + i}`)}
           style={
             isToShowOneMonth
               ? {
@@ -193,7 +199,7 @@ const Month = ({
         >
           {week.map((day: any) => (
             <Day
-              key={day._d.getTime() + month}
+              key={uid(`${day}`)}
               day={day}
               occupiedDates={occupiedDates}
               isToShowOneMonth={isToShowOneMonth}

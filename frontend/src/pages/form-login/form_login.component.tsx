@@ -31,20 +31,8 @@ const FormLogin = () => {
       if (usernameStorage !== null) {
         setLogin(usernameStorage);
       }
-
-      console.log(
-        typeof localStorage.getItem("rememberMe"),
-        localStorage.getItem("rememberMe")
-      );
     }
   }, []);
-
-  useEffect(() => {
-    if (!localStorage.getItem("accessToken")) {
-      setUser(null);
-      setIsAuthenticated(false);
-    }
-  }, [isAuthenticated]);
 
   const onSubmit = async (ev: any) => {
     ev.preventDefault();
