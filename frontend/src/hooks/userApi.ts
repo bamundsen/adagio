@@ -7,9 +7,9 @@ export const userApi = () => ({
       console.log(api.defaults);
       const response = await api.post("/auth/refresh");
 
-      api.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${response.data.accessToken}`;
+      // api.defaults.headers.common[
+      //   "Authorization"
+      // ] = `Bearer ${response.data.accessToken}`;
 
       console.log("Eia", response);
       return response;
@@ -27,9 +27,9 @@ export const userApi = () => ({
         password,
       });
 
-      api.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${response.data.accessToken}`;
+      // api.defaults.headers.common[
+      //   "Authorization"
+      // ] = `Bearer ${response.data.accessToken}`;
 
       console.log(response);
       return response;

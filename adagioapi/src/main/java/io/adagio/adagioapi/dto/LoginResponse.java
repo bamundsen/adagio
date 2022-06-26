@@ -7,15 +7,15 @@ public class LoginResponse {
     private SuccessFailure status;
     private String message;
     private UserDto user;
-    private String accessToken;
+//    private String accessToken;
     
     public LoginResponse() {}
     
-    public LoginResponse(SuccessFailure status, String message, User user, String accessToken) {
+    public LoginResponse(SuccessFailure status, String message, User user) {
     	this.status=status;
     	this.message = message;
     	this.user = new UserDto(user);
-    	this.accessToken=accessToken;
+//    	this.accessToken=accessToken;
     }
     
     
@@ -32,9 +32,9 @@ public class LoginResponse {
 		return user;
 	}
 	
-	public String getAccessToken() {
-		return accessToken;
-	}
+//	public String getAccessToken() {
+//		return accessToken;
+//	}
 
 	public String getMessage() {
 		return message;

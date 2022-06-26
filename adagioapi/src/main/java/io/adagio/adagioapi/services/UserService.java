@@ -72,12 +72,27 @@ public class UserService  {
 		System.out.println("access  token duration: "+ newAccessToken.getDuration());
 		
 		 LoginResponse loginResponse = new LoginResponse(LoginResponse.SuccessFailure.SUCCESS,
-				 "Auth successful.",user,newAccessToken.getTokenValue());
+				 "Auth successful.",user);
 	     return ResponseEntity.ok().headers(responseHeaders).body(loginResponse);
 	}
 	
     public ResponseEntity<LoginResponse> refresh(String accessToken, String refreshToken) {
         Boolean refreshTokenValid = tokenService.isTokenValid(refreshToken);
+        
+        if(refreshToken.trim().length() == 0) {
+        	throw new IllegalArgumentException("IGUAL A ZERO !");
+        }
+        
+        if(tokenService.isTokenValid(accessToken)) {
+        	String currentUserLogin = tokenService.getLoginFromToken(accessToken);
+        	Optional<User> currentUser = userRepository.findByLogin(currentUserLogin);
+        	
+            LoginResponse loginResponse = new LoginResponse(LoginResponse.SuccessFailure.SUCCESS, 
+            		"Refresh successful.",currentUser.get());
+            
+            return ResponseEntity.ok().body(loginResponse);
+        }
+        
         if (!refreshTokenValid) {
             throw new IllegalArgumentException("Refresh Token is invalid!");
         }
@@ -93,7 +108,7 @@ public class UserService  {
         responseHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.createRefreshTokenCookie(newRefreshToken.getTokenValue(),newRefreshToken.getDuration()).toString());
      
         LoginResponse loginResponse = new LoginResponse(LoginResponse.SuccessFailure.SUCCESS, 
-        		"Auth successful.",currentUser.get(), newAccessToken.getTokenValue());
+        		"Refresh successful.",currentUser.get());
         
         return ResponseEntity.ok().headers(responseHeaders).body(loginResponse);
     }
