@@ -6,7 +6,9 @@ interface DayProps {
   monthAux: string;
   isToShowOneMonth?: boolean;
   occupiedDates: any[];
+  setDayOfModal: React.Dispatch<React.SetStateAction<Date | null>>,
   setOccupiedDates: React.Dispatch<React.SetStateAction<any[]>>;
+  setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   month: string;
   year: number;
 }
@@ -15,7 +17,9 @@ const Day = ({
   month,
   year,
   monthAux,
+  setDayOfModal,
   occupiedDates,
+  setModalIsOpen,
   setOccupiedDates,
   isToShowOneMonth,
 }: DayProps) => {
@@ -58,17 +62,17 @@ const Day = ({
   };
 
   const handleClickDate = () => {
-    if (stateOfDay === "") {
-      setStateOfDay("selected");
-    } else if (stateOfDay === "selected") {
-      setStateOfDay("");
-    }
+    console.log(`day: ${day._d.getMonth()}, ${day._d.getDay()}`);
+    setDayOfModal(day._d);
+    setModalIsOpen(true);
   };
 
   return (
     <div
       className={`${styles.day_of_month}`}
-      onClick={handleClickDate}
+      onClick={() => {
+        handleClickDate();
+      }}
       style={verifyStateAndReturnCss()}
     >
       {day.format("DD").toString()}

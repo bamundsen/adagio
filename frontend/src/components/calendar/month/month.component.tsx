@@ -2,10 +2,15 @@ import moment from "moment";
 import { uid } from "react-uid";
 import "moment/locale/pt";
 import { useEffect, useState } from "react";
+import { Modal } from "react-bootstrap";
+import { CloseButton } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import style from "./month.module.scss";
 import Day from "../day/day.component";
 import ArrowToRight from "../../../assets/arrow_to_right.svg";
 import ArrowToLeft from "../../../assets/arrow_to_left.svg";
+import months from "../../../utils/months";
+import completeWeekDays from "../../../utils/weekDays";
 
 interface MonthProps {
   occupiedDates: any[];
@@ -38,6 +43,9 @@ const Month = ({
 
   const weekDays = ["D", "S", "T", "Q", "Q", "S", "S"];
   const weekDaysForOneMonth = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+  const [dayOfModal, setDayOfModal] = useState<Date | null>(null);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     // setValue(value.year(currentYear));
@@ -121,6 +129,34 @@ const Month = ({
           : undefined
       }
     >
+      <Modal show={modalIsOpen}>
+        <Modal.Header>
+          <h2 style={{ flex: "1" }}>
+            <Modal.Title style={{ width: "90%" }}>
+              {`${dayOfModal?.getDate()} de ${
+                months[dayOfModal !== null ? dayOfModal?.getMonth() : 0]
+              } de ${dayOfModal?.getFullYear()}\n
+              ${
+                completeWeekDays[dayOfModal !== null ? dayOfModal?.getDay() : 0]
+              }`}
+            </Modal.Title>
+          </h2>
+
+          <div
+            onClick={() => {
+              setModalIsOpen(false);
+            }}
+            className={`${style.close_modal_button}`}
+          >
+            X
+          </div>
+        </Modal.Header>
+        <Modal.Body style={{ minHeight: "65vh" }}>
+          Aqui vai ficar a modal!
+        </Modal.Body>
+        <Modal.Footer>Aqui o rodapé</Modal.Footer>
+      </Modal>
+
       <div
         className={`${style.month_card_header}`}
         style={
@@ -201,6 +237,8 @@ const Month = ({
             <Day
               key={uid(`${day}`)}
               day={day}
+              setDayOfModal={setDayOfModal}
+              setModalIsOpen={setModalIsOpen}
               occupiedDates={occupiedDates}
               isToShowOneMonth={isToShowOneMonth}
               setOccupiedDates={setOccupiedDates}
