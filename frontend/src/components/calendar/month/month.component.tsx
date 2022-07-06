@@ -9,8 +9,11 @@ import style from "./month.module.scss";
 import Day from "../day/day.component";
 import ArrowToRight from "../../../assets/arrow_to_right.svg";
 import ArrowToLeft from "../../../assets/arrow_to_left.svg";
+import LinkSideBarIcon from "../../../assets/link_sidebar_icon.svg";
 import months from "../../../utils/months";
 import completeWeekDays from "../../../utils/weekDays";
+import { Link } from "react-router-dom";
+import Form from "react-bootstrap/Form";
 
 interface MonthProps {
   occupiedDates: any[];
@@ -131,15 +134,41 @@ const Month = ({
     >
       <Modal show={modalIsOpen}>
         <Modal.Header>
-          <h2 style={{ flex: "1" }}>
-            <Modal.Title style={{ width: "90%" }}>
+          <h2
+            style={{
+              flex: "1",
+              width: "90%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Modal.Title>
               {`${dayOfModal?.getDate()} de ${
                 months[dayOfModal !== null ? dayOfModal?.getMonth() : 0]
-              } de ${dayOfModal?.getFullYear()}\n
-              ${
+              } de ${dayOfModal?.getFullYear()}
+              `}
+            </Modal.Title>
+            <span
+              style={{
+                fontWeight: "500",
+                fontSize: "16px",
+                margin: "8px 0",
+              }}
+            >
+              {`${
                 completeWeekDays[dayOfModal !== null ? dayOfModal?.getDay() : 0]
               }`}
-            </Modal.Title>
+            </span>
+
+            <span
+              style={{
+                fontWeight: "500",
+                fontSize: "16px",
+              }}
+            >
+              Tempo disponível: 3 horas e 40 minutos
+            </span>
           </h2>
 
           <div
@@ -152,9 +181,50 @@ const Month = ({
           </div>
         </Modal.Header>
         <Modal.Body style={{ minHeight: "65vh" }}>
-          Aqui vai ficar a modal!
+          <h2 style={{ fontSize: "18px" }}>Tarefas de hoje: </h2>
+
+          <ul>
+            <li>Conversa com o dentista (14:20)</li>
+          </ul>
         </Modal.Body>
-        <Modal.Footer>Aqui o rodapé</Modal.Footer>
+        <Modal.Footer style={{ display: "flex", padding: "0" }}>
+          <Link
+            to="/criar_tarefa"
+            style={{
+              margin: "0",
+              flex: "1",
+              color: "#000",
+              padding: "8px",
+              display: "flex",
+              borderRight: "1px solid #000",
+              justifyContent: "center",
+            }}
+          >
+            <img
+              style={{ width: "20px", marginRight: "10px" }}
+              src={LinkSideBarIcon}
+              alt={"Link para criar tarefa"}
+            />
+            <span>Criar tarefa</span>
+          </Link>
+          <div
+            style={{
+              flex: "1",
+              margin: "0",
+              padding: "8px",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <span>Dia Livre</span>
+
+            <Form.Check
+              style={{ marginLeft: "30px", marginTop: "3px" }}
+              type={"checkbox"}
+              id={`disabled-default-checkbox`}
+            />
+          </div>
+        </Modal.Footer>
       </Modal>
 
       <div
