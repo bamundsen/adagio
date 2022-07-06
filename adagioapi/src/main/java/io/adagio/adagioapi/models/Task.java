@@ -2,6 +2,7 @@ package io.adagio.adagioapi.models;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -52,8 +53,8 @@ public class Task {
 	@JoinColumn(name="project_id", nullable=true)
 	private Project project;
 
-	@OneToMany(mappedBy = "notifications")
-	private ArrayList<Notification> notifications;
+	@OneToMany(mappedBy = "task")
+	private List<Notification> notifications;
 
 	@NotNull
 	@Column(name = "priority")
@@ -136,7 +137,7 @@ public class Task {
 		this.priority = priority;
 	}
 
-	public ArrayList<Notification> getNotifications() {
+	public List<Notification> getNotifications() {
 		return notifications;
 	}
 
