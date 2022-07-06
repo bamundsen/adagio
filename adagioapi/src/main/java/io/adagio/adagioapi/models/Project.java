@@ -1,28 +1,25 @@
 package io.adagio.adagioapi.models;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import io.adagio.adagioapi.dto.CadastroTarefaForm;
+import io.adagio.adagioapi.dto.CadastroProjetoForm;
 
 @Entity
-@Table(name="tasks")
-public class Task {
-	
+@Table(name = "projects")
+public class Project {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
@@ -45,30 +42,25 @@ public class Task {
 	@Column(name = "dateTimeEnd")
 	private LocalDateTime dateTimeEnd;
 
+	//Este atributo será gerado automaticamente
+	@Column(name = "finishedStatus")
 	private boolean finishedStatus;
 
-	//optativamente a tarefa terá um projeto relacionado a ela
-	@ManyToOne
-	@JoinColumn(name="project_id", nullable=true)
-	private Project project;
+	//Este atributo será gerado automaticamente
+	@Column(name = "progressStatus")
+	private double progressStatus;
 
-	@OneToMany(mappedBy = "notifications")
-	private ArrayList<Notification> notifications;
+	@OneToMany(mappedBy = "project")
+	private List<Task> tasks;
 
-	@NotNull
-	@Column(name = "priority")
-	private Priority priority;
+	public Project () {}
 
-	public Task () {}
-
-	public Task (CadastroTarefaForm cadastroTaskForm) {
-		this.title = cadastroTaskForm.getTitle();
-		this.description = cadastroTaskForm.getDescription();
-		this.dateTimeStart = cadastroTaskForm.getDateTimeStart();
-		this.dateTimeEnd = cadastroTaskForm.getDateTimeEnd();
-		this.project = cadastroTaskForm.getProject();
-		this.notifications = cadastroTaskForm.getNotifications();
-		this.priority = cadastroTaskForm.getPriority();
+	public Project (CadastroProjetoForm cadastroProjectForm) {
+		this.title = cadastroProjectForm.getTitle();
+		this.description = cadastroProjectForm.getDescription();
+		this.dateTimeStart = cadastroProjectForm.getDateTimeStart();
+		this.dateTimeEnd = cadastroProjectForm.getDateTimeEnd();
+		this.tasks = cadastroProjectForm.getTasks();
 	}
 
 	public long getId() {
@@ -119,29 +111,20 @@ public class Task {
 		this.finishedStatus = finishedStatus;
 	}
 
-	public Project getProject() {
-		return project;
+	public double getProgressStatus() {
+		return progressStatus;
 	}
 
-	public void setProject(Project project) {
-		this.project = project;
+	public void setProgressStatus(double progressStatus) {
+		this.progressStatus = progressStatus;
 	}
 
-
-	public Priority getPriority() {
-		return priority;
+	public List<Task> getTasks() {
+		return tasks;
 	}
 
-	public void setPriority(Priority priority) {
-		this.priority = priority;
-	}
-
-	public ArrayList<Notification> getNotifications() {
-		return notifications;
-	}
-
-	public void setNotification(ArrayList<Notification> notifications) {
-		this.notifications = notifications;
+	public void setTasks(List<Task> tasks) {
+		this.tasks = tasks;
 	}
 	
 	
