@@ -28,9 +28,9 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
 
   const apiUser = userApi();
 
-  useEffect(() => {
-    teste();
-  });
+  // useEffect(() => {
+  //   teste();
+  // });
   useEffect(() => {
     if (user === null || isAuthenticated === false) {
       processUser().then((response) => {

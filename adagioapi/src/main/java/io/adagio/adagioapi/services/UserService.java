@@ -34,8 +34,8 @@ public class UserService  {
 		User user = userRepository.findByLogin(login).orElseThrow(()->new IllegalArgumentException(
 				"Usuário com login "+login+" não encontrado."));
 		
-		Boolean accessTokenIsValid = tokenService.isTokenValid(accessToken);
-		Boolean refreshTokenIsValid = tokenService.isTokenValid(refreshToken);
+		Boolean accessTokenIsValid = tokenService.isTokenValid(accessToken,"accesstoken");
+		Boolean refreshTokenIsValid = tokenService.isTokenValid(refreshToken,"refreshtoken");
 		
 		System.out.println("CHEGA AQUI");
 		HttpHeaders responseHeaders = new HttpHeaders();
@@ -77,14 +77,14 @@ public class UserService  {
 	}
 	
     public ResponseEntity<LoginResponse> refresh(String accessToken, String refreshToken) {
-        Boolean refreshTokenValid = tokenService.isTokenValid(refreshToken);
+        Boolean refreshTokenValid = tokenService.isTokenValid(refreshToken,"refreshtoken");
         
         if(refreshToken.trim().length() == 0) {
         	throw new IllegalArgumentException("IGUAL A ZERO !");
         }
         
-        if(tokenService.isTokenValid(accessToken)) {
-        	String currentUserLogin = tokenService.getLoginFromToken(accessToken);
+        if(tokenService.isTokenValid(accessToken,"accesstoken")) {
+        	String currentUserLogin = tokenService.getLoginFromToken(accessToken,"accesstoken");
         	Optional<User> currentUser = userRepository.findByLogin(currentUserLogin);
         	
             LoginResponse loginResponse = new LoginResponse(LoginResponse.SuccessFailure.SUCCESS, 
@@ -97,7 +97,7 @@ public class UserService  {
             throw new IllegalArgumentException("Refresh Token is invalid!");
         }
 
-        String currentUserLogin = tokenService.getLoginFromToken(refreshToken);
+        String currentUserLogin = tokenService.getLoginFromToken(refreshToken,"refreshtoken");
         Optional<User> currentUser = userRepository.findByLogin(currentUserLogin);
         
         Token newAccessToken = tokenService.gerarTokenDeAcesso(currentUserLogin);

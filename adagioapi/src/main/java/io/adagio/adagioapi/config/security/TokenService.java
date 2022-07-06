@@ -25,8 +25,11 @@ public class TokenService {
 	@Value("${adagio.jwt.refresh_expiration}")
 	private String refresh_expiration;
 	
-	@Value("${adagio.jwt.secret}")
-	private String secret;
+	@Value("${adagio.jwt.access_secret}")
+	private String accessSecret;
+	
+	@Value("${adagio.jwt.refresh_secret}")
+	private String refreshSecret;
 	
 	public Token gerarTokenDeAcesso(String login) {
 		Date hoje= new Date();
@@ -38,7 +41,7 @@ public class TokenService {
 				.setSubject(login)
 				.setIssuedAt(hoje)
 				.setExpiration(dataExpiracao)
-				.signWith(SignatureAlgorithm.HS512, secret)
+				.signWith(SignatureAlgorithm.HS512, accessSecret)
 				.compact();
 		
 		System.out.println("|EITA,  O VALOR"+duracao);
@@ -57,7 +60,7 @@ public class TokenService {
 				.setSubject(login)
 				.setIssuedAt(hoje)
 				.setExpiration(dataExpiracao)
-				.signWith(SignatureAlgorithm.HS512, secret)
+				.signWith(SignatureAlgorithm.HS512, refreshSecret)
 				.compact();
 		System.out.println(LocalDateTime.ofInstant(dataExpiracao.toInstant(),
 				ZoneId.systemDefault()));
@@ -67,9 +70,15 @@ public class TokenService {
 				ZoneId.systemDefault()));
 	}
 
-	public boolean isTokenValid(String token) {
+	public boolean isTokenValid(String token,String type) {
 		try {
-			Jwts.parser().setSigningKey(this.secret)
+			String secret = "";
+			if(type.trim().toLowerCase() == "accesstoken") {
+				secret = accessSecret;
+			} else if (type.trim().toLowerCase() == "refreshtoken") {
+				secret = refreshSecret;
+			}
+			Jwts.parser().setSigningKey(secret)
 			.parseClaimsJws(token);
 			return true;
 		}catch(Exception e) {
@@ -79,8 +88,14 @@ public class TokenService {
 		return false;
 	}
 
-	public String getLoginFromToken(String token) {
-		Claims claims = Jwts.parser().setSigningKey(this.secret)
+	public String getLoginFromToken(String token,String type) {
+		String secret = "";
+		if(type.trim().toLowerCase() == "accesstoken") {
+			secret = accessSecret;
+		} else if (type.trim().toLowerCase() == "refreshtoken") {
+			secret = refreshSecret;
+		}
+		Claims claims = Jwts.parser().setSigningKey(secret)
 		.parseClaimsJws(token).getBody();
 		return claims.getSubject();
 	}
