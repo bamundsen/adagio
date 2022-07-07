@@ -48,7 +48,6 @@ public class User implements UserDetails {
 	@OneToMany(mappedBy = "projects")
 	private List<Project> projects;
 
-
 	public User() {}
 	
 	public User(CadastroForm cadastroForm) {
