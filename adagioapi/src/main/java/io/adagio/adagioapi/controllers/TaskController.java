@@ -2,6 +2,8 @@ package io.adagio.adagioapi.controllers;
 
 import java.time.LocalDateTime;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,8 @@ public class TaskController {
 	@Autowired
 	private TaskRepository taskRepository;
 	
+	@RequestMapping("/first")
+	@Transactional()
 	public String testeTask() {
 		
 		Task teste = new Task();

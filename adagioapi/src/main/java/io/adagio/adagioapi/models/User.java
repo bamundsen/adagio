@@ -42,6 +42,12 @@ public class User implements UserDetails {
 	
 	private String phone;
 
+	@OneToMany(mappedBy = "tasks")
+	private List<Task> tasks;
+	
+	@OneToMany(mappedBy = "projects")
+	private List<Project> projects;
+
 	public User() {}
 	
 	public User(CadastroForm cadastroForm) {
