@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -49,6 +51,10 @@ public class Project {
 	//Este atributo será gerado automaticamente
 	@Column(name = "progressStatus")
 	private double progressStatus;
+	
+	@ManyToOne
+	@JoinColumn(name="user_id", nullable=true)
+	private User user;
 
 	@OneToMany(mappedBy = "project")
 	private List<Task> tasks;

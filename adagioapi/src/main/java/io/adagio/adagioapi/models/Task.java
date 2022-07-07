@@ -52,6 +52,10 @@ public class Task {
 	@ManyToOne
 	@JoinColumn(name="project_id", nullable=true)
 	private Project project;
+	
+	@ManyToOne
+	@JoinColumn(name="user_id", nullable=true)
+	private User user;
 
 	@OneToMany(mappedBy = "task")
 	private List<Notification> notifications;
