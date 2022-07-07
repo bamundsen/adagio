@@ -41,7 +41,7 @@ public class User implements UserDetails {
 	private String cpf;
 	
 	private String phone;
-	
+
 	@OneToMany(mappedBy = "tasks")
 	private List<Task> tasks;
 	
