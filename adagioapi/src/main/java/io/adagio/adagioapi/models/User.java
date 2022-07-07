@@ -46,7 +46,7 @@ public class User implements UserDetails {
 	private List<Task> tasks;
 	
 	@OneToMany(mappedBy = "projects")
-	private List<Task> projects;
+	private List<Project> projects;
 
 	public User() {}
 	
