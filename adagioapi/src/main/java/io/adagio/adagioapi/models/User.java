@@ -40,10 +40,6 @@ public class User implements UserDetails {
 	private String cpf;
 	
 	private String phone;
-	
-	private List<Task> tasks;
-	
-	private List<Project> projects;
 
 
 	public User() {}

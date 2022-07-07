@@ -37,12 +37,12 @@ public class Task {
 	private String description;
 
 	@DateTimeFormat
-	@NotBlank
+	@NotNull
 	@Column(name = "dateTimeStart")
 	private LocalDateTime dateTimeStart;
 
 	@DateTimeFormat
-	@NotBlank
+	@NotNull
 	@Column(name = "dateTimeEnd")
 	private LocalDateTime dateTimeEnd;
 
