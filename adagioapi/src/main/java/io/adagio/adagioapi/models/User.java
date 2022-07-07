@@ -42,10 +42,10 @@ public class User implements UserDetails {
 	
 	private String phone;
 
-	@OneToMany(mappedBy = "tasks")
+	@OneToMany(mappedBy = "user")
 	private List<Task> tasks;
 	
-	@OneToMany(mappedBy = "projects")
+	@OneToMany(mappedBy = "user")
 	private List<Project> projects;
 
 	public User() {}
