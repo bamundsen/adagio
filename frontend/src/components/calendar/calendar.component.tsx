@@ -10,6 +10,7 @@ interface CalendarProps {
   isToShowChangeFormatOption?: boolean;
   isToShowChangeYearOption?: boolean;
   isToShowAllOptionsOfCalendar?: boolean;
+  isToShowChangeMonthOption?: boolean;
 }
 const monthsAux = [
   "Janeiro",
@@ -44,6 +45,7 @@ const Calendar = ({
   isToShowChangeFormatOption,
   isToShowAllOptionsOfCalendar,
   isToShowChangeYearOption,
+  isToShowChangeMonthOption,
 }: CalendarProps) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
@@ -92,7 +94,9 @@ const Calendar = ({
       isToShowAllOptionsOfCalendar === undefined ? (
         <>
           <div className={`${styles.calendar_set_change_options}`}>
-            {isToShowOneMonth ? (
+            {isToShowOneMonth &&
+            (isToShowChangeMonthOption ||
+              isToShowChangeMonthOption === undefined) ? (
               <div className={`${styles.calendar_set_change_month}`}>
                 <DropdownButton
                   variant="outline-secondary"

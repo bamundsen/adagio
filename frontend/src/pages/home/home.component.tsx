@@ -16,6 +16,7 @@ const Home = () => {
       <AdagioSideBar itemsNav={sideBarData} />
       <Calendar
         isToShowChangeYearOption={false}
+        isToShowChangeMonthOption={false}
         isToShowChangeFormatOption={false}
         isToShowAllOptionsOfCalendar={true}
       />
