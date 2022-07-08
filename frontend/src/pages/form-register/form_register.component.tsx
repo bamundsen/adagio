@@ -24,13 +24,6 @@ const FormRegister = () => {
   const [password, setPassword] = useState("");
   const [confirmedPassword, setConfirmedPassword] = useState("");
 
-  useEffect(() => {
-    if (!localStorage.getItem("accessToken")) {
-      setUser(null);
-      setIsAuthenticated(false);
-    }
-  }, []);
-
   const cleanFields = () => {
     setName("");
     setUsername("");

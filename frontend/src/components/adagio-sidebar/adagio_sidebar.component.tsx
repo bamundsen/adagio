@@ -65,7 +65,7 @@ const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
               </Link>
             </li>
             <li>
-              <Link className={`${styles.link_nav}`} to={"/calendário"}>
+              <Link className={`${styles.link_nav}`} to={"/calendario"}>
                 <img src={LinkSideBarIcon} alt={"create register option"} />
                 <span>{"Calendário"}</span>
               </Link>

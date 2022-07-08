@@ -23,10 +23,6 @@ const Navigation = () => {
   const [displayDropdown, setDisplayDropdown] = useState("none");
 
   useEffect(() => {
-    console.log(windowDimensions);
-  }, [windowDimensions]);
-
-  useEffect(() => {
     const checkIfClickOutside = (e: any) => {
       if (
         displayDropdown !== "none" &&
