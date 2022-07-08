@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   useEffect(() => {
     if (user === null || isAuthenticated === false) {
       processUser().then((response) => {
-        console.log(response);
+        console.log("reponse PROCESS USER: ", response);
         if (response.status === 200) {
           setUserAndIsAuthenticatedAndToken(response.data.user, true);
         } else {

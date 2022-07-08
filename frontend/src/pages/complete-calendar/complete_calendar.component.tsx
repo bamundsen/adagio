@@ -1,12 +1,12 @@
-import AdagioSideBar from "../../components/adagio-sidebar/adagio_sidebar.component";
-import Calendar from "../../components/calendar/calendar.component";
-import { AuthContext } from "../../contexts/auth.context";
 import { useContext } from "react";
+import { AuthContext } from "../../contexts/auth.context";
 import { Navigate } from "react-router-dom";
 import commonStyles from "../../utils/common_styles.module.scss";
 import sideBarData from "../../utils/sideBarData";
+import AdagioSideBar from "../../components/adagio-sidebar/adagio_sidebar.component";
+import Calendar from "../../components/calendar/calendar.component";
 
-const Home = () => {
+const CompleteCalendar = () => {
   const { isAuthenticated } = useContext(AuthContext);
 
   return !isAuthenticated ? (
@@ -14,13 +14,9 @@ const Home = () => {
   ) : (
     <main className={`${commonStyles.main_content}`}>
       <AdagioSideBar itemsNav={sideBarData} />
-      <Calendar
-        isToShowChangeYearOption={false}
-        isToShowChangeFormatOption={false}
-        isToShowAllOptionsOfCalendar={true}
-      />
+      <Calendar />
     </main>
   );
 };
 
-export default Home;
+export default CompleteCalendar;

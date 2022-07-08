@@ -8,6 +8,7 @@ import Month from "./month/month.component";
 
 interface CalendarProps {
   isToShowChangeFormatOption?: boolean;
+  isToShowChangeYearOption?: boolean;
   isToShowAllOptionsOfCalendar?: boolean;
 }
 const monthsAux = [
@@ -42,6 +43,7 @@ const months = [
 const Calendar = ({
   isToShowChangeFormatOption,
   isToShowAllOptionsOfCalendar,
+  isToShowChangeYearOption,
 }: CalendarProps) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
@@ -86,7 +88,8 @@ const Calendar = ({
 
   return (
     <section className={`${styles.calendar_set}`}>
-      {isToShowAllOptionsOfCalendar ? (
+      {isToShowAllOptionsOfCalendar ||
+      isToShowAllOptionsOfCalendar === undefined ? (
         <>
           <div className={`${styles.calendar_set_change_options}`}>
             {isToShowOneMonth ? (
@@ -111,26 +114,30 @@ const Calendar = ({
               </div>
             ) : null}
 
-            <div className={`${styles.calendar_set_change_year}`}>
-              <Form.Label
-                style={{
-                  marginRight: "15px",
-                  marginLeft: "15%",
-                }}
-                htmlFor="inputYear"
-              >
-                Ano:
-              </Form.Label>
-              <DatePicker
-                className={`${styles.calendar_set_change_year_input}`}
-                selected={currentDate}
-                onChange={changeYear}
-                showYearPicker
-                dateFormat="yyyy"
-              />
-            </div>
+            {isToShowChangeYearOption ||
+            isToShowChangeYearOption === undefined ? (
+              <div className={`${styles.calendar_set_change_year}`}>
+                <Form.Label
+                  style={{
+                    marginRight: "15px",
+                    marginLeft: "15%",
+                  }}
+                  htmlFor="inputYear"
+                >
+                  Ano:
+                </Form.Label>
+                <DatePicker
+                  className={`${styles.calendar_set_change_year_input}`}
+                  selected={currentDate}
+                  onChange={changeYear}
+                  showYearPicker
+                  dateFormat="yyyy"
+                />
+              </div>
+            ) : null}
 
-            {isToShowChangeFormatOption ? (
+            {isToShowChangeFormatOption ||
+            isToShowChangeFormatOption === undefined ? (
               <div className={`${styles.calendar_set_change_format_button}`}>
                 <Button
                   onClick={toggleIsToShowOneMonth}

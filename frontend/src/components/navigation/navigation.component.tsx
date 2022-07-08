@@ -49,16 +49,6 @@ const Navigation = () => {
     toggleLoginOrRegisterPageAux();
   }, [isAuthenticated]);
 
-  const verifyIfTokenWasDeleted = () => {
-    if (!isAuthenticated) {
-      setIsAuthenticated(true);
-    }
-    // if (!localStorage.getItem("accessToken")) {
-    //   setUser(null);
-    //   setIsAuthenticated(false);
-    // }
-  };
-
   const toggleDisplayDropDown = () => {
     if (displayDropdown === "none") setDisplayDropdown("flex");
     else setDisplayDropdown("none");
@@ -207,7 +197,6 @@ const Navigation = () => {
           <Link
             to="/"
             onClick={() => {
-              verifyIfTokenWasDeleted();
               setLoginOrRegisterPageAux("/register");
             }}
           >
@@ -218,7 +207,7 @@ const Navigation = () => {
             />
           </Link>
 
-          {isAuthenticated === true ? (
+          {isAuthenticated ? (
             <ul
               className={`${styles["left-region-list-of-entities"]}`}
               style={{
