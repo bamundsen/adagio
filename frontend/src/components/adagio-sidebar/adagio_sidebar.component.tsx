@@ -59,13 +59,13 @@ const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
         {windowDimensions.width <= 490 ? (
           <>
             <li>
-              <Link className={`${styles.link_nav}`} to={"/projetos"}>
+              <Link className={`${styles.link_nav}`} to={"/adagio/projetos"}>
                 <img src={LinkSideBarIcon} alt={"create register option"} />
                 <span>{"Projetos"}</span>
               </Link>
             </li>
             <li>
-              <Link className={`${styles.link_nav}`} to={"/calendario"}>
+              <Link className={`${styles.link_nav}`} to={"/adagio/calendario"}>
                 <img src={LinkSideBarIcon} alt={"create register option"} />
                 <span>{"Calendário"}</span>
               </Link>

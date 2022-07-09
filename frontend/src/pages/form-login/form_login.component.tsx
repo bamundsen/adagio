@@ -11,17 +11,28 @@ import styles from "./form_login.module.scss";
 import loginIcon from "../../assets/user.svg";
 import { BsFillPersonFill } from "react-icons/bs";
 import { BsLockFill } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const FormLogin = () => {
   const { user, signin, setUser, setIsAuthenticated, isAuthenticated } =
     useContext(AuthContext);
-
+  const locationState: any = useLocation();
+  const navigate = useNavigate();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+
+  if (isAuthenticated) {
+    const destinyScreen = locationState.state?.destinyScreen;
+    console.log("LOCATION WITH LOGGED: ", locationState);
+    if (destinyScreen) {
+      navigate(`${destinyScreen}`);
+    } else {
+    }
+  }
 
   useEffect(() => {
     if (localStorage.getItem("rememberMe") === "true") {
@@ -33,6 +44,9 @@ const FormLogin = () => {
       } else {
         setLogin("");
       }
+    } else {
+      setLogin("");
+      setPassword("");
     }
   }, []);
 
@@ -54,6 +68,7 @@ const FormLogin = () => {
 
     if (wasSigned) {
       console.log(user);
+      navigate("/adagio/home");
     }
   };
 
@@ -66,7 +81,7 @@ const FormLogin = () => {
     };
   };
 
-  return !isAuthenticated ? (
+  return (
     <section className={`${styles["container-login-area"]}`}>
       <section className={`${styles["login-area"]}`}>
         <img
@@ -147,8 +162,6 @@ const FormLogin = () => {
         </Link>
       </section>
     </section>
-  ) : (
-    <Navigate to="/home" />
   );
 };
 

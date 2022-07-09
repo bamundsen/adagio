@@ -7,11 +7,7 @@ import commonStyles from "../../utils/common_styles.module.scss";
 import sideBarData from "../../utils/sideBarData";
 
 const Home = () => {
-  const { isAuthenticated } = useContext(AuthContext);
-
-  return !isAuthenticated ? (
-    <Navigate to="/" />
-  ) : (
+  return (
     <main className={`${commonStyles.main_content}`}>
       <AdagioSideBar itemsNav={sideBarData} />
       <Calendar

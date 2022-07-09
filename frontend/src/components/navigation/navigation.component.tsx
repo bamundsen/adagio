@@ -15,7 +15,7 @@ import useWindowDimensions from "../../utils/useWindowDimensions.utils";
 const Navigation = () => {
   const refDropdown = useRef<HTMLLIElement | null>(null);
   const windowDimensions = useWindowDimensions();
-
+  const { setTrigger, trigger } = useContext(AuthContext);
   const [loginOrRegisterPageAux, setLoginOrRegisterPageAux] =
     useState<string>();
   const { user, isAuthenticated, setUser, setIsAuthenticated, signout } =
@@ -191,9 +191,10 @@ const Navigation = () => {
       <header className={`${styles["header-navigation"]}`}>
         <div className={`${styles["left-region-header-navigation"]}`}>
           <Link
-            to="/"
+            to={`${isAuthenticated ? "/adagio/home" : "/"}`}
             onClick={() => {
               setLoginOrRegisterPageAux("/register");
+              setTrigger(!trigger);
             }}
           >
             <img
@@ -210,9 +211,9 @@ const Navigation = () => {
                 display: `${windowDimensions.width > 490 ? "" : "none"}`,
               }}
             >
-              <Link to="/projetos">Projetos</Link>
+              <Link to="/adagio/projetos">Projetos</Link>
 
-              <Link to="/calendario">Calendário</Link>
+              <Link to="/adagio/calendario">Calendário</Link>
             </ul>
           ) : null}
         </div>
