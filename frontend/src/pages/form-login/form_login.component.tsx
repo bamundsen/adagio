@@ -30,6 +30,8 @@ const FormLogin = () => {
       const usernameStorage: string | null = localStorage.getItem("username");
       if (usernameStorage !== null) {
         setLogin(usernameStorage);
+      } else {
+        setLogin("");
       }
     }
   }, []);
