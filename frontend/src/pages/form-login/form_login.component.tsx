@@ -31,6 +31,7 @@ const FormLogin = () => {
     if (destinyScreen) {
       navigate(`${destinyScreen}`);
     } else {
+      navigate("/adagio/home");
     }
   }
 
