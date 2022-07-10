@@ -2,13 +2,16 @@ import moment from "moment";
 import { Button, DropdownButton, Dropdown, Form } from "react-bootstrap";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from "./calendar.module.scss";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import Month from "./month/month.component";
+import { AuthContext } from "../../contexts/auth.context";
+import { CalendarContext } from "../../contexts/calendar.context";
 
 interface CalendarProps {
   isToShowChangeFormatOption?: boolean;
   isToShowChangeYearOption?: boolean;
+  trigger?: boolean;
   isToShowAllOptionsOfCalendar?: boolean;
   isToShowChangeMonthOption?: boolean;
 }
@@ -47,6 +50,7 @@ const Calendar = ({
   isToShowChangeYearOption,
   isToShowChangeMonthOption,
 }: CalendarProps) => {
+  const { trigger } = useContext(AuthContext);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [auxCurrentYear, setAuxCurrentYear] = useState(
@@ -56,10 +60,16 @@ const Calendar = ({
   const [isToShowOneMonth, setIsToShowOneMonth] = useState(true);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [monthToSend, setMonthToSend] = useState(months[currentMonth]);
+  const { triggerAlignCurrentMonth } = useContext(CalendarContext);
 
   useEffect(() => {
+    setCurrentMonth(new Date().getMonth());
+  }, [triggerAlignCurrentMonth]);
+
+  useEffect(() => {
+    console.log("VENHO AQUI TAMBÉM");
     setMonthToSend(months[currentMonth]);
-  }, [currentMonth]);
+  }, [currentMonth, trigger]);
 
   const toggleIsToShowOneMonth = () => {
     setIsToShowOneMonth(!isToShowOneMonth);

@@ -11,15 +11,16 @@ import UserNavigationWithArrow from "../../assets/user_navigation_with_arrow.svg
 import styles from "./navigation.module.scss";
 import { User } from "../../types/user";
 import useWindowDimensions from "../../utils/useWindowDimensions.utils";
+import { CalendarContext } from "../../contexts/calendar.context";
 
 const Navigation = () => {
+  const { setTriggerAlignCurrentMonth, triggerAlignCurrentMonth } =
+    useContext(CalendarContext);
   const refDropdown = useRef<HTMLLIElement | null>(null);
   const windowDimensions = useWindowDimensions();
-  const { setTrigger, trigger } = useContext(AuthContext);
   const [loginOrRegisterPageAux, setLoginOrRegisterPageAux] =
     useState<string>();
-  const { user, isAuthenticated, setUser, setIsAuthenticated, signout } =
-    useContext(AuthContext);
+  const { user, isAuthenticated, signout } = useContext(AuthContext);
   const [displayDropdown, setDisplayDropdown] = useState("none");
 
   useEffect(() => {
@@ -193,8 +194,9 @@ const Navigation = () => {
           <Link
             to={`${isAuthenticated ? "/adagio/home" : "/"}`}
             onClick={() => {
+              console.log("VENHO SIM");
               setLoginOrRegisterPageAux("/register");
-              setTrigger(!trigger);
+              setTriggerAlignCurrentMonth(!triggerAlignCurrentMonth);
             }}
           >
             <img

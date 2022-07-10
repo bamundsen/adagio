@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useLayoutEffect, useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/auth.context";
 import Container from "react-bootstrap/Container";
@@ -25,16 +25,6 @@ const FormLogin = () => {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
-  if (isAuthenticated) {
-    const destinyScreen = locationState.state?.destinyScreen;
-    console.log("LOCATION WITH LOGGED: ", locationState);
-    if (destinyScreen) {
-      navigate(`${destinyScreen}`);
-    } else {
-      navigate("/adagio/home");
-    }
-  }
-
   useEffect(() => {
     if (localStorage.getItem("rememberMe") === "true") {
       setRememberMe(true);
@@ -51,9 +41,18 @@ const FormLogin = () => {
     }
   }, []);
 
+  if (isAuthenticated) {
+    const destinyScreen = locationState.state?.destinyScreen;
+
+    if (destinyScreen) {
+      return <Navigate to={`${destinyScreen}`} />;
+    } else {
+      return <Navigate to={"/adagio/home"} />;
+    }
+  }
+
   const onSubmit = async (ev: any) => {
     ev.preventDefault();
-    console.log(login, password, rememberMe);
 
     if (rememberMe) {
       localStorage.setItem("username", login);
@@ -68,7 +67,6 @@ const FormLogin = () => {
     console.log(wasSigned);
 
     if (wasSigned) {
-      console.log(user);
       navigate("/adagio/home");
     }
   };

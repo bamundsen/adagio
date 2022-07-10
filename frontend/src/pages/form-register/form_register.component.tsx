@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import InputGroup from "react-bootstrap/InputGroup";
 import styles from "./form_register.module.scss";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import axios from "axios";
 import {} from "react-router-dom";
 import { useContext } from "react";
@@ -13,7 +13,7 @@ import { BsFileEaselFill } from "react-icons/bs";
 import { AuthContext } from "../../contexts/auth.context";
 import useWindowDimensions from "../../utils/useWindowDimensions.utils";
 
-const FormRegister = () => {
+const FormRegister: FC = () => {
   const windowDimensions = useWindowDimensions();
   const { setUser, setIsAuthenticated, register } = useContext(AuthContext);
   const [name, setName] = useState("");

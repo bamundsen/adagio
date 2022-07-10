@@ -6,7 +6,7 @@ interface DayProps {
   monthAux: string;
   isToShowOneMonth?: boolean;
   occupiedDates: any[];
-  setDayOfModal: React.Dispatch<React.SetStateAction<Date | null>>,
+  setDayOfModal: React.Dispatch<React.SetStateAction<Date | null>>;
   setOccupiedDates: React.Dispatch<React.SetStateAction<any[]>>;
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   month: string;
@@ -75,7 +75,17 @@ const Day = ({
       }}
       style={verifyStateAndReturnCss()}
     >
-      {day.format("DD").toString()}
+      <span
+        className={`${
+          day._d.getDate() === new Date().getDate() &&
+          day._d.getMonth() === new Date().getMonth()
+            ? styles.current_day
+            : null
+        }`}
+        style={{ padding: !isToShowOneMonth ? "4px" : undefined }}
+      >
+        {day.format("DD").toString()}
+      </span>
     </div>
   );
 };

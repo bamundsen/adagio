@@ -1,23 +1,8 @@
-import AdagioSideBar from "../../components/adagio-sidebar/adagio_sidebar.component";
-import Calendar from "../../components/calendar/calendar.component";
-import { AuthContext } from "../../contexts/auth.context";
-import { useContext } from "react";
-import { Navigate } from "react-router-dom";
-import commonStyles from "../../utils/common_styles.module.scss";
-import sideBarData from "../../utils/sideBarData";
+import { FC } from "react";
+import GenericCalendarExibition from "../generic-calendar-exibition/generic_calendar_exibition.component";
 
-const Home = () => {
-  return (
-    <main className={`${commonStyles.main_content}`}>
-      <AdagioSideBar itemsNav={sideBarData} />
-      <Calendar
-        isToShowChangeYearOption={false}
-        isToShowChangeMonthOption={false}
-        isToShowChangeFormatOption={false}
-        isToShowAllOptionsOfCalendar={true}
-      />
-    </main>
-  );
+const Home: FC = () => {
+  return <GenericCalendarExibition isToShowAllOptions={false} />;
 };
 
 export default Home;
