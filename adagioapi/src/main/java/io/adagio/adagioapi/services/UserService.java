@@ -63,10 +63,10 @@ public class UserService  {
 			addRefreshTokenCookie(responseHeaders, newRefreshToken);
 		}
 		
-		if(!refreshTokenIsValid && accessTokenIsValid) {
-			newRefreshToken = tokenService.gerarRefreshToken(login);
-			addRefreshTokenCookie(responseHeaders, newRefreshToken);
-		}
+//		if(!refreshTokenIsValid && accessTokenIsValid) {
+//			newRefreshToken = tokenService.gerarRefreshToken(login);
+//			addRefreshTokenCookie(responseHeaders, newRefreshToken);
+//		}
 		
 		System.out.println("refresh token duration: "+ newRefreshToken.getDuration());
 		System.out.println("access  token duration: "+ newAccessToken.getDuration());
@@ -83,21 +83,22 @@ public class UserService  {
         	throw new IllegalArgumentException("IGUAL A ZERO !");
         }
         
-        if(tokenService.isTokenValid(accessToken,"accesstoken")) {
-        	String currentUserLogin = tokenService.getLoginFromToken(accessToken,"accesstoken");
-        	Optional<User> currentUser = userRepository.findByLogin(currentUserLogin);
-        	
-            LoginResponse loginResponse = new LoginResponse(LoginResponse.SuccessFailure.SUCCESS, 
-            		"Refresh successful.",currentUser.get());
-            
-            return ResponseEntity.ok().body(loginResponse);
-        }
+//        if(tokenService.isTokenValid(accessToken,"accesstoken")) {
+//        	String currentUserLogin = tokenService.getLoginFromToken(accessToken,"accesstoken");
+//        	Optional<User> currentUser = userRepository.findByLogin(currentUserLogin);
+//        	
+//            LoginResponse loginResponse = new LoginResponse(LoginResponse.SuccessFailure.SUCCESS, 
+//            		"Refresh successful.",currentUser.get());
+//            
+//            return ResponseEntity.ok().body(loginResponse);
+//        }
         
         if (!refreshTokenValid) {
             throw new IllegalArgumentException("Refresh Token is invalid!");
         }
 
-        String currentUserLogin = tokenService.getLoginFromToken(refreshToken,"refreshtoken");
+//        String currentUserLogin = tokenService.getLoginFromToken(refreshToken,"refreshtoken");
+        String currentUserLogin = tokenService.getLoginFromToken(accessToken,"accesstoken");
         Optional<User> currentUser = userRepository.findByLogin(currentUserLogin);
         
         Token newAccessToken = tokenService.gerarTokenDeAcesso(currentUserLogin);
