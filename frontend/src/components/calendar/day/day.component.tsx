@@ -78,7 +78,8 @@ const Day = ({
       <span
         className={`${
           day._d.getDate() === new Date().getDate() &&
-          day._d.getMonth() === new Date().getMonth()
+          day._d.getMonth() === new Date().getMonth() &&
+          day._d.getFullYear() === new Date().getFullYear()
             ? styles.current_day
             : null
         }`}
