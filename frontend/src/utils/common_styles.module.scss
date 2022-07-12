@@ -1,14 +1,19 @@
 .main_content {
   display: flex;
+  min-height: calc(100vh - 14vh);
 }
 
 .common_pattern {
   width: 100%;
-  height: 100%;
+  height: inherit;
+
   display: flex;
+  align-self: center;
   justify-content: center;
+  flex-direction: column;
   align-items: center;
 }
+
 @media (max-width: 768px) {
   .main_content {
     flex-direction: column;
