@@ -9,6 +9,7 @@ import CompleteCalendar from "./pages/complete-calendar/complete_calendar.compon
 import NotFound from "./components/not-found/not_found.component";
 import PrivateRoute from "./components/private-route/private_route.component";
 import { AuthContext } from "./contexts/auth.context";
+import FormProjetos from "./pages/form-projetos/form_projetos.component";
 
 const ApplicationRoutes = () => {
   return (
@@ -21,6 +22,7 @@ const ApplicationRoutes = () => {
           <Route index element={<Navigate to="/adagio/home" />} />
           <Route path="calendario" element={<CompleteCalendar />} />
           <Route path="home" element={<Home />} />
+          <Route path="criar_projeto" element={<FormProjetos />}/>
           <Route path="*" element={<NotFound />} />
         </Route>
 
