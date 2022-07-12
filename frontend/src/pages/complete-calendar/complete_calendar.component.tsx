@@ -1,8 +1,8 @@
 import { FC } from "react";
 import GenericCalendarExibition from "../../components/generic-calendar-exibition/generic_calendar_exibition.component";
 
-const Home: FC = () => {
-  return <GenericCalendarExibition isToShowAllOptions={false} />;
+const CompleteCalendar: FC = () => {
+  return <GenericCalendarExibition isToShowAllOptions={true} />;
 };
 
-export default Home;
+export default CompleteCalendar;

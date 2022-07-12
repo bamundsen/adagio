@@ -11,20 +11,17 @@ import UserNavigationWithArrow from "../../assets/user_navigation_with_arrow.svg
 import styles from "./navigation.module.scss";
 import { User } from "../../types/user";
 import useWindowDimensions from "../../utils/useWindowDimensions.utils";
+import { CalendarContext } from "../../contexts/calendar.context";
 
 const Navigation = () => {
+  const { setTriggerAlignCurrentMonth, triggerAlignCurrentMonth } =
+    useContext(CalendarContext);
   const refDropdown = useRef<HTMLLIElement | null>(null);
   const windowDimensions = useWindowDimensions();
-
   const [loginOrRegisterPageAux, setLoginOrRegisterPageAux] =
     useState<string>();
-  const { user, isAuthenticated, setUser, setIsAuthenticated, signout } =
-    useContext(AuthContext);
+  const { user, isAuthenticated, signout } = useContext(AuthContext);
   const [displayDropdown, setDisplayDropdown] = useState("none");
-
-  useEffect(() => {
-    console.log(windowDimensions);
-  }, [windowDimensions]);
 
   useEffect(() => {
     const checkIfClickOutside = (e: any) => {
@@ -48,16 +45,6 @@ const Navigation = () => {
     // console.log("user data, authState", user, isAuthenticated);
     toggleLoginOrRegisterPageAux();
   }, [isAuthenticated]);
-
-  const verifyIfTokenWasDeleted = () => {
-    if (!isAuthenticated) {
-      setIsAuthenticated(true);
-    }
-    // if (!localStorage.getItem("accessToken")) {
-    //   setUser(null);
-    //   setIsAuthenticated(false);
-    // }
-  };
 
   const toggleDisplayDropDown = () => {
     if (displayDropdown === "none") setDisplayDropdown("flex");
@@ -205,10 +192,11 @@ const Navigation = () => {
       <header className={`${styles["header-navigation"]}`}>
         <div className={`${styles["left-region-header-navigation"]}`}>
           <Link
-            to="/"
+            to={`${isAuthenticated ? "/adagio/home" : "/"}`}
             onClick={() => {
-              verifyIfTokenWasDeleted();
+              console.log("VENHO SIM");
               setLoginOrRegisterPageAux("/register");
+              setTriggerAlignCurrentMonth(!triggerAlignCurrentMonth);
             }}
           >
             <img
@@ -218,16 +206,16 @@ const Navigation = () => {
             />
           </Link>
 
-          {isAuthenticated === true ? (
+          {isAuthenticated ? (
             <ul
               className={`${styles["left-region-list-of-entities"]}`}
               style={{
                 display: `${windowDimensions.width > 490 ? "" : "none"}`,
               }}
             >
-              <Link to="/projetos">Projetos</Link>
+              <Link to="/adagio/projetos">Projetos</Link>
 
-              <Link to="/calendario">Calendário</Link>
+              <Link to="/adagio/calendario">Calendário</Link>
             </ul>
           ) : null}
         </div>

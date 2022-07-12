@@ -92,26 +92,26 @@ public class AutenticacaoController {
         return userService.refresh(decryptedAccessToken, decryptedRefreshToken);
     }
     
-	@PostMapping("/validate")
-	public ResponseEntity<AccessData> validate(@RequestBody @Valid TokenDto token){
-		System.out.println("token: "+token);
-		if(tokenService.isTokenValid(token.getToken())) {
-			String login = tokenService.getLoginFromToken(token.getToken());
-			
-			User pureUser = userRepository.findByLogin(login).get();
-			
-			UserDto userDto = new UserDto(pureUser);
-			TokenDto tokenDto = new TokenDto();
-			tokenDto.setToken(token.getToken());
-			
-			
-			return ResponseEntity.ok(new AccessData(tokenDto ,
-					"Bearer", userDto));
-		}else{
-			
-			return ResponseEntity.badRequest().build();
-		}
-	}
+//	@PostMapping("/validate")
+//	public ResponseEntity<AccessData> validate(@RequestBody @Valid TokenDto token){
+//		System.out.println("token: "+token);
+//		if(tokenService.isTokenValid(token.getToken())) {
+//			String login = tokenService.getLoginFromToken(token.getToken());
+//			
+//			User pureUser = userRepository.findByLogin(login).get();
+//			
+//			UserDto userDto = new UserDto(pureUser);
+//			TokenDto tokenDto = new TokenDto();
+//			tokenDto.setToken(token.getToken());
+//			
+//			
+//			return ResponseEntity.ok(new AccessData(tokenDto ,
+//					"Bearer", userDto));
+//		}else{
+//			
+//			return ResponseEntity.badRequest().build();
+//		}
+//	}
 	
 	@PostMapping("/register")
 	@Transactional()

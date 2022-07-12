@@ -2,10 +2,18 @@ import moment from "moment";
 import { uid } from "react-uid";
 import "moment/locale/pt";
 import { useEffect, useState } from "react";
+import { Modal } from "react-bootstrap";
+import { CloseButton } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import style from "./month.module.scss";
 import Day from "../day/day.component";
 import ArrowToRight from "../../../assets/arrow_to_right.svg";
 import ArrowToLeft from "../../../assets/arrow_to_left.svg";
+import RelatoryModal from "../../relatory_modal/relatory_modal.component";
+import months from "../../../utils/months";
+import completeWeekDays from "../../../utils/weekDays";
+import { Link } from "react-router-dom";
+import Form from "react-bootstrap/Form";
 
 interface MonthProps {
   occupiedDates: any[];
@@ -38,6 +46,9 @@ const Month = ({
 
   const weekDays = ["D", "S", "T", "Q", "Q", "S", "S"];
   const weekDaysForOneMonth = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+  const [dayOfModal, setDayOfModal] = useState<Date | null>(null);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     // setValue(value.year(currentYear));
@@ -121,6 +132,14 @@ const Month = ({
           : undefined
       }
     >
+      <RelatoryModal
+        months={months}
+        dayOfModal={dayOfModal}
+        modalIsOpen={modalIsOpen}
+        setModalIsOpen={setModalIsOpen}
+        completeWeekDays={completeWeekDays}
+      />
+
       <div
         className={`${style.month_card_header}`}
         style={
@@ -201,6 +220,8 @@ const Month = ({
             <Day
               key={uid(`${day}`)}
               day={day}
+              setDayOfModal={setDayOfModal}
+              setModalIsOpen={setModalIsOpen}
               occupiedDates={occupiedDates}
               isToShowOneMonth={isToShowOneMonth}
               setOccupiedDates={setOccupiedDates}

@@ -1,0 +1,66 @@
+.close_modal_button {
+  text-transform: uppercase;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.title_modal_relatory {
+  flex: 1;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title_modal_relatory_weekday {
+  font-weight: 500;
+  font-size: 16px !important;
+  margin: 8px 0;
+}
+
+.title_modal_relatory_available_time {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.body_modal {
+  min-height: 65vh;
+}
+
+.body_modal_title {
+  font-size: 18px;
+}
+
+.footer_modal {
+  display: flex;
+  padding: 0;
+}
+
+.footer_modal_create_task_link {
+  margin: 0;
+  flex: 1;
+  color: #000;
+  padding: 8px;
+  display: flex;
+  border-right: 1px solid #000;
+  justify-content: center;
+}
+
+.footer_modal_create_task_link_icon {
+  width: 20px;
+  margin-right: 10px;
+}
+
+.footer_modal_set_free_day {
+  flex: 1;
+  margin: 0;
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.footer_modal_set_free_day_checkbox {
+  margin-left: 30px;
+  margin-top: 3px;
+}

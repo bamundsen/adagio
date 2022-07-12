@@ -49,7 +49,7 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter{
 			throws ServletException, IOException {
 		try {
 			String jwt = getJwtToken(request,true);
-			if(StringUtils.hasText(jwt) && tokenService.isTokenValid(jwt)) {
+			if(StringUtils.hasText(jwt) && tokenService.isTokenValid(jwt,"accesstoken")) {
 				autenticarCliente(jwt);
 			}
 		} catch(Exception ex) {
@@ -61,7 +61,7 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter{
 	}
 
 	private void autenticarCliente(String token) {
-		String login = tokenService.getLoginFromToken(token);
+		String login = tokenService.getLoginFromToken(token,"accesstoken");
 		Optional<User> usuarioOpt = usuarioRepository.findByLogin(login);
 		User usuario = usuarioOpt.orElse(null);
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(usuario,

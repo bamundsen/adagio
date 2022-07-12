@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -41,6 +42,11 @@ public class User implements UserDetails {
 	
 	private String phone;
 
+	@OneToMany(mappedBy = "user")
+	private List<Task> tasks;
+	
+	@OneToMany(mappedBy = "user")
+	private List<Project> projects;
 
 	public User() {}
 	

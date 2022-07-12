@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useLayoutEffect, useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/auth.context";
 import Container from "react-bootstrap/Container";
@@ -11,14 +11,16 @@ import styles from "./form_login.module.scss";
 import loginIcon from "../../assets/user.svg";
 import { BsFillPersonFill } from "react-icons/bs";
 import { BsLockFill } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const FormLogin = () => {
   const { user, signin, setUser, setIsAuthenticated, isAuthenticated } =
     useContext(AuthContext);
-
+  const locationState: any = useLocation();
+  const navigate = useNavigate();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -30,13 +32,27 @@ const FormLogin = () => {
       const usernameStorage: string | null = localStorage.getItem("username");
       if (usernameStorage !== null) {
         setLogin(usernameStorage);
+      } else {
+        setLogin("");
       }
+    } else {
+      setLogin("");
+      setPassword("");
     }
   }, []);
 
+  if (isAuthenticated) {
+    const destinyScreen = locationState.state?.destinyScreen;
+
+    if (destinyScreen) {
+      return <Navigate to={`${destinyScreen}`} />;
+    } else {
+      return <Navigate to={"/adagio/home"} />;
+    }
+  }
+
   const onSubmit = async (ev: any) => {
     ev.preventDefault();
-    console.log(login, password, rememberMe);
 
     if (rememberMe) {
       localStorage.setItem("username", login);
@@ -51,7 +67,7 @@ const FormLogin = () => {
     console.log(wasSigned);
 
     if (wasSigned) {
-      console.log(user);
+      navigate("/adagio/home");
     }
   };
 
@@ -64,7 +80,7 @@ const FormLogin = () => {
     };
   };
 
-  return !isAuthenticated ? (
+  return (
     <section className={`${styles["container-login-area"]}`}>
       <section className={`${styles["login-area"]}`}>
         <img
@@ -145,8 +161,6 @@ const FormLogin = () => {
         </Link>
       </section>
     </section>
-  ) : (
-    <Navigate to="/home" />
   );
 };
 

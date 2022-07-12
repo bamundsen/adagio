@@ -8,6 +8,9 @@ export type AuthContextType = {
   isAuthenticated: boolean;
   setUser: (user: User | null) => void;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
+  setTrigger: React.Dispatch<React.SetStateAction<boolean>>;
+  trigger: boolean;
+  processUser: () => Promise<any>;
   signin: (login: string, password: string) => Promise<boolean>;
   register: (
     login: string,
@@ -25,7 +28,10 @@ export const AuthContext = createContext<AuthContextType>(null!);
 export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+  const [trigger, setTrigger] = useState(false);
+  const [auxUserAndIsAuthenticated, setAuxUserAndIsAuthenticated] = useState<
+    any[]
+  >([]);
   const apiUser = userApi();
 
   useEffect(() => {
@@ -34,20 +40,29 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   useEffect(() => {
     if (user === null || isAuthenticated === false) {
       processUser().then((response) => {
-        console.log(response);
         if (response.status === 200) {
-          setUserAndIsAuthenticatedAndToken(response.data.user, true);
+          setAuxUserAndIsAuthenticated([response.data.user, true]);
         } else {
-          setIsAuthenticated(false);
-          setUser(null);
+          setAuxUserAndIsAuthenticated([null, false]);
         }
       });
     }
-  }, [isAuthenticated, user]);
+  }, [trigger, setTrigger]);
+
+  useEffect(() => {
+    if (
+      auxUserAndIsAuthenticated.length > 0 &&
+      auxUserAndIsAuthenticated[0] !== null
+    ) {
+      setUserAndIsAuthenticatedAndToken(
+        auxUserAndIsAuthenticated[0],
+        auxUserAndIsAuthenticated[1]
+      );
+    }
+  }, [auxUserAndIsAuthenticated]);
 
   const teste = async () => {
     const testeRes = await apiUser.teste();
-    console.log(testeRes);
   };
   const processUser = async () => {
     const response: any = await apiUser.validateToken();
@@ -68,7 +83,6 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const signin = async (login: string, password: string) => {
     const response: any = await apiUser.signin(login, password);
 
-    console.log(response);
     if (response?.status === 200) {
       setUserAndIsAuthenticatedAndToken(response.data.user, true);
       return true;
@@ -86,7 +100,6 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   ) => {
     const user: User = { login, name, phone, email, cpf, password };
     const response = await apiUser.register(user);
-    console.log(response);
 
     return response?.status;
   };
@@ -103,6 +116,9 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     isAuthenticated,
     setIsAuthenticated,
     signin,
+    setTrigger,
+    processUser,
+    trigger,
     register,
     signout,
   };

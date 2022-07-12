@@ -2,13 +2,18 @@ import moment from "moment";
 import { Button, DropdownButton, Dropdown, Form } from "react-bootstrap";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from "./calendar.module.scss";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import Month from "./month/month.component";
+import { AuthContext } from "../../contexts/auth.context";
+import { CalendarContext } from "../../contexts/calendar.context";
 
 interface CalendarProps {
   isToShowChangeFormatOption?: boolean;
+  isToShowChangeYearOption?: boolean;
+  trigger?: boolean;
   isToShowAllOptionsOfCalendar?: boolean;
+  isToShowChangeMonthOption?: boolean;
 }
 const monthsAux = [
   "Janeiro",
@@ -42,7 +47,10 @@ const months = [
 const Calendar = ({
   isToShowChangeFormatOption,
   isToShowAllOptionsOfCalendar,
+  isToShowChangeYearOption,
+  isToShowChangeMonthOption,
 }: CalendarProps) => {
+  const { trigger } = useContext(AuthContext);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [auxCurrentYear, setAuxCurrentYear] = useState(
@@ -52,10 +60,16 @@ const Calendar = ({
   const [isToShowOneMonth, setIsToShowOneMonth] = useState(true);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [monthToSend, setMonthToSend] = useState(months[currentMonth]);
+  const { triggerAlignCurrentMonth } = useContext(CalendarContext);
 
   useEffect(() => {
+    setCurrentMonth(new Date().getMonth());
+  }, [triggerAlignCurrentMonth]);
+
+  useEffect(() => {
+    console.log("VENHO AQUI TAMBÉM");
     setMonthToSend(months[currentMonth]);
-  }, [currentMonth]);
+  }, [currentMonth, trigger]);
 
   const toggleIsToShowOneMonth = () => {
     setIsToShowOneMonth(!isToShowOneMonth);
@@ -86,10 +100,13 @@ const Calendar = ({
 
   return (
     <section className={`${styles.calendar_set}`}>
-      {isToShowAllOptionsOfCalendar ? (
+      {isToShowAllOptionsOfCalendar ||
+      isToShowAllOptionsOfCalendar === undefined ? (
         <>
           <div className={`${styles.calendar_set_change_options}`}>
-            {isToShowOneMonth ? (
+            {isToShowOneMonth &&
+            (isToShowChangeMonthOption ||
+              isToShowChangeMonthOption === undefined) ? (
               <div className={`${styles.calendar_set_change_month}`}>
                 <DropdownButton
                   variant="outline-secondary"
@@ -111,26 +128,30 @@ const Calendar = ({
               </div>
             ) : null}
 
-            <div className={`${styles.calendar_set_change_year}`}>
-              <Form.Label
-                style={{
-                  marginRight: "15px",
-                  marginLeft: "15%",
-                }}
-                htmlFor="inputYear"
-              >
-                Ano:
-              </Form.Label>
-              <DatePicker
-                className={`${styles.calendar_set_change_year_input}`}
-                selected={currentDate}
-                onChange={changeYear}
-                showYearPicker
-                dateFormat="yyyy"
-              />
-            </div>
+            {isToShowChangeYearOption ||
+            isToShowChangeYearOption === undefined ? (
+              <div className={`${styles.calendar_set_change_year}`}>
+                <Form.Label
+                  style={{
+                    marginRight: "15px",
+                    marginLeft: "15%",
+                  }}
+                  htmlFor="inputYear"
+                >
+                  Ano:
+                </Form.Label>
+                <DatePicker
+                  className={`${styles.calendar_set_change_year_input}`}
+                  selected={currentDate}
+                  onChange={changeYear}
+                  showYearPicker
+                  dateFormat="yyyy"
+                />
+              </div>
+            ) : null}
 
-            {isToShowChangeFormatOption ? (
+            {isToShowChangeFormatOption ||
+            isToShowChangeFormatOption === undefined ? (
               <div className={`${styles.calendar_set_change_format_button}`}>
                 <Button
                   onClick={toggleIsToShowOneMonth}
