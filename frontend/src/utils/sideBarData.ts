@@ -2,7 +2,7 @@ const itemsNav = [
   {
     category: "create_register_option",
     label: "Criar projetos",
-    link: "/cadastrar_projeto",
+    link: "/adagio/criar_projeto",
   },
   {
     category: "create_register_option",
