@@ -2,12 +2,12 @@ const itemsNav = [
   {
     category: "create_register_option",
     label: "Criar projetos",
-    link: "/adagio/criar_projetos",
+    link: "/cadastrar_projeto",
   },
   {
     category: "create_register_option",
     label: "Criar tarefas",
-    link: "/adagio/criar_tarefas",
+    link: "/cadastrar_tarefa",
   },
   {
     category: "calendar_export",
