@@ -20,10 +20,10 @@ public class CookieUtil {
     private String refreshTokenCookieName;
     
     public HttpCookie createAccessTokenCookie(String token, Long duration) {
-    	String  encryptedToken = SecurityCipher.encrypt(token);
+//    	String  encryptedToken = SecurityCipher.encrypt(token);
     	
     	System.out.println("duração: "+ duration);
-    	return ResponseCookie.from(accessTokenCookieName, encryptedToken)
+    	return ResponseCookie.from("accessToken", token)
     			.maxAge(duration / 1000)
     			.httpOnly(true)
     			.path("/")
@@ -31,10 +31,10 @@ public class CookieUtil {
     }
     
     public HttpCookie createRefreshTokenCookie(String token, Long duration) {
-    	String  encryptedToken = SecurityCipher.encrypt(token);
+//    	String  encryptedToken = SecurityCipher.encrypt(token);
     
     	System.out.println("duração: "+duration);
-    	return ResponseCookie.from(refreshTokenCookieName, encryptedToken)
+    	return ResponseCookie.from("refreshToken", token)
     			.maxAge(duration / 1000)
     			.httpOnly(true)
     			.path("/")
