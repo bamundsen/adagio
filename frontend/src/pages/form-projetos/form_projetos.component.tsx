@@ -264,7 +264,6 @@ const FormProjetos = () => {
                     Cadastrar
                   </Button>
                 </div>
-
                 </div>
               </div>
             </Form>
