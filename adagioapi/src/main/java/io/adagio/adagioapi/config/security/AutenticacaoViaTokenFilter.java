@@ -78,7 +78,8 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter{
 			String accessToken = bearerToken.substring(7);
 			if(accessToken == null) return null;
 			
-			return SecurityCipher.decrypt(accessToken);
+//			return SecurityCipher.decrypt(accessToken);
+			return accessToken;
 		}
 		
 		return null;
@@ -94,7 +95,8 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter{
 	                System.out.println("value: "+accessToken);
 	                if (accessToken == null) return null;
 
-	                return SecurityCipher.decrypt(accessToken);
+//	                return SecurityCipher.decrypt(accessToken);
+	                return accessToken;
 	            }
 	        }
 	        return null;

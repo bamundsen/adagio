@@ -104,9 +104,12 @@ public class UserService  {
         Token newAccessToken = tokenService.gerarTokenDeAcesso(currentUserLogin);
         Token newRefreshToken = tokenService.gerarRefreshToken(currentUserLogin);
         
+        System.out.println("EIIIIIIIIIIIIIIIIIIIIIIIII ESTOU                AQUIIIIIIIIIIIIIIIIIIIIIII");
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.createAccessTokenCookie(newAccessToken.getTokenValue(), newAccessToken.getDuration()).toString());
-        responseHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil.createRefreshTokenCookie(newRefreshToken.getTokenValue(),newRefreshToken.getDuration()).toString());
+        responseHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil
+        		.createAccessTokenCookie(newAccessToken.getTokenValue(), newAccessToken.getDuration()).toString());
+        responseHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil
+        		.createRefreshTokenCookie(newRefreshToken.getTokenValue(),newRefreshToken.getDuration()).toString());
      
         LoginResponse loginResponse = new LoginResponse(LoginResponse.SuccessFailure.SUCCESS, 
         		"Refresh successful.",currentUser.get());

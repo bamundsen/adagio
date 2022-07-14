@@ -73,12 +73,12 @@ public class AutenticacaoController {
 		Authentication authentication=authManager.authenticate(dadosLogin);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
-		String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
-		String decryptedRefreshToken = SecurityCipher.decrypt(refreshToken);
+//		String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
+//		String decryptedRefreshToken = SecurityCipher.decrypt(refreshToken);
 		
 		System.out.println("aqui EMBAIXO");
-		return userService.login(form, decryptedAccessToken, decryptedRefreshToken);
-		
+//		return userService.login(form, decryptedAccessToken, decryptedRefreshToken);
+		return userService.login(form, accessToken, refreshToken);
 
 	}
 	
@@ -87,9 +87,10 @@ public class AutenticacaoController {
                                                       @CookieValue(name = "refreshToken", required = false) String refreshToken) {
     	System.out.println("REFRESH TOKEN VINDO DO FRONT-END: "+ refreshToken);
     	
-    	String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
-        String decryptedRefreshToken = SecurityCipher.decrypt(refreshToken);
-        return userService.refresh(decryptedAccessToken, decryptedRefreshToken);
+//    	String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
+//        String decryptedRefreshToken = SecurityCipher.decrypt(refreshToken);
+//        return userService.refresh(decryptedAccessToken, decryptedRefreshToken);
+    	return userService.refresh(accessToken, refreshToken);
     }
     
 //	@PostMapping("/validate")
