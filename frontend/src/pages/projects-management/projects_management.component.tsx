@@ -3,7 +3,7 @@ import commonStyles from "../../utils/common_styles.module.scss";
 import styles from "./projects_management.module.scss";
 import sideBarData from "../../utils/sideBarData";
 import { Button, Table } from "react-bootstrap";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { ProjectContext } from "../../contexts/project.context";
 import { Project } from "../../types/Project";
 
@@ -11,7 +11,7 @@ const ProjectsManagement = () => {
   const { projects, page, setPage } = useContext(ProjectContext);
 
   const decrementPage = () => {
-    if (page > 1) {
+    if (page > 0) {
       setPage(page - 1);
     }
   };

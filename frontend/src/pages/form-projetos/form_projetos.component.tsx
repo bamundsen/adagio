@@ -23,7 +23,11 @@ import { Navigate } from "react-router-dom";
 
 const FormProjetos = () => {
   const { user } = useContext(AuthContext);
-  const { createProject } = useContext(ProjectContext);
+  const {
+    createProject,
+    setTriggerToSearchProjectsAgainAfterRegister,
+    triggerToSearchProjectsAgainAfterRegister,
+  } = useContext(ProjectContext);
   const windowDimensions = useWindowDimensions();
   const [isToGoToProjects, setIsToGoToProjects] = useState(false);
   const [titulo, setTitle] = useState("");
@@ -121,6 +125,9 @@ const FormProjetos = () => {
       const responseToCreate = await createProject(projectToRegister);
       console.log(responseToCreate);
       if (responseToCreate.status === 201) {
+        setTriggerToSearchProjectsAgainAfterRegister(
+          !triggerToSearchProjectsAgainAfterRegister
+        );
         alert("Projeto criado com sucesso !");
         goToProjects();
       }

@@ -4,6 +4,10 @@ import { ProjectApi } from "../hooks/projectApi";
 
 export type ProjectContextType = {
   page: number;
+  triggerToSearchProjectsAgainAfterRegister: boolean;
+  setTriggerToSearchProjectsAgainAfterRegister: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
   setPage: React.Dispatch<React.SetStateAction<number>>;
   projects: Project[] | any;
   getProjects: () => any;
@@ -14,7 +18,11 @@ export const ProjectContext = createContext<ProjectContextType>(null!);
 
 export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
   const [projects, setProjects] = useState<any[] | Project[]>([]);
-  const [page, setPage] = useState(1);
+  const [
+    triggerToSearchProjectsAgainAfterRegister,
+    setTriggerToSearchProjectsAgainAfterRegister,
+  ] = useState(false);
+  const [page, setPage] = useState(0);
   const [size, setSize] = useState(8);
   const apiProject = ProjectApi();
 
@@ -22,7 +30,11 @@ export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
     getProjects().then((response: Project[]) => {
       setProjects(response);
     });
-  }, [page, size]);
+  }, [page, size, triggerToSearchProjectsAgainAfterRegister]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [triggerToSearchProjectsAgainAfterRegister]);
 
   const getProjects = async () => {
     const listOfProjects = await apiProject.getProjects(size, page);
@@ -38,6 +50,8 @@ export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
     page,
     setPage,
     projects,
+    setTriggerToSearchProjectsAgainAfterRegister,
+    triggerToSearchProjectsAgainAfterRegister,
     getProjects,
     createProject,
   };
