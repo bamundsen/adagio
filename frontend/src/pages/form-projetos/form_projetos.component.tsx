@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Button,
   Col,
@@ -16,9 +16,16 @@ import useWindowDimensions from "../../utils/useWindowDimensions.utils";
 import styles from "./form_projetos.module.scss";
 import DatePicker from "react-datepicker";
 import { isDataView } from "util/types";
+import { AuthContext } from "../../contexts/auth.context";
+import { Project } from "../../types/Project";
+import { ProjectContext } from "../../contexts/project.context";
+import { Navigate } from "react-router-dom";
 
 const FormProjetos = () => {
+  const { user } = useContext(AuthContext);
+  const { createProject } = useContext(ProjectContext);
   const windowDimensions = useWindowDimensions();
+  const [isToGoToProjects, setIsToGoToProjects] = useState(false);
   const [titulo, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startHour, setStartHour] = useState("");
@@ -34,34 +41,42 @@ const FormProjetos = () => {
 
   useEffect(() => {
     setStartHour(
-      `${startHourAux.getHours()}:${startHourAux.getMinutes()}:${startHourAux.getSeconds()}`
+      `${String(startHourAux.getHours()).padStart(2, "0")}:${String(
+        startHourAux.getMinutes()
+      ).padStart(2, "0")}:${String(startHourAux.getSeconds()).padStart(2, "0")}`
     );
     setStartDate(
-      `${startDateAux.getFullYear()}-${
+      `${String(startDateAux.getFullYear()).padStart(2, "0")}-${String(
         startDateAux.getMonth() + 1
-      }-${startDateAux.getDate()}`
+      ).padStart(2, "0")}-${String(startDateAux.getDate()).padStart(2, "0")}`
     );
     setEndDate(
-      `${endDateAux.getFullYear()}-${
+      `${String(endDateAux.getFullYear()).padStart(2, "0")}-${String(
         endDateAux.getMonth() + 1
-      }-${endDateAux.getDate()}`
+      ).padStart(2, "0")}-${String(endDateAux.getDate()).padStart(2, "0")}`
     );
     setEndHour(
-      `${endHourAux.getHours()}:${endHourAux.getMinutes()}:${endHourAux.getSeconds()}`
+      `${String(endHourAux.getHours()).padStart(2, ")")}:${String(
+        endHourAux.getMinutes()
+      ).padStart(2, "0")}:${String(endHourAux.getSeconds()).padStart(2, "0")}`
     );
   }, []);
 
   const onChangeStartHour = (date: Date) => {
     setAuxStartHour(date);
     setStartHour(
-      `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+      `${String(date.getHours()).padStart(2, "0")}:${String(
+        date.getMinutes()
+      ).padStart(2, "0")}:${String(date.getSeconds()).padStart(2, "0")}`
     );
     return true;
   };
 
   const onChangeStartDate = (date: Date) => {
     setStartDate(
-      `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+      `${String(date.getFullYear()).padStart(2, "0")}-${String(
+        date.getMonth() + 1
+      ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
     );
     setAuxStartDate(date);
     return true;
@@ -69,7 +84,9 @@ const FormProjetos = () => {
 
   const onChangeEndDate = (date: Date) => {
     setEndDate(
-      `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+      `${String(date.getFullYear()).padStart(2, "0")}-${String(
+        date.getMonth() + 1
+      ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
     );
     setAuxEndDate(date);
     return true;
@@ -77,25 +94,50 @@ const FormProjetos = () => {
 
   const onChangeEndHour = (date: Date) => {
     setAuxEndHour(date);
-    setEndHour(`${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
+    setEndHour(
+      `${String(date.getHours()).padStart(2, "0")}:${String(
+        date.getMinutes()
+      ).padStart(2, "0")}:${String(date.getSeconds()).padStart(2, "0")}`
+    );
     return true;
   };
 
+  const goToProjects = () => {
+    setIsToGoToProjects(true);
+  };
   const onSubmit = async (ev: any) => {
     ev.preventDefault();
+
+    const projectToRegister: Project = {
+      title: titulo.trim(),
+      description: description.trim(),
+      dateTimeStart: `${startDate}T${startHour}`,
+      dateTimeEnd: `${endDate}T${endHour}`,
+      idUser: user?.id,
+      tasksIds: [],
+    };
+
+    try {
+      const responseToCreate = await createProject(projectToRegister);
+      console.log(responseToCreate);
+      if (responseToCreate.status === 201) {
+        alert("Projeto criado com sucesso !");
+        goToProjects();
+      }
+    } catch (erro) {
+      alert("Houve um erro");
+    }
+
+    console.log(user?.id);
     console.log(titulo);
     console.log(description);
     console.log(`${startDate}T${startHour}`);
     console.log(`${endDate}T${endHour}`);
   };
-  return (
+  return !isToGoToProjects ? (
     <main className={`${commonStyles.main_content}`}>
       <AdagioSideBar itemsNav={sideBarData} />
-      <section
-        style={{
-          flex: 1,
-        }}
-      >
+      <section style={{ flex: 1 }}>
         <h1 style={{ fontSize: "26px", marginLeft: "18px", marginTop: "10px" }}>
           CADASTRE UM PROJETO:
         </h1>
@@ -317,6 +359,8 @@ const FormProjetos = () => {
         </Container>
       </section>
     </main>
+  ) : (
+    <Navigate to="/adagio/projetos" />
   );
 };
 export default FormProjetos;

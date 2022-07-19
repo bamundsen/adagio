@@ -1,8 +1,9 @@
 export type Project = {
-    id?: number;
-    Titulo: string;
-    Descricao: string;
-    DateTimeStart: string;
-    DateTimeEnd: string;
+  id?: number;
+  title: string;
+  description: string;
+  dateTimeStart: string;
+  dateTimeEnd: string;
+  idUser?: number;
+  tasksIds: any[];
 };
-  

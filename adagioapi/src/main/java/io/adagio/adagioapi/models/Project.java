@@ -13,10 +13,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import io.adagio.adagioapi.dto.CadastroProjetoForm;
+import io.adagio.adagioapi.dto.ProjectDto;
 
 @Entity
 @Table(name = "projects")
@@ -25,7 +28,7 @@ public class Project {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
-	private long id;
+	private Long id;
 
 	@NotBlank
 	@Column(name = "title")
@@ -35,12 +38,12 @@ public class Project {
 	private String description;
 
 	@DateTimeFormat
-	@NotBlank
+	@NotNull
 	@Column(name = "dateTimeStart")
 	private LocalDateTime dateTimeStart;
 
 	@DateTimeFormat
-	@NotBlank
+	@NotNull
 	@Column(name = "dateTimeEnd")
 	private LocalDateTime dateTimeEnd;
 
@@ -61,19 +64,20 @@ public class Project {
 
 	public Project () {}
 
-	public Project (CadastroProjetoForm cadastroProjectForm) {
+	public Project (CadastroProjetoForm cadastroProjectForm, List<Task> tasks, User user) {
 		this.title = cadastroProjectForm.getTitle();
 		this.description = cadastroProjectForm.getDescription();
 		this.dateTimeStart = cadastroProjectForm.getDateTimeStart();
 		this.dateTimeEnd = cadastroProjectForm.getDateTimeEnd();
-		this.tasks = cadastroProjectForm.getTasks();
+		this.tasks = tasks;
+		this.user = user;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -133,5 +137,11 @@ public class Project {
 		this.tasks = tasks;
 	}
 	
+	public Long getIdUser() {
+		return this.user.getId();
+	}
 	
+	public static Page<ProjectDto> converter(Page<Project> projects){
+		return projects.map(ProjectDto::new);
+	}
 }
