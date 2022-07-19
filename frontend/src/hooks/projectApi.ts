@@ -5,7 +5,7 @@ export const ProjectApi = () => ({
   getProjects: async (size?: number, page?: number) => {
     try {
       const response = await api.get(
-        `/users/projects?size=${!size ? 10 : size}&page=${!page ? 1 : page}`
+        `/users/projects?size=${!size ? 6 : size}&page=${!page ? 1 : page}`
       );
 
       console.log(response);

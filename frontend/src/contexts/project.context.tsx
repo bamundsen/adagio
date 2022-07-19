@@ -15,7 +15,7 @@ export const ProjectContext = createContext<ProjectContextType>(null!);
 export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
   const [projects, setProjects] = useState<any[] | Project[]>([]);
   const [page, setPage] = useState(1);
-  const [size, setSize] = useState(10);
+  const [size, setSize] = useState(8);
   const apiProject = ProjectApi();
 
   useEffect(() => {
