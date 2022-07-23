@@ -24,6 +24,7 @@ const ApplicationRoutes = () => {
           <Route path="calendario" element={<CompleteCalendar />} />
           <Route path="home" element={<Home />} />
           <Route path="projetos" element={<ProjectsManagement />} />
+          <Route path="editar_projeto/:id" element={<FormProjetos />} />
           <Route path="criar_projeto" element={<FormProjetos />} />
           <Route path="*" element={<NotFound />} />
         </Route>

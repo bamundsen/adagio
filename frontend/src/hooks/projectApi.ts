@@ -17,10 +17,32 @@ export const ProjectApi = () => ({
     }
   },
 
+  getProject: async (idProject: number) => {
+    try {
+      const response = await api.get(`/users/projects/${idProject}`);
+
+      console.log(response);
+
+      return response.data;
+    } catch (erro) {
+      console.log(erro);
+    }
+  },
+
   createProject: async (project: Project) => {
     try {
       const response = await api.post("/users/projects", project);
 
+      console.log(response);
+      return response;
+    } catch (erro) {
+      console.log(erro);
+    }
+  },
+
+  editProject: async (project: Project, id: number) => {
+    try {
+      const response = await api.put(`users/projects/${id}`, project);
       console.log(response);
       return response;
     } catch (erro) {

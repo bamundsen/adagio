@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import io.adagio.adagioapi.models.Project;
 import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
+import io.adagio.adagioapi.repositories.ProjectRepository;
 import io.adagio.adagioapi.repositories.TaskRepository;
 import io.adagio.adagioapi.repositories.UserRepository;
 
@@ -91,4 +92,23 @@ public class CadastroProjetoForm {
 		return new Project(this, tasks, user.get());
 	}
 
+	public Project atualizar(Long id, ProjectRepository projectRepository,TaskRepository taskRepository) {
+		Project project = projectRepository.getById(id);
+		
+		project.setDateTimeEnd(dateTimeEnd);
+		project.setDateTimeStart(dateTimeStart);
+		project.setTitle(title);
+		project.setDescription(description);
+		
+		List<Task> tasks = new ArrayList<>();
+		
+		for(Long taskId : tasksIds) {
+			Task task = taskRepository.getById(taskId);
+			tasks.add(task);
+		}
+		
+		project.setTasks(tasks);
+		
+		return project;
+	}
 }

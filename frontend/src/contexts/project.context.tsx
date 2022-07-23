@@ -11,7 +11,9 @@ export type ProjectContextType = {
   setPage: React.Dispatch<React.SetStateAction<number>>;
   projects: Project[] | any;
   getProjects: () => any;
+  getProject: (idProject: number) => any;
   createProject: (project: Project) => any;
+  editProject: (project: Project, id: number) => any;
 };
 
 export const ProjectContext = createContext<ProjectContextType>(null!);
@@ -41,11 +43,20 @@ export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
     return listOfProjects;
   };
 
+  const getProject = async (idProject: number) => {
+    const project = await apiProject.getProject(idProject);
+    return project;
+  };
+
   const createProject = async (project: Project) => {
     const responseToCreate = await apiProject.createProject(project);
     return responseToCreate;
   };
 
+  const editProject = async (project: Project, id: number) => {
+    const responseToEdit = await apiProject.editProject(project, id);
+    return responseToEdit;
+  };
   const value: ProjectContextType = {
     page,
     setPage,
@@ -53,7 +64,9 @@ export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
     setTriggerToSearchProjectsAgainAfterRegister,
     triggerToSearchProjectsAgainAfterRegister,
     getProjects,
+    getProject,
     createProject,
+    editProject,
   };
 
   return (
