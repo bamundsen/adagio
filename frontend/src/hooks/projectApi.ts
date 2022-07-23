@@ -49,4 +49,17 @@ export const ProjectApi = () => ({
       console.log(erro);
     }
   },
+
+
+  deleteProject: async(id:number) => {
+    try {
+      const response = await api.delete(`users/projects/${id}`);
+
+      console.log(response);
+
+      return response;
+    }catch(erro){
+      console.log(erro);
+    }
+  }
 });

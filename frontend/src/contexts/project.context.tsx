@@ -1,10 +1,15 @@
 import { createContext, useEffect, useState } from "react";
 import { Project } from "../types/Project";
 import { ProjectApi } from "../hooks/projectApi";
+import { api } from "../hooks/base_api";
 
 export type ProjectContextType = {
   page: number;
+  triggerToSearchProjectsAgainAfterDelete: boolean;
   triggerToSearchProjectsAgainAfterRegister: boolean;
+  setTriggerToSearchProjectsAgainAfterDelete: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
   setTriggerToSearchProjectsAgainAfterRegister: React.Dispatch<
     React.SetStateAction<boolean>
   >;
@@ -14,6 +19,7 @@ export type ProjectContextType = {
   getProject: (idProject: number) => any;
   createProject: (project: Project) => any;
   editProject: (project: Project, id: number) => any;
+  deleteProject: (id: number) => any;
 };
 
 export const ProjectContext = createContext<ProjectContextType>(null!);
@@ -24,15 +30,26 @@ export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
     triggerToSearchProjectsAgainAfterRegister,
     setTriggerToSearchProjectsAgainAfterRegister,
   ] = useState(false);
+  const [
+    triggerToSearchProjectsAgainAfterDelete,
+    setTriggerToSearchProjectsAgainAfterDelete,
+  ] = useState(false);
+
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(8);
   const apiProject = ProjectApi();
 
   useEffect(() => {
+    console.log("EIEIEIEIEIEIEIIEIEIEEI");
     getProjects().then((response: Project[]) => {
       setProjects(response);
     });
-  }, [page, size, triggerToSearchProjectsAgainAfterRegister]);
+  }, [
+    page,
+    size,
+    triggerToSearchProjectsAgainAfterRegister,
+    triggerToSearchProjectsAgainAfterDelete,
+  ]);
 
   useEffect(() => {
     setPage(0);
@@ -57,16 +74,30 @@ export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
     const responseToEdit = await apiProject.editProject(project, id);
     return responseToEdit;
   };
+
+  const deleteProject = async (id: number) => {
+    const responseToDelete = await apiProject.deleteProject(id);
+
+    if (responseToDelete?.status === 200) {
+      setTriggerToSearchProjectsAgainAfterDelete(
+        !triggerToSearchProjectsAgainAfterDelete
+      );
+    }
+    return responseToDelete;
+  };
   const value: ProjectContextType = {
     page,
     setPage,
     projects,
     setTriggerToSearchProjectsAgainAfterRegister,
     triggerToSearchProjectsAgainAfterRegister,
+    triggerToSearchProjectsAgainAfterDelete,
+    setTriggerToSearchProjectsAgainAfterDelete,
     getProjects,
     getProject,
     createProject,
     editProject,
+    deleteProject,
   };
 
   return (

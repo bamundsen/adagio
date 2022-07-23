@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -93,6 +94,18 @@ public class ProjectController {
 		if(optionalProject.isPresent()) {
 			Project project = projectForm.atualizar(id, projectRepository,taskRepository);
 			return ResponseEntity.ok(new ProjectDto(project));
+		}
+		
+		return ResponseEntity.notFound().build();
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deletar(@PathVariable("id") Long id){
+		Optional<Project> project = projectRepository.findById(id);
+		
+		if(project.isPresent()) {
+			projectRepository.deleteById(id);
+			return ResponseEntity.ok().build();
 		}
 		
 		return ResponseEntity.notFound().build();

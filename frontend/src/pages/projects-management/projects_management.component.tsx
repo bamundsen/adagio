@@ -3,6 +3,7 @@ import commonStyles from "../../utils/common_styles.module.scss";
 import styles from "./projects_management.module.scss";
 import sideBarData from "../../utils/sideBarData";
 import { BsFillPenFill } from "react-icons/bs";
+import { BsTrash } from "react-icons/bs";
 import { Button, Table } from "react-bootstrap";
 import { useContext, useEffect } from "react";
 import { ProjectContext } from "../../contexts/project.context";
@@ -11,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 const ProjectsManagement = () => {
   const navigate = useNavigate();
-  const { projects, page, setPage } = useContext(ProjectContext);
+  const { projects, page, setPage, deleteProject } = useContext(ProjectContext);
 
   const decrementPage = () => {
     if (page > 0) {
@@ -27,6 +28,12 @@ const ProjectsManagement = () => {
     navigate(`/adagio/editar_projeto/${project.id}`);
   };
 
+  const deleteProjectById = (id: number) => {
+    deleteProject(id).then((response: any) => {
+      console.log(response);
+    });
+  };
+
   return (
     <main className={`${commonStyles.main_content}`}>
       <AdagioSideBar itemsNav={sideBarData} />
@@ -37,6 +44,7 @@ const ProjectsManagement = () => {
               <th>Título</th>
               <th>Descrição</th>
               <th>Editar</th>
+              <th>Deletar</th>
             </tr>
           </thead>
           <tbody>
@@ -44,16 +52,25 @@ const ProjectsManagement = () => {
               console.log(project);
 
               return (
-                <tr>
+                <tr key={project?.id + project?.title}>
                   <td>{project.title}</td>
                   <td>{project.description}</td>
-                  <td className={styles.edit_area}>
+                  <td className={styles.operation_area}>
                     <BsFillPenFill
                       onClick={() => {
                         goToEdit(project);
                       }}
                       style={{ cursor: "pointer", color: "#227711" }}
                     />
+                  </td>
+                  <td className={styles.operation_area}>
+                    <BsTrash
+                      onClick={() => {
+                        if (project.id !== undefined)
+                          deleteProjectById(project.id);
+                      }}
+                      style={{ cursor: "pointer", color: "#ff1209" }}
+                    ></BsTrash>
                   </td>
                 </tr>
               );
