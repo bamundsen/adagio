@@ -137,8 +137,8 @@ public class Project {
 		this.tasks = tasks;
 	}
 	
-	public Long getIdUser() {
-		return this.user.getId();
+	public User getUser() {
+		return user;
 	}
 	
 	public static Page<ProjectDto> converter(Page<Project> projects){

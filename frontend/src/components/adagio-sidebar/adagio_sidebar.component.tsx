@@ -3,8 +3,10 @@ import LinkSideBarIcon from "../../assets/link_sidebar_icon.svg";
 import HamburgerSideBar from "../../assets/hamburger_sidebar.svg";
 import styles from "./adagio_sidebar.module.scss";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useWindowDimensions from "../../utils/useWindowDimensions.utils";
+import { AuthContext } from "../../contexts/auth.context";
+import { ProjectContext } from "../../contexts/project.context";
 
 interface AdagioSideBarProps {
   itemsNav: any[];
@@ -12,6 +14,8 @@ interface AdagioSideBarProps {
 const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
   const windowDimensions = useWindowDimensions();
   const [hideSideBar, setHideSideBar] = useState(false);
+  const { isToRestartFormAgain, setIsToRestartFormAgain } =
+    useContext(ProjectContext);
 
   const returnItemDependsOnCategory = (item: any) => {
     if (item.category.toLowerCase() === "calendar_export") {
@@ -23,7 +27,13 @@ const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
       );
     } else if (item.category.toLowerCase() === "create_register_option") {
       return (
-        <Link className={`${styles.link_nav}`} to={item.link}>
+        <Link
+          onClick={() => {
+            setIsToRestartFormAgain(!isToRestartFormAgain);
+          }}
+          className={`${styles.link_nav}`}
+          to={item.link}
+        >
           <img src={LinkSideBarIcon} alt={"create register option"} />
           <span>{item.label}</span>
         </Link>

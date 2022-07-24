@@ -11,7 +11,7 @@ export const ProjectApi = () => ({
       );
 
       console.log(response);
-      return response.data.content;
+      return response.data;
     } catch (erro) {
       console.log(erro);
     }
@@ -50,16 +50,15 @@ export const ProjectApi = () => ({
     }
   },
 
-
-  deleteProject: async(id:number) => {
+  deleteProject: async (id: number) => {
     try {
       const response = await api.delete(`users/projects/${id}`);
 
       console.log(response);
 
       return response;
-    }catch(erro){
+    } catch (erro) {
       console.log(erro);
     }
-  }
+  },
 });

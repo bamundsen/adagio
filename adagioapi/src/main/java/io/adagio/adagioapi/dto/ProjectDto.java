@@ -35,7 +35,7 @@ public class ProjectDto {
 		this.description = project.getDescription();
 		this.dateTimeEnd = project.getDateTimeEnd();
 		this.dateTimeStart = project.getDateTimeStart();
-		this.idUser = project.getIdUser();
+		this.idUser = project.getUser().getId();
 		this.tasks = project.getTasks();
 	}
 	

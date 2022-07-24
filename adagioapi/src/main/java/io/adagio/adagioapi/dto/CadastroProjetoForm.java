@@ -31,8 +31,6 @@ public class CadastroProjetoForm {
 
 	private List<Long> tasksIds;
 
-	@NotNull
-	private Long idUser;
 	
 	public String getTitle() {
 		return title;
@@ -73,14 +71,8 @@ public class CadastroProjetoForm {
 	public void setTasksIds(List<Long> tasksIds) {
 		this.tasksIds = tasksIds;
 	}
-	
-	public Long getIdUser() {
-		return this.getIdUser();
-	}
-	
-	public Project converter(UserRepository userRepository, TaskRepository taskRepository ) {
-		
-		Optional<User> user = userRepository.findById(idUser);
+
+	public Project converter(TaskRepository taskRepository ,User user) {
 		
 		List<Task> tasks = new ArrayList<>();
 		
@@ -89,7 +81,7 @@ public class CadastroProjetoForm {
 			tasks.add(task);
 		}
 		
-		return new Project(this, tasks, user.get());
+		return new Project(this, tasks, user);
 	}
 
 	public Project atualizar(Long id, ProjectRepository projectRepository,TaskRepository taskRepository) {

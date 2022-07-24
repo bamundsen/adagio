@@ -12,7 +12,22 @@ import { useNavigate } from "react-router-dom";
 
 const ProjectsManagement = () => {
   const navigate = useNavigate();
-  const { projects, page, setPage, deleteProject } = useContext(ProjectContext);
+  const {
+    projects,
+    page,
+    setPage,
+    isLast,
+    isFirst,
+    deleteProject,
+    triggerToSearchProjectsAgain,
+    setTriggerToSearchProjectsAgain,
+  } = useContext(ProjectContext);
+
+  useEffect(() => {
+    if (projects !== undefined) {
+      setTriggerToSearchProjectsAgain(!triggerToSearchProjectsAgain);
+    }
+  }, []);
 
   const decrementPage = () => {
     if (page > 0) {
@@ -48,7 +63,7 @@ const ProjectsManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {projects.map((project: Project) => {
+            {projects?.map((project: Project) => {
               console.log(project);
 
               return (
@@ -79,22 +94,27 @@ const ProjectsManagement = () => {
         </Table>
 
         <section className={styles.container_buttons}>
-          <Button
-            onClick={() => {
-              decrementPage();
-            }}
-            className={styles.pagination_projects_button}
-          >
-            Anterior
-          </Button>
-          <Button
-            onClick={() => {
-              incrementPage();
-            }}
-            className={styles.pagination_projects_button}
-          >
-            Próximo
-          </Button>
+          {!isFirst ? (
+            <Button
+              onClick={() => {
+                decrementPage();
+              }}
+              className={styles.pagination_projects_button}
+            >
+              Anterior
+            </Button>
+          ) : null}
+
+          {!isLast ? (
+            <Button
+              onClick={() => {
+                incrementPage();
+              }}
+              className={styles.pagination_projects_button}
+            >
+              Próximo
+            </Button>
+          ) : null}
         </section>
       </section>
     </main>

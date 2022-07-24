@@ -37,7 +37,6 @@ public class UserService  {
 		Boolean accessTokenIsValid = tokenService.isTokenValid(accessToken,"accesstoken");
 		Boolean refreshTokenIsValid = tokenService.isTokenValid(refreshToken,"refreshtoken");
 		
-		System.out.println("CHEGA AQUI");
 		HttpHeaders responseHeaders = new HttpHeaders();
 		Token newAccessToken = new Token();
 		Token newRefreshToken = new Token();
@@ -68,8 +67,6 @@ public class UserService  {
 //			addRefreshTokenCookie(responseHeaders, newRefreshToken);
 //		}
 		
-		System.out.println("refresh token duration: "+ newRefreshToken.getDuration());
-		System.out.println("access  token duration: "+ newAccessToken.getDuration());
 		
 		 LoginResponse loginResponse = new LoginResponse(LoginResponse.SuccessFailure.SUCCESS,
 				 "Auth successful.",user);
@@ -104,7 +101,7 @@ public class UserService  {
         Token newAccessToken = tokenService.gerarTokenDeAcesso(currentUserLogin);
         Token newRefreshToken = tokenService.gerarRefreshToken(currentUserLogin);
         
-        System.out.println("EIIIIIIIIIIIIIIIIIIIIIIIII ESTOU                AQUIIIIIIIIIIIIIIIIIIIIIII");
+     
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add(HttpHeaders.SET_COOKIE, cookieUtil
         		.createAccessTokenCookie(newAccessToken.getTokenValue(), newAccessToken.getDuration()).toString());

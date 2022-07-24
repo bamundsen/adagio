@@ -29,6 +29,8 @@ const FormProjetos = () => {
     getProject,
     setTriggerToSearchProjectsAgainAfterRegister,
     triggerToSearchProjectsAgainAfterRegister,
+    isToRestartFormAgain,
+    setIsToRestartFormAgain,
   } = useContext(ProjectContext);
   const windowDimensions = useWindowDimensions();
   const { id } = useParams();
@@ -48,6 +50,7 @@ const FormProjetos = () => {
   const [isToEdit, setIsToEdit] = useState(false);
 
   useEffect(() => {
+    console.log("ei ou djfkdjfdjkfdkfj", id);
     if (id !== undefined) {
       getProject(Number(id)).then((response: any) => {
         setTitle(response.title);
@@ -58,8 +61,16 @@ const FormProjetos = () => {
         setEndHourAux(new Date(response.dateTimeEnd));
         setIsToEdit(true);
       });
+    } else {
+      setTitle("");
+      setDescription("");
+      setStartDateAux(new Date());
+      setStartHourAux(new Date());
+      setEndDateAux(new Date());
+      setEndHourAux(new Date(new Date().setHours(23, 59)));
+      setIsToEdit(false);
     }
-  }, []);
+  }, [isToRestartFormAgain, setIsToRestartFormAgain]);
 
   useEffect(() => {
     setStartDate(filterAndReturnDate(startDateAux));
@@ -115,7 +126,6 @@ const FormProjetos = () => {
       description: description.trim(),
       dateTimeStart: `${startDate}T${startHour}`,
       dateTimeEnd: `${endDate}T${endHour}`,
-      idUser: user?.id,
       tasksIds: [],
     };
 
@@ -152,7 +162,7 @@ const FormProjetos = () => {
       <AdagioSideBar itemsNav={sideBarData} />
       <section style={{ flex: 1 }}>
         <h1 style={{ fontSize: "26px", marginLeft: "18px", marginTop: "10px" }}>
-          CADASTRE UM PROJETO:
+          {isToEdit ? "EDITE O PROJETO:" : "CADASTRE UM PROJETO:"}
         </h1>
         <Container className={"mt-5 center"}>
           <Row>
@@ -361,7 +371,7 @@ const FormProjetos = () => {
                         }}
                         type="submit"
                       >
-                        Cadastrar
+                        {isToEdit ? "Editar" : "Cadastrar"}
                       </Button>
                     </div>
                   </div>

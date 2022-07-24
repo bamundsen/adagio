@@ -7,14 +7,22 @@ export type ProjectContextType = {
   page: number;
   triggerToSearchProjectsAgainAfterDelete: boolean;
   triggerToSearchProjectsAgainAfterRegister: boolean;
+  isToRestartFormAgain: boolean;
+  triggerToSearchProjectsAgain: boolean;
   setTriggerToSearchProjectsAgainAfterDelete: React.Dispatch<
     React.SetStateAction<boolean>
   >;
+  setIsToRestartFormAgain: React.Dispatch<React.SetStateAction<boolean>>;
   setTriggerToSearchProjectsAgainAfterRegister: React.Dispatch<
     React.SetStateAction<boolean>
   >;
+  setTriggerToSearchProjectsAgain: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
   setPage: React.Dispatch<React.SetStateAction<number>>;
-  projects: Project[] | any;
+  projects: Project[] | any[];
+  isFirst: boolean;
+  isLast: boolean;
   getProjects: () => any;
   getProject: (idProject: number) => any;
   createProject: (project: Project) => any;
@@ -26,6 +34,7 @@ export const ProjectContext = createContext<ProjectContextType>(null!);
 
 export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
   const [projects, setProjects] = useState<any[] | Project[]>([]);
+
   const [
     triggerToSearchProjectsAgainAfterRegister,
     setTriggerToSearchProjectsAgainAfterRegister,
@@ -35,18 +44,37 @@ export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
     setTriggerToSearchProjectsAgainAfterDelete,
   ] = useState(false);
 
+  const [isToRestartFormAgain, setIsToRestartFormAgain] = useState(true);
+
+  const [triggerToSearchProjectsAgain, setTriggerToSearchProjectsAgain] =
+    useState(false);
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(8);
   const apiProject = ProjectApi();
+  const [isFirst, setIsFirst] = useState(false);
+  const [isLast, setIsLast] = useState(false);
 
   useEffect(() => {
-    console.log("EIEIEIEIEIEIEIIEIEIEEI");
-    getProjects().then((response: Project[]) => {
-      setProjects(response);
+    getProjects().then((response: any) => {
+      if (response.last) {
+        setIsLast(true);
+      } else {
+        setIsLast(false);
+      }
+
+      if (response.first) {
+        setIsFirst(true);
+      } else {
+        setIsFirst(false);
+      }
+
+      setProjects(response.content);
     });
   }, [
     page,
     size,
+    isFirst,
+    isLast,
     triggerToSearchProjectsAgainAfterRegister,
     triggerToSearchProjectsAgainAfterDelete,
   ]);
@@ -85,6 +113,7 @@ export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
     }
     return responseToDelete;
   };
+
   const value: ProjectContextType = {
     page,
     setPage,
@@ -95,7 +124,13 @@ export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
     setTriggerToSearchProjectsAgainAfterDelete,
     getProjects,
     getProject,
+    setIsToRestartFormAgain,
+    isToRestartFormAgain,
     createProject,
+    isFirst,
+    isLast,
+    triggerToSearchProjectsAgain,
+    setTriggerToSearchProjectsAgain,
     editProject,
     deleteProject,
   };
