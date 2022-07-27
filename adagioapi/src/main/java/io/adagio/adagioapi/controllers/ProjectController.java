@@ -47,21 +47,16 @@ public class ProjectController {
 	@Autowired
 	private TaskRepository taskRepository;
 	
-	@Autowired
-	private UserRepository userRepository;
-	
+
 	@Value("${adagio.api.base_servico_de_rotas_privadas}")
 	private String base_da_url_do_servico;
 	
 
-	
 	@GetMapping
-//	@Cacheable(value="listaDeProjetos")
 	public Page<ProjectDto> listar(@PageableDefault(sort="dateTimeEnd",page=0,size=10,
 			direction=Direction.ASC) Pageable paginacao){
 			User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-			System.out.println("ESTÁ LOGADO: "+logado.getId());
 			Page<Project> projects = projectRepository.findByUser(logado,paginacao);
 			return Project.converter(projects);	
 	}

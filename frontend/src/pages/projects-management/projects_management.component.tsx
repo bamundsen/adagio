@@ -8,7 +8,7 @@ import { Button, Table } from "react-bootstrap";
 import { useContext, useEffect } from "react";
 import { ProjectContext } from "../../contexts/project.context";
 import { Project } from "../../types/Project";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ProjectsManagement = () => {
   const navigate = useNavigate();
@@ -58,6 +58,8 @@ const ProjectsManagement = () => {
             <tr>
               <th>Título</th>
               <th>Descrição</th>
+              <th>Progresso</th>
+              <th>Tarefas</th>
               <th>Editar</th>
               <th>Deletar</th>
             </tr>
@@ -70,6 +72,10 @@ const ProjectsManagement = () => {
                 <tr key={project?.id + project?.title}>
                   <td>{project.title}</td>
                   <td>{project.description}</td>
+                  <td>{project?.progress}</td>
+                  <td>
+                    <Link to="#">Gerenciar tarefas</Link>
+                  </td>
                   <td className={styles.operation_area}>
                     <BsFillPenFill
                       onClick={() => {

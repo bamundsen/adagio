@@ -24,6 +24,8 @@ public class ProjectDto {
 
 	private LocalDateTime dateTimeEnd;
 	
+	private double progress;
+	
 	private Long idUser;
 	
 	private List<Task> tasks;
@@ -36,6 +38,7 @@ public class ProjectDto {
 		this.dateTimeEnd = project.getDateTimeEnd();
 		this.dateTimeStart = project.getDateTimeStart();
 		this.idUser = project.getUser().getId();
+		this.progress= project.getProgressStatus();
 		this.tasks = project.getTasks();
 	}
 	
@@ -65,5 +68,9 @@ public class ProjectDto {
 	
 	public String getDescription() {
 		return this.description;
+	}
+	
+	public double getProgress() {
+		return this.progress;
 	}
 }
