@@ -16,9 +16,12 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import io.adagio.adagioapi.dto.CadastroTarefaForm;
+import io.adagio.adagioapi.dto.ProjectDto;
+import io.adagio.adagioapi.dto.TaskDto;
 
 @Entity
 @Table(name="tasks")
@@ -66,12 +69,13 @@ public class Task {
 
 	public Task () {}
 
-	public Task (CadastroTarefaForm cadastroTaskForm) {
+	public Task (CadastroTarefaForm cadastroTaskForm, User user, Project project) {
 		this.title = cadastroTaskForm.getTitle();
 		this.description = cadastroTaskForm.getDescription();
 		this.dateTimeStart = cadastroTaskForm.getDateTimeStart();
 		this.dateTimeEnd = cadastroTaskForm.getDateTimeEnd();
-		this.project = cadastroTaskForm.getProject();
+		this.project = project;
+		this.user = user;
 		this.notifications = cadastroTaskForm.getNotifications();
 		this.priority = cadastroTaskForm.getPriority();
 	}
@@ -148,6 +152,21 @@ public class Task {
 	public void setNotification(ArrayList<Notification> notifications) {
 		this.notifications = notifications;
 	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public void setNotifications(List<Notification> notifications) {
+		this.notifications = notifications;
+	}
 	
+	public static Page<TaskDto> converter(Page<Task> tasks){
+		return tasks.map(TaskDto::new);
+	}
 	
 }
