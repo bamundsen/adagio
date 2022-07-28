@@ -11,6 +11,8 @@ import PrivateRoute from "./components/private-route/private_route.component";
 import { AuthContext } from "./contexts/auth.context";
 import FormProjetos from "./pages/form-projetos/form_projetos.component";
 import ProjectsManagement from "./pages/projects-management/projects_management.component";
+import FormTarefas from "./pages/form-tarefas/form_tarefas.component";
+
 
 const ApplicationRoutes = () => {
   return (
@@ -26,6 +28,8 @@ const ApplicationRoutes = () => {
           <Route path="projetos" element={<ProjectsManagement />} />
           <Route path="editar_projeto/:id" element={<FormProjetos />} />
           <Route path="criar_projeto" element={<FormProjetos />} />
+          <Route path="criar_projeto" element={<FormProjetos />}/>
+          <Route path="cadastrar_tarefa" element={<FormTarefas/>}/>
           <Route path="*" element={<NotFound />} />
         </Route>
 
