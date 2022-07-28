@@ -38,9 +38,53 @@ public class TaskDto {
 		this.dateTimeStart = task.getDateTimeStart();
 		this.idUser = task.getUser().getId();
 		this.finishedStatus = task.isFinishedStatus();
-		this.idProject = task.getProject().getId();
+		
+		if(task.getProject() != null)
+			this.idProject = task.getProject().getId();
+		
 		this.priority = task.getPriority();
 		this.notifications = task.getNotifications();
 	}
 
+	public Long getId() {
+		return id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public LocalDateTime getDateTimeStart() {
+		return dateTimeStart;
+	}
+
+	public LocalDateTime getDateTimeEnd() {
+		return dateTimeEnd;
+	}
+
+	public Long getIdUser() {
+		return idUser;
+	}
+
+	public boolean isFinishedStatus() {
+		return finishedStatus;
+	}
+
+	public Long getIdProject() {
+		return idProject;
+	}
+
+	public Priority getPriority() {
+		return priority;
+	}
+
+	public List<Notification> getNotifications() {
+		return notifications;
+	}
+
+	
 }

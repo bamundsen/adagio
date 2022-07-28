@@ -80,6 +80,7 @@ public class Task {
 		this.priority = cadastroTaskForm.getPriority();
 	}
 
+
 	public long getId() {
 		return id;
 	}

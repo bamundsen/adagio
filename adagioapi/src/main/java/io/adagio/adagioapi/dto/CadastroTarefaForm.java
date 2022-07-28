@@ -22,10 +22,10 @@ public class CadastroTarefaForm {
 
 	private String description;
 
-	@NotBlank
+	@NotNull
 	private LocalDateTime dateTimeStart;
 
-	@NotBlank
+	@NotNull
 	private LocalDateTime dateTimeEnd;
 
 	private boolean finishedStatus;
@@ -104,6 +104,9 @@ public class CadastroTarefaForm {
 	}
 
 	public Task converter(User user, ProjectRepository projectRepository ) {
+		
+		if(idProject == null)
+			return new Task(this, user, null);
 		
 		Optional<Project> project = projectRepository.findById(idProject);
 		
