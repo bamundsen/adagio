@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Button,
   Col,
@@ -16,88 +16,153 @@ import useWindowDimensions from "../../utils/useWindowDimensions.utils";
 import styles from "./form_projetos.module.scss";
 import DatePicker from "react-datepicker";
 import { isDataView } from "util/types";
+import { AuthContext } from "../../contexts/auth.context";
+import { Project } from "../../types/Project";
+import { ProjectContext } from "../../contexts/project.context";
+import { Navigate, useLocation, useParams } from "react-router-dom";
 
 const FormProjetos = () => {
+  const { user } = useContext(AuthContext);
+  const {
+    createProject,
+    editProject,
+    getProject,
+    setTriggerToSearchProjectsAgainAfterRegister,
+    triggerToSearchProjectsAgainAfterRegister,
+    isToRestartFormAgain,
+    setIsToRestartFormAgain,
+  } = useContext(ProjectContext);
   const windowDimensions = useWindowDimensions();
+  const { id } = useParams();
+  const [isToGoToProjects, setIsToGoToProjects] = useState(false);
   const [titulo, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startHour, setStartHour] = useState("");
-  const [startHourAux, setAuxStartHour] = useState<Date>(new Date());
+  const [startHourAux, setStartHourAux] = useState<Date>(new Date());
   const [startDate, setStartDate] = useState("");
-  const [startDateAux, setAuxStartDate] = useState(new Date());
+  const [startDateAux, setStartDateAux] = useState(new Date());
   const [endDate, setEndDate] = useState("");
-  const [endDateAux, setAuxEndDate] = useState<Date>(new Date());
+  const [endDateAux, setEndDateAux] = useState<Date>(new Date());
   const [endHour, setEndHour] = useState("");
-  const [endHourAux, setAuxEndHour] = useState(
+  const [endHourAux, setEndHourAux] = useState(
     new Date(new Date().setHours(23, 59))
   );
+  const [isToEdit, setIsToEdit] = useState(false);
 
   useEffect(() => {
-    setStartHour(
-      `${startHourAux.getHours()}:${startHourAux.getMinutes()}:${startHourAux.getSeconds()}`
-    );
-    setStartDate(
-      `${startDateAux.getFullYear()}-${
-        startDateAux.getMonth() + 1
-      }-${startDateAux.getDate()}`
-    );
-    setEndDate(
-      `${endDateAux.getFullYear()}-${
-        endDateAux.getMonth() + 1
-      }-${endDateAux.getDate()}`
-    );
-    setEndHour(
-      `${endHourAux.getHours()}:${endHourAux.getMinutes()}:${endHourAux.getSeconds()}`
-    );
-  }, []);
+    console.log("ei ou djfkdjfdjkfdkfj", id);
+    if (id !== undefined) {
+      getProject(Number(id)).then((response: any) => {
+        setTitle(response.title);
+        setDescription(response.description);
+        setStartDateAux(new Date(response.dateTimeStart));
+        setStartHourAux(new Date(response.dateTimeStart));
+        setEndDateAux(new Date(response.dateTimeEnd));
+        setEndHourAux(new Date(response.dateTimeEnd));
+        setIsToEdit(true);
+      });
+    } else {
+      setTitle("");
+      setDescription("");
+      setStartDateAux(new Date());
+      setStartHourAux(new Date());
+      setEndDateAux(new Date());
+      setEndHourAux(new Date(new Date().setHours(23, 59)));
+      setIsToEdit(false);
+    }
+  }, [isToRestartFormAgain, setIsToRestartFormAgain]);
+
+  useEffect(() => {
+    setStartDate(filterAndReturnDate(startDateAux));
+    setStartHour(filterAndReturnHour(startHourAux));
+    setEndDate(filterAndReturnDate(endDateAux));
+    setEndHour(filterAndReturnHour(endHourAux));
+  }, [startDateAux, startHourAux, endDateAux, endHourAux]);
 
   const onChangeStartHour = (date: Date) => {
-    setAuxStartHour(date);
-    setStartHour(
-      `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-    );
+    setStartHourAux(date);
+    setStartHour(filterAndReturnHour(date));
     return true;
   };
 
   const onChangeStartDate = (date: Date) => {
-    setStartDate(
-      `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-    );
-    setAuxStartDate(date);
+    setStartDate(filterAndReturnDate(date));
+    setStartDateAux(date);
     return true;
   };
 
   const onChangeEndDate = (date: Date) => {
-    setEndDate(
-      `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-    );
-    setAuxEndDate(date);
+    setEndDate(filterAndReturnDate(date));
+    setEndDateAux(date);
     return true;
   };
 
   const onChangeEndHour = (date: Date) => {
-    setAuxEndHour(date);
-    setEndHour(`${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
+    setEndHourAux(date);
+    setEndHour(filterAndReturnHour(date));
     return true;
   };
 
+  const filterAndReturnHour = (hour: Date) => {
+    return `${String(hour.getHours()).padStart(2, "0")}:${String(
+      hour.getMinutes()
+    ).padStart(2, "0")}:${String(hour.getSeconds()).padStart(2, "0")}`;
+  };
+
+  const filterAndReturnDate = (date: Date) => {
+    return `${String(date.getFullYear()).padStart(2, "0")}-${String(
+      date.getMonth() + 1
+    ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  };
+
+  const goToProjects = () => {
+    setIsToGoToProjects(true);
+  };
   const onSubmit = async (ev: any) => {
     ev.preventDefault();
-    console.log(titulo);
-    console.log(description);
-    console.log(`${startDate}T${startHour}`);
-    console.log(`${endDate}T${endHour}`);
+
+    const projectToRegisterOrEdit: Project = {
+      title: titulo.trim(),
+      description: description.trim(),
+      dateTimeStart: `${startDate}T${startHour}`,
+      dateTimeEnd: `${endDate}T${endHour}`,
+      tasksIds: [],
+    };
+
+    try {
+      let responseToOperation: any = undefined;
+
+      if (isToEdit === false) {
+        const responseToOperation = await createProject(
+          projectToRegisterOrEdit
+        );
+
+        console.log(responseToOperation);
+        if (responseToOperation.status === 201) {
+          alert("Projeto criado com sucesso !");
+        }
+      } else if (id !== undefined) {
+        const responseToOperation = await editProject(
+          projectToRegisterOrEdit,
+          Number(id)
+        );
+        console.log(responseToOperation);
+      }
+      setTriggerToSearchProjectsAgainAfterRegister(
+        !triggerToSearchProjectsAgainAfterRegister
+      );
+      goToProjects();
+    } catch (erro) {
+      console.log(erro);
+      alert("Houve um erro");
+    }
   };
-  return (
+  return !isToGoToProjects ? (
     <main className={`${commonStyles.main_content}`}>
       <AdagioSideBar itemsNav={sideBarData} />
-      <section
-        style={{
-          flex: 1,
-        }}
-      >
+      <section style={{ flex: 1 }}>
         <h1 style={{ fontSize: "26px", marginLeft: "18px", marginTop: "10px" }}>
-          CADASTRE UM PROJETO:
+          {isToEdit ? "EDITE O PROJETO:" : "CADASTRE UM PROJETO:"}
         </h1>
         <Container className={"mt-5 center"}>
           <Row>
@@ -306,7 +371,7 @@ const FormProjetos = () => {
                         }}
                         type="submit"
                       >
-                        Cadastrar
+                        {isToEdit ? "Editar" : "Cadastrar"}
                       </Button>
                     </div>
                   </div>
@@ -317,6 +382,8 @@ const FormProjetos = () => {
         </Container>
       </section>
     </main>
+  ) : (
+    <Navigate to="/adagio/projetos" />
   );
 };
 export default FormProjetos;

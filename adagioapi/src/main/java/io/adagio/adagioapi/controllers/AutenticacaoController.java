@@ -67,16 +67,14 @@ public class AutenticacaoController {
 			@CookieValue(name="refreshToken", required=false) String refreshToken,
 			@RequestBody @Valid LoginForm form){
 		UsernamePasswordAuthenticationToken dadosLogin=form.converter();
-		System.out.println("BATEU AQUI");
-		
-			
+	
 		Authentication authentication=authManager.authenticate(dadosLogin);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
 //		String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
 //		String decryptedRefreshToken = SecurityCipher.decrypt(refreshToken);
 		
-		System.out.println("aqui EMBAIXO");
+
 //		return userService.login(form, decryptedAccessToken, decryptedRefreshToken);
 		return userService.login(form, accessToken, refreshToken);
 
@@ -85,7 +83,6 @@ public class AutenticacaoController {
     @PostMapping(value = "/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginResponse> refreshToken(@CookieValue(name = "accessToken", required = false) String accessToken,
                                                       @CookieValue(name = "refreshToken", required = false) String refreshToken) {
-    	System.out.println("REFRESH TOKEN VINDO DO FRONT-END: "+ refreshToken);
     	
 //    	String decryptedAccessToken = SecurityCipher.decrypt(accessToken);
 //        String decryptedRefreshToken = SecurityCipher.decrypt(refreshToken);

@@ -1,7 +1,7 @@
 import { User } from "../types/user";
 import { api } from "./base_api";
 
-export const userApi = () => ({
+export const UserApi = () => ({
   validateToken: async () => {
     try {
       const response = await api.post("/auth/refresh");

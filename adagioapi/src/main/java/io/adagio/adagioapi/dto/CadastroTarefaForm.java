@@ -2,6 +2,7 @@ package io.adagio.adagioapi.dto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -9,6 +10,10 @@ import javax.validation.constraints.NotNull;
 import io.adagio.adagioapi.models.Notification;
 import io.adagio.adagioapi.models.Priority;
 import io.adagio.adagioapi.models.Project;
+import io.adagio.adagioapi.models.Task;
+import io.adagio.adagioapi.models.User;
+import io.adagio.adagioapi.repositories.ProjectRepository;
+import io.adagio.adagioapi.repositories.UserRepository;
 
 public class CadastroTarefaForm {
 
@@ -17,15 +22,15 @@ public class CadastroTarefaForm {
 
 	private String description;
 
-	@NotBlank
+	@NotNull
 	private LocalDateTime dateTimeStart;
 
-	@NotBlank
+	@NotNull
 	private LocalDateTime dateTimeEnd;
 
 	private boolean finishedStatus;
 
-	private Project project;
+	private Long idProject;
 
 	private ArrayList <Notification> notifications;
 
@@ -72,12 +77,12 @@ public class CadastroTarefaForm {
 		this.finishedStatus = finishedStatus;
 	}
 
-	public Project getProject() {
-		return project;
+	public Long getIdProject() {
+		return idProject;
 	}
 
-	public void setProject(Project project) {
-		this.project = project;
+	public void setIdProject(Long idProject) {
+		this.idProject = idProject;
 	}
 
 	public Priority getPriority() {
@@ -95,8 +100,17 @@ public class CadastroTarefaForm {
 	public void setNotifications(ArrayList<Notification> notifications) {
 		
 		this.notifications = notifications;
+		
 	}
-	
-	
+
+	public Task converter(User user, ProjectRepository projectRepository ) {
+		
+		if(idProject == null)
+			return new Task(this, user, null);
+		
+		Optional<Project> project = projectRepository.findById(idProject);
+		
+		return new Task(this, user, project.get());
+	}
 	
 }

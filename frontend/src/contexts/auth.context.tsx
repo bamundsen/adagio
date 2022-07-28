@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import { User } from "../types/user";
-import { userApi } from "../hooks/userApi";
+import { UserApi } from "../hooks/userApi";
 import { api } from "../hooks/base_api";
 
 export type AuthContextType = {
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const [auxUserAndIsAuthenticated, setAuxUserAndIsAuthenticated] = useState<
     any[]
   >([]);
-  const apiUser = userApi();
+  const apiUser = UserApi();
 
   useEffect(() => {
     teste();

@@ -10,6 +10,7 @@ import NotFound from "./components/not-found/not_found.component";
 import PrivateRoute from "./components/private-route/private_route.component";
 import { AuthContext } from "./contexts/auth.context";
 import FormProjetos from "./pages/form-projetos/form_projetos.component";
+import ProjectsManagement from "./pages/projects-management/projects_management.component";
 
 const ApplicationRoutes = () => {
   return (
@@ -22,7 +23,9 @@ const ApplicationRoutes = () => {
           <Route index element={<Navigate to="/adagio/home" />} />
           <Route path="calendario" element={<CompleteCalendar />} />
           <Route path="home" element={<Home />} />
-          <Route path="criar_projeto" element={<FormProjetos />}/>
+          <Route path="projetos" element={<ProjectsManagement />} />
+          <Route path="editar_projeto/:id" element={<FormProjetos />} />
+          <Route path="criar_projeto" element={<FormProjetos />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

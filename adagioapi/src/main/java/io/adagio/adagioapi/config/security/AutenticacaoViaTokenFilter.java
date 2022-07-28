@@ -50,6 +50,7 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter{
 		try {
 			String jwt = getJwtToken(request,true);
 			if(StringUtils.hasText(jwt) && tokenService.isTokenValid(jwt,"accesstoken")) {
+				System.out.println("BEM, AQUI EU CHEGIO - OLHA SÓ");
 				autenticarCliente(jwt);
 			}
 		} catch(Exception ex) {
@@ -65,7 +66,7 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter{
 		Optional<User> usuarioOpt = usuarioRepository.findByLogin(login);
 		User usuario = usuarioOpt.orElse(null);
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(usuario,
-				null, usuario.getAuthorities());
+				usuario, usuario.getAuthorities());
 		SecurityContextHolder.
 		getContext().setAuthentication(authentication);
 		
