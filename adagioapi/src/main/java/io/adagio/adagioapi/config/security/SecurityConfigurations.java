@@ -60,7 +60,6 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().authorizeRequests()
 		.antMatchers("/api/v1/auth/*").permitAll()
-		.antMatchers("/api/v1/testtask/*").permitAll() //REMOVER DEPOIS
 		.anyRequest().authenticated().and()
 		.csrf().disable()
 		.sessionManagement()
