@@ -75,6 +75,7 @@ public class TaskController {
 	}
 	
 	@DeleteMapping("/{id}")
+	@Transactional
 	public ResponseEntity<TaskDto> delete(@PathVariable ("id") Long id){
 		
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
