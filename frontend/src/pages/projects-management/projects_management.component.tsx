@@ -5,7 +5,7 @@ import sideBarData from "../../utils/sideBarData";
 import { BsFillPenFill } from "react-icons/bs";
 import { BsTrash } from "react-icons/bs";
 import { Button, Table } from "react-bootstrap";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ProjectContext } from "../../contexts/project.context";
 import { Project } from "../../types/Project";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,15 +13,48 @@ import { Link, useNavigate } from "react-router-dom";
 const ProjectsManagement = () => {
   const navigate = useNavigate();
   const {
-    projects,
-    page,
-    setPage,
-    isLast,
-    isFirst,
+    getProjects,
     deleteProject,
     triggerToSearchProjectsAgain,
     setTriggerToSearchProjectsAgain,
+    triggerToSearchProjectsAgainAfterRegister,
+    triggerToSearchProjectsAgainAfterDelete,
   } = useContext(ProjectContext);
+
+  const [projects, setProjects] = useState<any[] | Project[]>([]);
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(6);
+  const [isFirst, setIsFirst] = useState(false);
+  const [isLast, setIsLast] = useState(false);
+
+  useEffect(() => {
+    getProjects(size,page).then((response: any) => {
+      if (response.last) {
+        setIsLast(true);
+      } else {
+        setIsLast(false);
+      }
+
+      if (response.first) {
+        setIsFirst(true);
+      } else {
+        setIsFirst(false);
+      }
+
+      setProjects(response.content);
+    });
+  }, [
+    page,
+    size,
+    isFirst,
+    isLast,
+    triggerToSearchProjectsAgainAfterRegister,
+    triggerToSearchProjectsAgainAfterDelete,
+  ]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [triggerToSearchProjectsAgainAfterRegister]);
 
   useEffect(() => {
     if (projects !== undefined) {

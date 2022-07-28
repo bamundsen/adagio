@@ -4,7 +4,6 @@ import { ProjectApi } from "../hooks/projectApi";
 import { api } from "../hooks/base_api";
 
 export type ProjectContextType = {
-  page: number;
   triggerToSearchProjectsAgainAfterDelete: boolean;
   triggerToSearchProjectsAgainAfterRegister: boolean;
   isToRestartFormAgain: boolean;
@@ -19,11 +18,7 @@ export type ProjectContextType = {
   setTriggerToSearchProjectsAgain: React.Dispatch<
     React.SetStateAction<boolean>
   >;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  projects: Project[] | any[];
-  isFirst: boolean;
-  isLast: boolean;
-  getProjects: () => any;
+  getProjects: (size?: number, page?: number) => any;
   getProject: (idProject: number) => any;
   createProject: (project: Project) => any;
   editProject: (project: Project, id: number) => any;
@@ -33,8 +28,6 @@ export type ProjectContextType = {
 export const ProjectContext = createContext<ProjectContextType>(null!);
 
 export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
-  const [projects, setProjects] = useState<any[] | Project[]>([]);
-
   const [
     triggerToSearchProjectsAgainAfterRegister,
     setTriggerToSearchProjectsAgainAfterRegister,
@@ -48,42 +41,10 @@ export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
 
   const [triggerToSearchProjectsAgain, setTriggerToSearchProjectsAgain] =
     useState(false);
-  const [page, setPage] = useState(0);
-  const [size, setSize] = useState(8);
+
   const apiProject = ProjectApi();
-  const [isFirst, setIsFirst] = useState(false);
-  const [isLast, setIsLast] = useState(false);
 
-  useEffect(() => {
-    getProjects().then((response: any) => {
-      if (response.last) {
-        setIsLast(true);
-      } else {
-        setIsLast(false);
-      }
-
-      if (response.first) {
-        setIsFirst(true);
-      } else {
-        setIsFirst(false);
-      }
-
-      setProjects(response.content);
-    });
-  }, [
-    page,
-    size,
-    isFirst,
-    isLast,
-    triggerToSearchProjectsAgainAfterRegister,
-    triggerToSearchProjectsAgainAfterDelete,
-  ]);
-
-  useEffect(() => {
-    setPage(0);
-  }, [triggerToSearchProjectsAgainAfterRegister]);
-
-  const getProjects = async () => {
+  const getProjects = async (size?: number, page?: number) => {
     const listOfProjects = await apiProject.getProjects(size, page);
     return listOfProjects;
   };
@@ -115,9 +76,6 @@ export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
   };
 
   const value: ProjectContextType = {
-    page,
-    setPage,
-    projects,
     setTriggerToSearchProjectsAgainAfterRegister,
     triggerToSearchProjectsAgainAfterRegister,
     triggerToSearchProjectsAgainAfterDelete,
@@ -127,8 +85,6 @@ export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
     setIsToRestartFormAgain,
     isToRestartFormAgain,
     createProject,
-    isFirst,
-    isLast,
     triggerToSearchProjectsAgain,
     setTriggerToSearchProjectsAgain,
     editProject,
