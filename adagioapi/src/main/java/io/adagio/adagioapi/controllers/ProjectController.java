@@ -54,7 +54,7 @@ public class ProjectController {
 
 	@GetMapping
 	public Page<ProjectDto> listar(@PageableDefault(sort="dateTimeEnd",page=0,size=10,
-			direction=Direction.ASC) Pageable paginacao){
+			direction=Direction.DESC) Pageable paginacao){
 			User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 			Page<Project> projects = projectRepository.findByUser(logado,paginacao);
