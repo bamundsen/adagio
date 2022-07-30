@@ -9,11 +9,12 @@ export const ProjectApi = () => ({
           page === undefined ? 0 : page
         }`
       );
-
-      console.log(response);
+      console.log("djkfkldflkdjklfdjlfk");
+      // console.log(response);
       return response.data;
     } catch (erro) {
-      console.log(erro);
+      console.log("EITA AAAAA");
+      return erro;
     }
   },
 

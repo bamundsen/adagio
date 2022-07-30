@@ -28,26 +28,27 @@ const ProjectsManagement = () => {
   const [isLast, setIsLast] = useState(false);
 
   useEffect(() => {
-    getProjects(size,page).then((response: any) => {
-      if (response.last) {
+    getProjects(size, page).then((response: any) => {
+      if (response?.last) {
         setIsLast(true);
       } else {
         setIsLast(false);
       }
 
-      if (response.first) {
+      if (response?.first) {
         setIsFirst(true);
       } else {
         setIsFirst(false);
       }
 
-      setProjects(response.content);
+      setProjects(response?.content);
     });
   }, [
     page,
     size,
     isFirst,
     isLast,
+    triggerToSearchProjectsAgain,
     triggerToSearchProjectsAgainAfterRegister,
     triggerToSearchProjectsAgainAfterDelete,
   ]);
@@ -99,8 +100,6 @@ const ProjectsManagement = () => {
           </thead>
           <tbody>
             {projects?.map((project: Project) => {
-              console.log(project);
-
               return (
                 <tr key={project?.id + project?.title}>
                   <td>{project.title}</td>
