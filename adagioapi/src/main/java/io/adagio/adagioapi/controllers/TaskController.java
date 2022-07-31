@@ -38,9 +38,6 @@ import io.adagio.adagioapi.repositories.UserRepository;
 public class TaskController {
 	
 	@Autowired
-	private AuthenticationManager authManager;
-	
-	@Autowired
 	private TaskRepository taskRepository;
 	
 	@Autowired

@@ -7,7 +7,7 @@ import { BsTrash } from "react-icons/bs";
 import { Button, Table } from "react-bootstrap";
 import { useContext, useEffect, useState } from "react";
 import { ProjectContext } from "../../contexts/project.context";
-import { Project } from "../../types/Project";
+import { Project } from "../../types/ProjectType";
 import { Link, useNavigate } from "react-router-dom";
 
 const ProjectsManagement = () => {

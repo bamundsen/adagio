@@ -9,7 +9,7 @@ import YellowBell from "../../assets/white_bell.svg";
 import UserNavigation from "../../assets/user_navigation.svg";
 import UserNavigationWithArrow from "../../assets/user_navigation_with_arrow.svg";
 import styles from "./navigation.module.scss";
-import { User } from "../../types/user";
+import { User } from "../../types/UserType";
 import useWindowDimensions from "../../utils/useWindowDimensions.utils";
 import { CalendarContext } from "../../contexts/calendar.context";
 import { ProjectContext } from "../../contexts/project.context";

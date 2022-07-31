@@ -1,10 +1,12 @@
-export type Project = {
+export type Task = {
   id?: number;
   title: string;
   description: string;
-  progress?: number;
   dateTimeStart: string;
   dateTimeEnd: string;
+  finishedStatus: boolean;
   idUser?: number;
-  tasksIds: any[];
+  idProject?: number;
+  priority: string;
+  notifications: number[];
 };

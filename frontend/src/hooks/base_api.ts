@@ -15,23 +15,15 @@ const api = axios.create({
 
 api.interceptors.response.use(
   (response) => {
-    console.log("EI OU KKDJFD");
     return response;
   },
   async function (error) {
-    // const navigate = useNavigate();
-    // const { setUser, setIsAuthenticated } = useContext(AuthContext);
-    console.log("ISSO ?");
     const originalRequest = error.config;
 
     if (
       error.response.status === 401 &&
       originalRequest.url === "http://localhost:8079/api/v1/auth/refresh"
     ) {
-      // setUser(null);
-      // setIsAuthenticated(false);
-
-      // navigate("/");
       return Promise.reject(error);
     }
 
@@ -43,15 +35,12 @@ api.interceptors.response.use(
       const response = await api.post("/auth/refresh");
 
       if (response.status === 200) {
-        // setUser(response.data.user);
-        // setIsAuthenticated(true);
-        console.log("REFAZ");
         return axios(originalRequest);
       }
       return response;
     }
-    console.log("NÃO REFAZ");
-    // return Promise.reject(error);
+
+    return Promise.reject(error);
   }
 );
 

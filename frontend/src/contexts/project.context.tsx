@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { Project } from "../types/Project";
+import { Project } from "../types/ProjectType";
 import { ProjectApi } from "../hooks/projectApi";
 import { api } from "../hooks/base_api";
 

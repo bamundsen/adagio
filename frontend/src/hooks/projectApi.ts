@@ -1,4 +1,4 @@
-import { Project } from "../types/Project";
+import { Project } from "../types/ProjectType";
 import { api } from "./base_api";
 
 export const ProjectApi = () => ({
@@ -9,11 +9,9 @@ export const ProjectApi = () => ({
           page === undefined ? 0 : page
         }`
       );
-      console.log("djkfkldflkdjklfdjlfk");
-      // console.log(response);
+
       return response.data;
     } catch (erro) {
-      console.log("EITA AAAAA");
       return erro;
     }
   },
@@ -21,8 +19,6 @@ export const ProjectApi = () => ({
   getProject: async (idProject: number) => {
     try {
       const response = await api.get(`/users/projects/${idProject}`);
-
-      console.log(response);
 
       return response.data;
     } catch (erro) {
@@ -34,7 +30,6 @@ export const ProjectApi = () => ({
     try {
       const response = await api.post("/users/projects", project);
 
-      console.log(response);
       return response;
     } catch (erro) {
       console.log(erro);
@@ -44,7 +39,7 @@ export const ProjectApi = () => ({
   editProject: async (project: Project, id: number) => {
     try {
       const response = await api.put(`users/projects/${id}`, project);
-      console.log(response);
+
       return response;
     } catch (erro) {
       console.log(erro);
@@ -54,8 +49,6 @@ export const ProjectApi = () => ({
   deleteProject: async (id: number) => {
     try {
       const response = await api.delete(`users/projects/${id}`);
-
-      console.log(response);
 
       return response;
     } catch (erro) {
