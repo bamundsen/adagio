@@ -4,11 +4,12 @@ import styles from "./projects_management.module.scss";
 import sideBarData from "../../utils/sideBarData";
 import { BsFillPenFill } from "react-icons/bs";
 import { BsTrash } from "react-icons/bs";
-import { Button, Table } from "react-bootstrap";
+import { Button, Spinner, Table } from "react-bootstrap";
 import { useContext, useEffect, useState } from "react";
 import { ProjectContext } from "../../contexts/project.context";
 import { Project } from "../../types/ProjectType";
 import { Link, useNavigate } from "react-router-dom";
+import AdagioSpinner from "../../components/adagio-spinner/adagio_spinner.component";
 
 const ProjectsManagement = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const ProjectsManagement = () => {
   const [size, setSize] = useState(6);
   const [isFirst, setIsFirst] = useState(false);
   const [isLast, setIsLast] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     getProjects(size, page).then((response: any) => {
@@ -42,6 +44,10 @@ const ProjectsManagement = () => {
       }
 
       setProjects(response?.content);
+
+      if (response.content) {
+        setIsLoaded(true);
+      }
     });
   }, [
     page,
@@ -83,6 +89,10 @@ const ProjectsManagement = () => {
     });
   };
 
+  const returnSpinner = () => {
+    return <AdagioSpinner />;
+  };
+
   return (
     <main className={`${commonStyles.main_content}`}>
       <AdagioSideBar itemsNav={sideBarData} />
@@ -99,37 +109,40 @@ const ProjectsManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {projects?.map((project: Project) => {
-              return (
-                <tr key={project?.id + project?.title}>
-                  <td>{project.title}</td>
-                  <td>{project.description}</td>
-                  <td>{project?.progress}</td>
-                  <td>
-                    <Link to="#">Gerenciar tarefas</Link>
-                  </td>
-                  <td className={styles.operation_area}>
-                    <BsFillPenFill
-                      onClick={() => {
-                        goToEdit(project);
-                      }}
-                      style={{ cursor: "pointer", color: "#227711" }}
-                    />
-                  </td>
-                  <td className={styles.operation_area}>
-                    <BsTrash
-                      onClick={() => {
-                        if (project.id !== undefined)
-                          deleteProjectById(project.id);
-                      }}
-                      style={{ cursor: "pointer", color: "#ff1209" }}
-                    ></BsTrash>
-                  </td>
-                </tr>
-              );
-            })}
+            {isLoaded &&
+              projects?.map((project: Project) => {
+                return (
+                  <tr key={project?.id + project?.title}>
+                    <td>{project.title}</td>
+                    <td>{project.description}</td>
+                    <td>{project?.progress}</td>
+                    <td>
+                      <Link to="#">Gerenciar tarefas</Link>
+                    </td>
+                    <td className={styles.operation_area}>
+                      <BsFillPenFill
+                        onClick={() => {
+                          goToEdit(project);
+                        }}
+                        style={{ cursor: "pointer", color: "#227711" }}
+                      />
+                    </td>
+                    <td className={styles.operation_area}>
+                      <BsTrash
+                        onClick={() => {
+                          if (project.id !== undefined)
+                            deleteProjectById(project.id);
+                        }}
+                        style={{ cursor: "pointer", color: "#ff1209" }}
+                      ></BsTrash>
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </Table>
+
+        {!isLoaded && returnSpinner()}
 
         <section className={styles.container_buttons}>
           {!isFirst ? (

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import LinkSideBarIcon from "../../assets/link_sidebar_icon.svg";
 import { TaskContext } from "../../contexts/task.context";
 import { Task } from "../../types/TaskType";
+import AdagioSpinner from "../adagio-spinner/adagio_spinner.component";
 import style from "./relatory_modal.module.scss";
 
 interface RelatoryModalProps {
@@ -28,6 +29,7 @@ const RelatoryModal = ({
 }: RelatoryModalProps) => {
   const { listByStartDateTimeFilter } = useContext(TaskContext);
   const [tasksToShow, setTasksToShow] = useState<any[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     if (modalIsOpen) {
@@ -50,10 +52,18 @@ const RelatoryModal = ({
               return { title, hourAndMinute };
             }),
           ]);
+
+          if (response.data.length > 0) {
+            setIsLoaded(true);
+          }
         }
       );
     }
   }, [modalIsOpen]);
+
+  const returnSpinner = () => {
+    return <AdagioSpinner />;
+  };
 
   return (
     <Modal show={modalIsOpen}>
@@ -89,14 +99,17 @@ const RelatoryModal = ({
         <h2 className={`${style.body_modal_title}`}>Tarefas</h2>
 
         <ul>
-          {tasksToShow.map((task: any, i) => {
-            return (
-              <li key={task.title + task.hourAndMinute + i}>
-                {task.title} ({task.hourAndMinute})
-              </li>
-            );
-          })}
+          {isLoaded &&
+            tasksToShow.map((task: any, i) => {
+              return (
+                <li key={task.title + task.hourAndMinute + i}>
+                  {task.title} ({task.hourAndMinute})
+                </li>
+              );
+            })}
         </ul>
+
+        {!isLoaded && returnSpinner()}
       </Modal.Body>
       <Modal.Footer className={`${style.footer_modal}`}>
         <Link

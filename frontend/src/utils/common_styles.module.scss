@@ -14,6 +14,17 @@
   align-items: center;
 }
 
+.spinner_container {
+  width: 100%;
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+}
+
+.spinner {
+  width: 65px;
+  height: 65px;
+}
 @media (max-width: 768px) {
   .main_content {
     flex-direction: column;
