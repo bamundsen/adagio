@@ -50,6 +50,9 @@ const Month = ({
   const [dayOfModal, setDayOfModal] = useState<Date | null>(null);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
+  const [dateToSearch, setDateToSearch] = useState("");
+  const [dateFinalToSearch, setDateFinalToSearch] = useState("");
+
   useEffect(() => {
     // setValue(value.year(currentYear));
 
@@ -136,6 +139,8 @@ const Month = ({
         months={months}
         dayOfModal={dayOfModal}
         modalIsOpen={modalIsOpen}
+        dateToSearch={dateToSearch}
+        dateFinalToSearch={dateFinalToSearch}
         setModalIsOpen={setModalIsOpen}
         completeWeekDays={completeWeekDays}
       />
@@ -220,6 +225,8 @@ const Month = ({
             <Day
               key={uid(`${day}`)}
               day={day}
+              setDateToSearch={setDateToSearch}
+              setDateTimeFinalToSearch={setDateFinalToSearch}
               setDayOfModal={setDayOfModal}
               setModalIsOpen={setModalIsOpen}
               occupiedDates={occupiedDates}

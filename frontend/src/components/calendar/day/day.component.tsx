@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./day.module.scss";
 
 interface DayProps {
@@ -9,6 +9,8 @@ interface DayProps {
   setDayOfModal: React.Dispatch<React.SetStateAction<Date | null>>;
   setOccupiedDates: React.Dispatch<React.SetStateAction<any[]>>;
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setDateToSearch: React.Dispatch<React.SetStateAction<string>>;
+  setDateTimeFinalToSearch: React.Dispatch<React.SetStateAction<string>>;
   month: string;
   year: number;
 }
@@ -17,9 +19,11 @@ const Day = ({
   month,
   year,
   monthAux,
+  setDateTimeFinalToSearch,
   setDayOfModal,
   occupiedDates,
   setModalIsOpen,
+  setDateToSearch,
   setOccupiedDates,
   isToShowOneMonth,
 }: DayProps) => {
@@ -64,7 +68,21 @@ const Day = ({
   const handleClickDate = () => {
     console.log(`day: ${day._d.getMonth()}, ${day._d.getDay()}`);
     setDayOfModal(day._d);
+    formDateToSearch();
     setModalIsOpen(true);
+  };
+
+  const formDateToSearch = () => {
+    setDateToSearch(
+      `${String(day._d.getFullYear()).padStart(2, "0")}-${String(
+        day._d.getMonth() + 1
+      ).padStart(2, "0")}-${String(day._d.getDate()).padStart(2, "0")}T00:00:00`
+    );
+    setDateTimeFinalToSearch(
+      `${String(day._d.getFullYear()).padStart(2, "0")}-${String(
+        day._d.getMonth() + 1
+      ).padStart(2, "0")}-${String(day._d.getDate()).padStart(2, "0")}T23:59:59`
+    );
   };
 
   return (

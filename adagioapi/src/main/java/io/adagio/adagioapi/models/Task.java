@@ -170,4 +170,13 @@ public class Task {
 		return tasks.map(TaskDto::new);
 	}
 	
+	public static List<TaskDto> converter(List<Task> tasks){
+		List<TaskDto> tasksDto = new ArrayList<>();
+		
+		for(Task task : tasks) {
+			TaskDto taskDto = new TaskDto(task);
+			tasksDto.add(taskDto);
+		}
+		return tasksDto;
+	}
 }
