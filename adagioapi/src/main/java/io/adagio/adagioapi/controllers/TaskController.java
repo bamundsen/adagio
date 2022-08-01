@@ -2,6 +2,7 @@ package io.adagio.adagioapi.controllers;
 
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import io.adagio.adagioapi.dto.CadastroTarefaForm;
+import io.adagio.adagioapi.dto.StartAndEndDateDto;
 import io.adagio.adagioapi.dto.TaskDto;
 import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
@@ -36,9 +38,6 @@ import io.adagio.adagioapi.repositories.UserRepository;
 @RestController
 @RequestMapping("${adagio.api.base_servico_de_rotas_privadas}/tasks")
 public class TaskController {
-	
-	@Autowired
-	private AuthenticationManager authManager;
 	
 	@Autowired
 	private TaskRepository taskRepository;
@@ -57,6 +56,20 @@ public class TaskController {
 			return Task.converter(tasks);	
 	}
 
+	@PostMapping("/list-by-start-datetime-filter")
+	public ResponseEntity<List<TaskDto>> listByStartDateAndEndDate(@RequestBody @Valid StartAndEndDateDto startDateDto){
+		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		List<Task> tasks = taskRepository.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThan(logado,
+				startDateDto.getDateTimeStart(),
+				startDateDto.getDateTimeEnd());
+		
+		List<TaskDto> tasksDto = Task.converter(tasks);
+		
+		return ResponseEntity.ok().body(tasksDto);
+	}
+	
+	
 	@PostMapping
 	@Transactional
 	public ResponseEntity<TaskDto> save(@RequestBody @Valid CadastroTarefaForm taskForm, 

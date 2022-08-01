@@ -14,8 +14,12 @@ interface AdagioSideBarProps {
 const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
   const windowDimensions = useWindowDimensions();
   const [hideSideBar, setHideSideBar] = useState(false);
-  const { isToRestartFormAgain, setIsToRestartFormAgain } =
-    useContext(ProjectContext);
+  const {
+    isToRestartFormAgain,
+    setIsToRestartFormAgain,
+    setTriggerToSearchProjectsAgain,
+    triggerToSearchProjectsAgain,
+  } = useContext(ProjectContext);
 
   const returnItemDependsOnCategory = (item: any) => {
     if (item.category.toLowerCase() === "calendar_export") {
@@ -69,7 +73,15 @@ const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
         {windowDimensions.width <= 490 ? (
           <>
             <li>
-              <Link className={`${styles.link_nav}`} to={"/adagio/projetos"}>
+              <Link
+                className={`${styles.link_nav}`}
+                to={"/adagio/projetos"}
+                onClick={() => {
+                  setTriggerToSearchProjectsAgain(
+                    !triggerToSearchProjectsAgain
+                  );
+                }}
+              >
                 <img src={LinkSideBarIcon} alt={"create register option"} />
                 <span>{"Projetos"}</span>
               </Link>

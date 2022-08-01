@@ -1,4 +1,4 @@
-import { User } from "../types/user";
+import { User } from "../types/UserType";
 import { api } from "./base_api";
 
 export const UserApi = () => ({
@@ -12,7 +12,6 @@ export const UserApi = () => ({
 
       return response;
     } catch (erro) {
-      console.log("ERRO", erro);
       return erro;
     }
   },
@@ -23,10 +22,6 @@ export const UserApi = () => ({
         login,
         password,
       });
-
-      // api.defaults.headers.common[
-      //   "Authorization"
-      // ] = `Bearer ${response.data.accessToken}`;
 
       return response;
     } catch (erro) {
@@ -44,21 +39,18 @@ export const UserApi = () => ({
   register: async (user: User) => {
     try {
       const response = await api.post("/auth/register", user);
-
-      console.log(response);
       return response;
     } catch (erro) {
       console.log(erro);
     }
   },
 
-  teste: async () => {
-    try {
-      console.log(api.defaults);
-      const response = await api.get("/teste");
-      console.log(response);
-    } catch (erro) {
-      console.log(erro);
-    }
-  },
+  // teste: async () => {
+  //   try {
+  //     const response = await api.get("/teste");
+
+  //   } catch (erro) {
+  //     console.log(erro);
+  //   }
+  // },
 });

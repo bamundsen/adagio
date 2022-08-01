@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { User } from "../types/user";
+import { User } from "../types/UserType";
 import { UserApi } from "../hooks/userApi";
 import { api } from "../hooks/base_api";
 
@@ -35,9 +35,6 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const apiUser = UserApi();
 
   useEffect(() => {
-    teste();
-  });
-  useEffect(() => {
     if (user === null || isAuthenticated === false) {
       processUser().then((response) => {
         if (response.status === 200) {
@@ -61,9 +58,10 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     }
   }, [auxUserAndIsAuthenticated]);
 
-  const teste = async () => {
-    const testeRes = await apiUser.teste();
-  };
+  // const teste = async () => {
+  //   const testeRes = await apiUser.teste();
+  // };
+
   const processUser = async () => {
     const response: any = await apiUser.validateToken();
 

@@ -6,6 +6,7 @@ import { CalendarProvider } from "./contexts/calendar.context";
 import "./index.css";
 import App from "./App";
 import { ProjectProvider } from "./contexts/project.context";
+import { TaskProvider } from "./contexts/task.context";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -15,9 +16,11 @@ root.render(
     <BrowserRouter>
       <AuthProvider>
         <ProjectProvider>
-          <CalendarProvider>
-            <App />
-          </CalendarProvider>
+          <TaskProvider>
+            <CalendarProvider>
+              <App />
+            </CalendarProvider>
+          </TaskProvider>
         </ProjectProvider>
       </AuthProvider>
     </BrowserRouter>

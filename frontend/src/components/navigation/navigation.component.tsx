@@ -9,18 +9,21 @@ import YellowBell from "../../assets/white_bell.svg";
 import UserNavigation from "../../assets/user_navigation.svg";
 import UserNavigationWithArrow from "../../assets/user_navigation_with_arrow.svg";
 import styles from "./navigation.module.scss";
-import { User } from "../../types/user";
+import { User } from "../../types/UserType";
 import useWindowDimensions from "../../utils/useWindowDimensions.utils";
 import { CalendarContext } from "../../contexts/calendar.context";
+import { ProjectContext } from "../../contexts/project.context";
 
 const Navigation = () => {
   const { setTriggerAlignCurrentMonth, triggerAlignCurrentMonth } =
     useContext(CalendarContext);
+  const { user, isAuthenticated, signout } = useContext(AuthContext);
+  const { setTriggerToSearchProjectsAgain, triggerToSearchProjectsAgain } =
+    useContext(ProjectContext);
   const refDropdown = useRef<HTMLLIElement | null>(null);
   const windowDimensions = useWindowDimensions();
   const [loginOrRegisterPageAux, setLoginOrRegisterPageAux] =
     useState<string>();
-  const { user, isAuthenticated, signout } = useContext(AuthContext);
   const [displayDropdown, setDisplayDropdown] = useState("none");
 
   useEffect(() => {
@@ -213,7 +216,16 @@ const Navigation = () => {
                 display: `${windowDimensions.width > 490 ? "" : "none"}`,
               }}
             >
-              <Link to="/adagio/projetos">Projetos</Link>
+              <Link
+                to="/adagio/projetos"
+                onClick={() => {
+                  setTriggerToSearchProjectsAgain(
+                    !triggerToSearchProjectsAgain
+                  );
+                }}
+              >
+                Projetos
+              </Link>
 
               <Link to="/adagio/calendario">Calendário</Link>
             </ul>

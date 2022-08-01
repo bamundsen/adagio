@@ -1,0 +1,23 @@
+.set_tarefas_form {
+    display: flex;
+    width: 95%;
+    justify-content: space-between;
+  }
+
+
+  .member_tarefas_form{
+    width: 100%;
+    height: 38px;
+    display: flex;
+    justify-content: space-around;
+    border-radius: 0.25rem;
+    border: 1px solid;
+    border-color: #ced4da;
+  }
+
+  .buttons_area_register {
+    width: 85%;
+    padding-top: 25px;
+    display: flex;
+    justify-content: space-around;
+  }

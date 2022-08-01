@@ -17,7 +17,7 @@ import styles from "./form_projetos.module.scss";
 import DatePicker from "react-datepicker";
 import { isDataView } from "util/types";
 import { AuthContext } from "../../contexts/auth.context";
-import { Project } from "../../types/Project";
+import { Project } from "../../types/ProjectType";
 import { ProjectContext } from "../../contexts/project.context";
 import { Navigate, useLocation, useParams } from "react-router-dom";
 
