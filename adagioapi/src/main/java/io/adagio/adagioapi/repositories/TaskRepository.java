@@ -14,9 +14,11 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 	
 	Optional<Task> findByIdAndUser(Long id, User user);
 	
-	List<Task> findByDateTimeStartGreaterThanEqualAndDateTimeEndLessThanEqual(LocalDateTime dateTimeStart,LocalDateTime dateTimeEnd);
-	List<Task> findByDateTimeStartGreaterThanEqualAndDateTimeStartLessThanEqual(LocalDateTime dateTimeStartMin,LocalDateTime dateTimeStartMax);
-	List<Task> findByDateTimeStartGreaterThanEqual(LocalDateTime dateTimeStart);
+	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeEndLessThanEqual(User user,LocalDateTime dateTimeStart,LocalDateTime dateTimeEnd);
+	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanEqual(User user,LocalDateTime dateTimeStartMin,LocalDateTime dateTimeStartMax);
+	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThan(User user,LocalDateTime dateTimeStartMin,LocalDateTime dateTimeStartMax);
+	
+	List<Task> findByUserAndDateTimeStartGreaterThanEqual(User user,LocalDateTime dateTimeStartMin);
 	
 	void deleteByIdAndUser(Long id, User user);
 

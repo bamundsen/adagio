@@ -58,7 +58,10 @@ public class TaskController {
 
 	@PostMapping("/list-by-start-datetime-filter")
 	public ResponseEntity<List<TaskDto>> listByStartDateAndEndDate(@RequestBody @Valid StartAndEndDateDto startDateDto){
-		List<Task> tasks = taskRepository.findByDateTimeStartGreaterThanEqualAndDateTimeStartLessThanEqual(startDateDto.getDateTimeStart(),
+		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		List<Task> tasks = taskRepository.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThan(logado,
+				startDateDto.getDateTimeStart(),
 				startDateDto.getDateTimeEnd());
 		
 		List<TaskDto> tasksDto = Task.converter(tasks);
