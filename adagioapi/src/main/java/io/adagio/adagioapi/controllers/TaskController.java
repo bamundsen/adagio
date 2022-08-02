@@ -27,8 +27,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import io.adagio.adagioapi.dto.CadastroTarefaForm;
+import io.adagio.adagioapi.dto.ColorThatIsToBeShowedBasedOnPriorityDto;
 import io.adagio.adagioapi.dto.StartAndEndDateDto;
 import io.adagio.adagioapi.dto.TaskDto;
+import io.adagio.adagioapi.models.Priority;
 import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.repositories.ProjectRepository;
@@ -69,6 +71,21 @@ public class TaskController {
 		return ResponseEntity.ok().body(tasksDto);
 	}
 	
+	@PostMapping("/get-color-that-is-to-be-showed")
+	public ResponseEntity<ColorThatIsToBeShowedBasedOnPriorityDto> getColor(@RequestBody @Valid StartAndEndDateDto form){
+		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		List<Task> tasks = taskRepository.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThan(logado,
+				form.getDateTimeStart(),
+				form.getDateTimeEnd());
+		
+
+		String hexadecimalOfColor = ColorThatIsToBeShowedBasedOnPriorityDto.defineColorThatIsToBeShowed(tasks);
+		
+		
+		ColorThatIsToBeShowedBasedOnPriorityDto color = new ColorThatIsToBeShowedBasedOnPriorityDto(hexadecimalOfColor);
+		return ResponseEntity.ok().body(color);
+	}
 	
 	@PostMapping
 	@Transactional

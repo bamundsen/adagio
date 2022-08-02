@@ -70,7 +70,7 @@ public class TaskDto {
 		return idUser;
 	}
 
-	public boolean isFinishedStatus() {
+	public boolean getFinishedStatus() {
 		return finishedStatus;
 	}
 

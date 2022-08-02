@@ -24,7 +24,7 @@ const FormTarefas = () => {
   const { createTask } = useContext(TaskContext);
   const [titulo, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("");
+  const [priority, setPriority] = useState("LOW");
   const [startHour, setStartHour] = useState("");
   const [startHourAux, setAuxStartHour] = useState<Date>(new Date());
   const [endHour, setEndHour] = useState("");
