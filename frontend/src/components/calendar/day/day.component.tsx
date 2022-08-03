@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { triggerAsyncId } from "async_hooks";
+import React, { useContext, useEffect, useState } from "react";
+import { TaskContext } from "../../../contexts/task.context";
 import styles from "./day.module.scss";
 
 interface DayProps {
@@ -29,6 +31,20 @@ const Day = ({
 }: DayProps) => {
   const [stateOfDay, setStateOfDay] = useState("");
   const [dayToCompare, setDayToCompare] = useState(day._d);
+  const { getColorThatIsToBeShowed } = useContext(TaskContext);
+  const [color, setColor] = useState("");
+
+  useEffect(() => {
+    getColorThatIsToBeShowed(
+      returnThisDateWithHour("00:00:00"),
+      returnThisDateWithHour("23:59:59")
+    ).then((response: any) => {
+      if (response.colorThatIsToBeShowed !== null) {
+        setColor(response.colorThatIsToBeShowed);
+      }
+    });
+  }, []);
+
   useEffect(() => {
     const currentMonth = new Date(month + ",01," + year).getMonth();
 
@@ -73,16 +89,34 @@ const Day = ({
   };
 
   const formDateToSearch = () => {
-    setDateToSearch(
-      `${String(day._d.getFullYear()).padStart(2, "0")}-${String(
-        day._d.getMonth() + 1
-      ).padStart(2, "0")}-${String(day._d.getDate()).padStart(2, "0")}T00:00:00`
-    );
-    setDateTimeFinalToSearch(
-      `${String(day._d.getFullYear()).padStart(2, "0")}-${String(
-        day._d.getMonth() + 1
-      ).padStart(2, "0")}-${String(day._d.getDate()).padStart(2, "0")}T23:59:59`
-    );
+    setDateToSearch(`${returnThisDateWithHour("00:00:00")}`);
+    setDateTimeFinalToSearch(`${returnThisDateWithHour("23:59:59")}`);
+  };
+
+  const returnThisDateWithHour = (hour: string) => {
+    return `${String(day._d.getFullYear()).padStart(2, "0")}-${String(
+      day._d.getMonth() + 1
+    ).padStart(2, "0")}-${String(day._d.getDate()).padStart(2, "0")}T${hour}`;
+  };
+
+  const returnClassName = () => {
+    if (
+      day._d.getDate() === new Date().getDate() &&
+      day._d.getMonth() === new Date().getMonth() &&
+      day._d.getFullYear() === new Date().getFullYear()
+    ) {
+      return styles.current_day;
+    } else if (stateOfDay !== "nonPertenceMonth") {
+      if (color === "RED") {
+        return styles.critical_day;
+      } else if (color === "GREEN") {
+        return styles.high_day;
+      } else if (color === "BLUE") {
+        return styles.regular_day;
+      } else if (color === "GRAY") {
+        return styles.low_day;
+      }
+    }
   };
 
   return (
@@ -94,13 +128,7 @@ const Day = ({
       style={verifyStateAndReturnCss()}
     >
       <span
-        className={`${
-          day._d.getDate() === new Date().getDate() &&
-          day._d.getMonth() === new Date().getMonth() &&
-          day._d.getFullYear() === new Date().getFullYear()
-            ? styles.current_day
-            : null
-        }`}
+        className={`${returnClassName()}`}
         style={{ padding: !isToShowOneMonth ? "4px" : undefined }}
       >
         {day.format("DD").toString()}

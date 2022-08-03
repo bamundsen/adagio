@@ -30,6 +30,7 @@ import io.adagio.adagioapi.dto.CadastroTarefaForm;
 import io.adagio.adagioapi.dto.ColorThatIsToBeShowedBasedOnPriorityDto;
 import io.adagio.adagioapi.dto.StartAndEndDateDto;
 import io.adagio.adagioapi.dto.TaskDto;
+import io.adagio.adagioapi.models.ColorOfPriority;
 import io.adagio.adagioapi.models.Priority;
 import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
@@ -80,7 +81,7 @@ public class TaskController {
 				form.getDateTimeEnd());
 		
 
-		String hexadecimalOfColor = ColorThatIsToBeShowedBasedOnPriorityDto.defineColorThatIsToBeShowed(tasks);
+		ColorOfPriority hexadecimalOfColor = ColorThatIsToBeShowedBasedOnPriorityDto.defineColorThatIsToBeShowed(tasks);
 		
 		
 		ColorThatIsToBeShowedBasedOnPriorityDto color = new ColorThatIsToBeShowedBasedOnPriorityDto(hexadecimalOfColor);

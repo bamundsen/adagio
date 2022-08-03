@@ -8,6 +8,10 @@ export type TaskContextType = {
     startDateTime: string,
     dateFinalToSearch: string
   ) => any;
+  getColorThatIsToBeShowed: (
+    startDateTime: string,
+    dateFinalToSearch: string
+  ) => any;
 };
 
 export const TaskContext = createContext<TaskContextType>(null!);
@@ -30,9 +34,22 @@ export const TaskProvider = ({ children }: { children: JSX.Element }) => {
     );
     return response;
   };
+
+  const getColorThatIsToBeShowed = async (
+    startDateTime: string,
+    dateFinalToSearch: string
+  ) => {
+    const response = await taskApi.getColorThatIsToBeShowed(
+      startDateTime,
+      dateFinalToSearch
+    );
+
+    return response;
+  };
   const value: TaskContextType = {
     createTask,
     listByStartDateTimeFilter,
+    getColorThatIsToBeShowed,
   };
 
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;

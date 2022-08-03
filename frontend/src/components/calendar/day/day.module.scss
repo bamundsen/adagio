@@ -12,10 +12,36 @@
   margin: 1px;
 }
 
-.current_day {
+.current_day,
+.critical_day,
+.high_day,
+.regular_day,
+.low_day {
   width: auto;
   height: auto;
   border-radius: 45%;
   padding: 10px;
+}
+
+.current_day {
   background-color: yellow;
+}
+
+.critical_day {
+  background-color: #dd4458;
+  color: #fff;
+}
+
+.high_day {
+  background-color: rgb(9, 119, 5);
+  color: #fff;
+}
+
+.regular_day {
+  background-color: rgb(32, 32, 231);
+  color: #fff;
+}
+
+.low_day {
+  background-color: #cceeddcb;
 }
