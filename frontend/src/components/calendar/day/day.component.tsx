@@ -38,7 +38,6 @@ const Day = ({
   const [color, setColor] = useState("");
 
   useEffect(() => {
-    console.log("EI EI EI");
     getColorThatIsToBeShowed(
       returnThisDateWithHour("00:00:00"),
       returnThisDateWithHour("23:59:59")

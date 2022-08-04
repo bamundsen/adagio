@@ -56,8 +56,6 @@ const Month = ({
   const [dateFinalToSearch, setDateFinalToSearch] = useState("");
 
   useEffect(() => {
-    // setValue(value.year(currentYear));
-    console.log("CARREGOU");
     updateCalendar();
   }, [value]);
 
