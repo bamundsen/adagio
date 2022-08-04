@@ -67,7 +67,6 @@ const Calendar = ({
   }, [triggerAlignCurrentMonth]);
 
   useEffect(() => {
-    console.log("VENHO AQUI TAMBÉM");
     setMonthToSend(months[currentMonth]);
   }, [currentMonth, trigger]);
 
@@ -76,7 +75,6 @@ const Calendar = ({
   };
 
   const changeMonth = (e: any) => {
-    console.log(e.target.id);
     const id: number = Number(e.target.id);
     if (id >= 0 && id <= 11) {
       setCurrentMonth(id);
@@ -85,7 +83,6 @@ const Calendar = ({
 
   const changeYear = (newDate: Date) => {
     const newCurrentYear = Math.abs(newDate.getFullYear());
-    console.log(newCurrentYear);
 
     if (newCurrentYear <= new Date().getFullYear()) {
       if (new Date().getFullYear() - newCurrentYear <= 10) {

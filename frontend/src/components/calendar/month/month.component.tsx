@@ -1,7 +1,7 @@
 import moment from "moment";
 import { uid } from "react-uid";
 import "moment/locale/pt";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { CloseButton } from "react-bootstrap";
 import { Button } from "react-bootstrap";
@@ -14,6 +14,7 @@ import months from "../../../utils/months";
 import completeWeekDays from "../../../utils/weekDays";
 import { Link } from "react-router-dom";
 import Form from "react-bootstrap/Form";
+import { CalendarContext } from "../../../contexts/calendar.context";
 
 interface MonthProps {
   occupiedDates: any[];
@@ -50,12 +51,13 @@ const Month = ({
   const [dayOfModal, setDayOfModal] = useState<Date | null>(null);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
+  const { triggerUpdateCalendar } = useContext(CalendarContext);
   const [dateToSearch, setDateToSearch] = useState("");
   const [dateFinalToSearch, setDateFinalToSearch] = useState("");
 
   useEffect(() => {
     // setValue(value.year(currentYear));
-
+    console.log("CARREGOU");
     updateCalendar();
   }, [value]);
 

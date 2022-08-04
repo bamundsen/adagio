@@ -25,6 +25,8 @@ const Navigation = () => {
   const [loginOrRegisterPageAux, setLoginOrRegisterPageAux] =
     useState<string>();
   const [displayDropdown, setDisplayDropdown] = useState("none");
+  const { triggerUpdateCalendar, setTriggerUpdateCalendar } =
+    useContext(CalendarContext);
 
   useEffect(() => {
     const checkIfClickOutside = (e: any) => {
@@ -55,7 +57,6 @@ const Navigation = () => {
   };
 
   const closeDisplayDropDown = () => {
-    console.log("ON BLUR");
     if (displayDropdown !== "none") setDisplayDropdown("none");
   };
 
@@ -86,7 +87,9 @@ const Navigation = () => {
             !isAuthenticated && (
               <li
                 className={`${styles["item-navegacao"]}`}
-                onClick={toggleLoginOrRegisterPageAux}
+                onClick={() => {
+                  toggleLoginOrRegisterPageAux();
+                }}
               >
                 <Link
                   to={`${
@@ -197,9 +200,9 @@ const Navigation = () => {
           <Link
             to={`${isAuthenticated ? "/adagio/home" : "/"}`}
             onClick={() => {
-              console.log("VENHO SIM");
               setLoginOrRegisterPageAux("/register");
               setTriggerAlignCurrentMonth(!triggerAlignCurrentMonth);
+              setTriggerUpdateCalendar(!triggerUpdateCalendar);
             }}
           >
             <img

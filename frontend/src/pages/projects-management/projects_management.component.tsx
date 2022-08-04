@@ -28,6 +28,7 @@ const ProjectsManagement = () => {
   const [isFirst, setIsFirst] = useState(false);
   const [isLast, setIsLast] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [thereIsNoData, setThereIsNoData] = useState(false);
 
   useEffect(() => {
     getProjects(size, page).then((response: any) => {
@@ -44,10 +45,6 @@ const ProjectsManagement = () => {
       }
 
       setProjects(response?.content);
-
-      if (response.content) {
-        setIsLoaded(true);
-      }
     });
   }, [
     page,
@@ -58,6 +55,15 @@ const ProjectsManagement = () => {
     triggerToSearchProjectsAgainAfterRegister,
     triggerToSearchProjectsAgainAfterDelete,
   ]);
+
+  useEffect(() => {
+    if (projects.length > 0) {
+      setIsLoaded(true);
+    } else {
+      setIsLoaded(false);
+      setThereIsNoData(true);
+    }
+  }, [projects]);
 
   useEffect(() => {
     setPage(0);
@@ -90,7 +96,7 @@ const ProjectsManagement = () => {
   };
 
   const returnSpinner = () => {
-    return <AdagioSpinner />;
+    return <AdagioSpinner thereIsNoData={thereIsNoData} />;
   };
 
   return (

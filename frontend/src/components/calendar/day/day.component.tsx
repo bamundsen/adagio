@@ -1,5 +1,6 @@
 import { triggerAsyncId } from "async_hooks";
 import React, { useContext, useEffect, useState } from "react";
+import { CalendarContext } from "../../../contexts/calendar.context";
 import { TaskContext } from "../../../contexts/task.context";
 import styles from "./day.module.scss";
 
@@ -32,9 +33,12 @@ const Day = ({
   const [stateOfDay, setStateOfDay] = useState("");
   const [dayToCompare, setDayToCompare] = useState(day._d);
   const { getColorThatIsToBeShowed } = useContext(TaskContext);
+  const { triggerUpdateCalendar, setTriggerUpdateCalendar } =
+    useContext(CalendarContext);
   const [color, setColor] = useState("");
 
   useEffect(() => {
+    console.log("EI EI EI");
     getColorThatIsToBeShowed(
       returnThisDateWithHour("00:00:00"),
       returnThisDateWithHour("23:59:59")
@@ -43,7 +47,7 @@ const Day = ({
         setColor(response.colorThatIsToBeShowed);
       }
     });
-  }, []);
+  }, [triggerUpdateCalendar]);
 
   useEffect(() => {
     const currentMonth = new Date(month + ",01," + year).getMonth();
@@ -82,7 +86,6 @@ const Day = ({
   };
 
   const handleClickDate = () => {
-    console.log(`day: ${day._d.getMonth()}, ${day._d.getDay()}`);
     setDayOfModal(day._d);
     formDateToSearch();
     setModalIsOpen(true);

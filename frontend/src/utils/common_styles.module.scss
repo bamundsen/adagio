@@ -25,6 +25,12 @@
   width: 65px;
   height: 65px;
 }
+
+.there_is_content_in_the_data {
+  text-align: center;
+  padding: 35px;
+}
+
 @media (max-width: 768px) {
   .main_content {
     flex-direction: column;

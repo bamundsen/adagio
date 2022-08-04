@@ -30,13 +30,12 @@ const RelatoryModal = ({
   const { listByStartDateTimeFilter } = useContext(TaskContext);
   const [tasksToShow, setTasksToShow] = useState<any[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [thereIsNoData, setThereIsNoData] = useState(false);
 
   useEffect(() => {
     if (modalIsOpen) {
-      console.log(dateFinalToSearch, dateToSearch);
       listByStartDateTimeFilter(dateToSearch, dateFinalToSearch).then(
         (response: any) => {
-          console.log(response);
           setTasksToShow([
             ...response.data.map((task: Task) => {
               const title = task.title;
@@ -55,14 +54,25 @@ const RelatoryModal = ({
 
           if (response.data.length > 0) {
             setIsLoaded(true);
+          } else if (response.data.length === 0) {
+            setThereIsNoData(true);
           }
         }
       );
     }
   }, [modalIsOpen]);
 
+  useEffect(() => {
+    if (tasksToShow.length > 0) {
+      setIsLoaded(true);
+    } else {
+      setIsLoaded(false);
+      setThereIsNoData(true);
+    }
+  }, [tasksToShow]);
+
   const returnSpinner = () => {
-    return <AdagioSpinner />;
+    return <AdagioSpinner thereIsNoData={thereIsNoData} />;
   };
 
   return (
