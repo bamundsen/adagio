@@ -1,6 +1,7 @@
 import { setDefaultResultOrder } from "dns";
 import { useContext, useEffect, useState } from "react";
 import { Form, Modal } from "react-bootstrap";
+import { BsTrash } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import LinkSideBarIcon from "../../assets/link_sidebar_icon.svg";
 import { TaskContext } from "../../contexts/task.context";
@@ -31,6 +32,9 @@ const RelatoryModal = ({
   const [tasksToShow, setTasksToShow] = useState<any[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [thereIsNoData, setThereIsNoData] = useState(false);
+  const { deleteById } = useContext(TaskContext);
+  const [triggerToSearchTasksAgain, setTriggerToSearchTasksAgain] =
+    useState(false);
 
   useEffect(() => {
     if (modalIsOpen) {
@@ -40,7 +44,7 @@ const RelatoryModal = ({
             ...response.data.map((task: Task) => {
               const title = task.title;
               const dateTimeStart = new Date(task.dateTimeStart);
-
+              const id = task.id;
               const hourAndMinute = `${String(
                 dateTimeStart.getHours()
               ).padStart(2, "0")}:${String(dateTimeStart.getMinutes()).padStart(
@@ -48,7 +52,7 @@ const RelatoryModal = ({
                 "0"
               )}`;
 
-              return { title, hourAndMinute };
+              return { id, title, hourAndMinute };
             }),
           ]);
 
@@ -60,7 +64,16 @@ const RelatoryModal = ({
         }
       );
     }
-  }, [modalIsOpen]);
+  }, [modalIsOpen, triggerToSearchTasksAgain]);
+
+  const deleteTaskById = (id: number) => {
+    deleteById(id).then((response: any) => {
+      console.log(response);
+      if (response.status === 200) {
+        setTriggerToSearchTasksAgain(!triggerToSearchTasksAgain);
+      }
+    });
+  };
 
   useEffect(() => {
     if (tasksToShow.length > 0) {
@@ -113,7 +126,15 @@ const RelatoryModal = ({
             tasksToShow.map((task: any, i) => {
               return (
                 <li key={task.title + task.hourAndMinute + i}>
-                  {task.title} ({task.hourAndMinute})
+                  <span>
+                    {task.title} ({task.hourAndMinute})
+                  </span>
+                  <BsTrash
+                    onClick={() => {
+                      deleteTaskById(task.id);
+                    }}
+                    style={{ cursor: "pointer", color: "#ff1209" }}
+                  />
                 </li>
               );
             })}

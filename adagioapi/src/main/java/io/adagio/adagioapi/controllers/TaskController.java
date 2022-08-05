@@ -54,8 +54,9 @@ public class TaskController {
 	@GetMapping
 	public Page<TaskDto> list(@PageableDefault(sort="dateTimeEnd",page=0,size=10,
 			direction=Direction.ASC) Pageable pagination){
-	
-			Page<Task> tasks = taskRepository.findAll(pagination);
+			User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			
+			Page<Task> tasks = taskRepository.findByUser(logado,pagination);
 			return Task.converter(tasks);	
 	}
 

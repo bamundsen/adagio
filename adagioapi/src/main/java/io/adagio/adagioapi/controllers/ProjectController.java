@@ -36,6 +36,7 @@ import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.repositories.ProjectRepository;
 import io.adagio.adagioapi.repositories.TaskRepository;
 import io.adagio.adagioapi.repositories.UserRepository;
+import io.adagio.adagioapi.services.ProjectService;
 
 @RestController
 @RequestMapping("${adagio.api.base_servico_de_rotas_privadas}/projects")
@@ -47,7 +48,9 @@ public class ProjectController {
 	@Autowired
 	private TaskRepository taskRepository;
 	
-
+	@Autowired
+	private ProjectService projectService;
+	
 	@Value("${adagio.api.base_servico_de_rotas_privadas}")
 	private String base_da_url_do_servico;
 	
@@ -114,6 +117,7 @@ public class ProjectController {
 		Optional<Project> project = projectRepository.findByIdAndUser(id,logado);
 		
 		if(project.isPresent()) {
+			projectService.deleteTasksByProjectAndUser(project.get(), logado);
 			projectRepository.deleteByIdAndUser(id,logado);
 			return ResponseEntity.ok().build();
 		}

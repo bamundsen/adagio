@@ -30,6 +30,15 @@ export const TaskApi = () => ({
     }
   },
 
+  deleteById: async (id: number) => {
+    try {
+      const response = await api.delete(`/users/tasks/${id}`);
+
+      return response;
+    } catch (erro) {
+      console.log(erro);
+    }
+  },
   getColorThatIsToBeShowed: async (
     startDateTime: string,
     dateFinalToSearch: string
