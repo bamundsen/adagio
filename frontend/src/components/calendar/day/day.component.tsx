@@ -130,6 +130,7 @@ const Day = ({
       style={verifyStateAndReturnCss()}
     >
       <span
+        tabIndex={1}
         className={`${returnClassName()}`}
         style={{ padding: !isToShowOneMonth ? "4px" : undefined }}
       >

@@ -1,6 +1,7 @@
 package io.adagio.adagioapi.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -28,7 +29,7 @@ public class ProjectDto {
 	
 	private Long idUser;
 	
-	private List<Task> tasks;
+	private List<TaskDto> tasks = new ArrayList<TaskDto>();
 	
 	public ProjectDto(Project project)
 	{
@@ -39,7 +40,11 @@ public class ProjectDto {
 		this.dateTimeStart = project.getDateTimeStart();
 		this.idUser = project.getUser().getId();
 		this.progress= project.getProgressStatus();
-		this.tasks = project.getTasks();
+		
+		for(Task task : project.getTasks()) {
+			TaskDto taskToAdd = new TaskDto(task);
+			tasks.add(taskToAdd);
+		}
 	}
 	
 	public Long getId () {
@@ -50,7 +55,7 @@ public class ProjectDto {
 		return this.idUser;
 	}
 	
-	public List<Task> getTasks(){
+	public List<TaskDto> getTasks(){
 		return this.tasks;
 	}
 	

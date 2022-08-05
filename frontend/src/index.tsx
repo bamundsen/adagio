@@ -7,6 +7,10 @@ import "./index.css";
 import App from "./App";
 import { ProjectProvider } from "./contexts/project.context";
 import { TaskProvider } from "./contexts/task.context";
+import {
+  NotificationContext,
+  NotificationProvider,
+} from "./contexts/notification.context";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -18,7 +22,9 @@ root.render(
         <ProjectProvider>
           <TaskProvider>
             <CalendarProvider>
-              <App />
+              <NotificationProvider>
+                <App />
+              </NotificationProvider>
             </CalendarProvider>
           </TaskProvider>
         </ProjectProvider>

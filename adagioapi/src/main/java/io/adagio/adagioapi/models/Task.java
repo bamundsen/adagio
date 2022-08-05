@@ -19,6 +19,8 @@ import javax.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import io.adagio.adagioapi.dto.CadastroTarefaForm;
 import io.adagio.adagioapi.dto.ProjectDto;
 import io.adagio.adagioapi.dto.TaskDto;
@@ -53,6 +55,7 @@ public class Task {
 
 	//optativamente a tarefa terá um projeto relacionado a ela
 	@ManyToOne
+	@JsonBackReference
 	@JoinColumn(name="project_id", nullable=true)
 	private Project project;
 	
