@@ -110,6 +110,7 @@ const RelatoryModal = ({
         </h2>
 
         <div
+          tabIndex={1}
           onClick={() => {
             setModalIsOpen(false);
           }}
@@ -144,6 +145,7 @@ const RelatoryModal = ({
       </Modal.Body>
       <Modal.Footer className={`${style.footer_modal}`}>
         <Link
+          tabIndex={1}
           to="/criar_tarefa"
           className={`${style.footer_modal_create_task_link}`}
         >
@@ -158,6 +160,7 @@ const RelatoryModal = ({
           <span>Dia Livre</span>
 
           <Form.Check
+            tabIndex={1}
             className={`${style.footer_modal_set_free_day_checkbox}`}
             type={"checkbox"}
             id={`disabled-default-checkbox`}

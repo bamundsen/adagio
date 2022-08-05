@@ -64,7 +64,7 @@ public class TaskController {
 	public ResponseEntity<List<TaskDto>> listByStartDateAndEndDate(@RequestBody @Valid StartAndEndDateDto startDateDto){
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		List<Task> tasks = taskRepository.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThan(logado,
+		List<Task> tasks = taskRepository.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanAndProjectIsNull(logado,
 				startDateDto.getDateTimeStart(),
 				startDateDto.getDateTimeEnd());
 		
@@ -77,7 +77,7 @@ public class TaskController {
 	public ResponseEntity<ColorThatIsToBeShowedBasedOnPriorityDto> getColor(@RequestBody @Valid StartAndEndDateDto form){
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		List<Task> tasks = taskRepository.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThan(logado,
+		List<Task> tasks = taskRepository.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanAndProjectIsNull(logado,
 				form.getDateTimeStart(),
 				form.getDateTimeEnd());
 		

@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Modal, Toast } from "react-bootstrap";
+import { BsInfo, BsInfoSquare } from "react-icons/bs";
 import { TaskContext } from "./task.context";
 
 const defineHourAndMinuteOfNow = () => {
@@ -44,7 +45,7 @@ export const NotificationProvider = ({
 
         console.log("VENHO");
       });
-    }, 100000);
+    }, 40000);
   }, []);
 
   useEffect(() => {
@@ -61,11 +62,14 @@ export const NotificationProvider = ({
         const hour = dt.dateTimeStart.split("T")[1].split(":")[0];
         const minute = dt.dateTimeStart.split("T")[1].split(":")[1];
         setTitleTask(dt.title);
-        setHourAndMinuteToCompare(`${hour}:${minute}`);
-        console.log(hourAndMinuteOfNow, hourAndMinuteToCompare);
+        console.log(hourAndMinuteOfNow, `${hour}:${minute}`);
+        if (hourAndMinuteOfNow === `${hour}:${minute}`) {
+          setHourAndMinuteToCompare(`${hour}:${minute}`);
+          break;
+        }
       }
     }
-  }, [tasksFromToday, isToShowAlert]);
+  }, [tasksFromToday]);
 
   const returnThisDateWithHour = (hour: string) => {
     return `${String(new Date().getFullYear()).padStart(2, "0")}-${String(
@@ -82,14 +86,41 @@ export const NotificationProvider = ({
     //   alert(`${message}!`);
     return (
       <Modal show={isToShowAlert}>
-        {message}
-        <button
-          onClick={() => {
-            setIsToShowAlert(false);
+        <div
+          style={{
+            width: "100%",
+            minHeight: "75px",
+            padding: "9px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          sair
-        </button>
+          {/* <span>{message}</span> */}
+          <span>
+            <BsInfoSquare
+              tabIndex={1}
+              title={"Uma tarefa foi iniciada"}
+              style={{
+                color: "blue",
+                width: "24px",
+                height: "24px",
+                marginRight: "15px",
+              }}
+            />
+            {message}
+          </span>
+          <span
+            style={{ fontSize: "18px", marginRight: "8px", cursor: "pointer" }}
+            tabIndex={1}
+            title={"Close"}
+            onClick={() => {
+              setIsToShowAlert(false);
+            }}
+          >
+            X
+          </span>
+        </div>
       </Modal>
     );
   };

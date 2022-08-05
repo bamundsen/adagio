@@ -161,6 +161,7 @@ const Month = ({
         {isToShowOneMonth ? (
           <>
             <img
+              tabIndex={1}
               onClick={decrementCurrentMonth}
               className={style.icon_arrow_calendar}
               src={ArrowToLeft}
@@ -168,6 +169,7 @@ const Month = ({
             />
             {monthAux + ` ${currentYear}`}
             <img
+              tabIndex={1}
               onClick={incrementCurrentMonth}
               className={style.icon_arrow_calendar}
               src={ArrowToRight}

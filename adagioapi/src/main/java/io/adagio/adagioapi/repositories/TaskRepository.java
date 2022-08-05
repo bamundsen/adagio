@@ -21,7 +21,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
 	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeEndLessThanEqual(User user,LocalDateTime dateTimeStart,LocalDateTime dateTimeEnd);
 	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanEqual(User user,LocalDateTime dateTimeStartMin,LocalDateTime dateTimeStartMax);
-	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThan(User user,LocalDateTime dateTimeStartMin,LocalDateTime dateTimeStartMax);
+	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanAndProjectIsNull(User user,LocalDateTime dateTimeStartMin,LocalDateTime dateTimeStartMax);
 	
 	List<Task> findByUserAndDateTimeStartGreaterThanEqual(User user,LocalDateTime dateTimeStartMin);
 	

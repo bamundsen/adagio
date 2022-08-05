@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import io.adagio.adagioapi.dto.CadastroProjetoForm;
+import io.adagio.adagioapi.dto.OperationType;
 import io.adagio.adagioapi.dto.ProjectDto;
 import io.adagio.adagioapi.models.Project;
 import io.adagio.adagioapi.models.User;
@@ -84,6 +85,7 @@ public class ProjectController {
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		Project project = projectForm.converter( taskRepository,logado);
+		projectService.vinculateTasksToProject(project.getTasks(),project);
 		
 		projectRepository.save(project);
 		
@@ -102,7 +104,14 @@ public class ProjectController {
 		Optional<Project> optionalProject = projectRepository.findByIdAndUser(id,logado);
 		
 		if(optionalProject.isPresent()) {
+			projectService.deleteTasksByProjectOrDesvinculateAndUser(optionalProject.get(), logado, OperationType.EDIT);
+			
 			Project project = projectForm.atualizar(id, projectRepository,taskRepository);
+			
+			projectService.vinculateTasksToProject(project.getTasks(),project);
+			
+			projectRepository.save(project);
+			
 			return ResponseEntity.ok(new ProjectDto(project));
 		}
 		
@@ -117,7 +126,7 @@ public class ProjectController {
 		Optional<Project> project = projectRepository.findByIdAndUser(id,logado);
 		
 		if(project.isPresent()) {
-			projectService.deleteTasksByProjectAndUser(project.get(), logado);
+			projectService.deleteTasksByProjectOrDesvinculateAndUser(project.get(), logado, OperationType.DELETE);
 			projectRepository.deleteByIdAndUser(id,logado);
 			return ResponseEntity.ok().build();
 		}
