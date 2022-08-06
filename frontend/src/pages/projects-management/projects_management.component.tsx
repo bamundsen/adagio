@@ -176,13 +176,13 @@ const ProjectsManagement = () => {
 
         {!isLoaded && returnSpinner()}
 
-        <section className={styles.container_buttons}>
+        <section className={commonStyles.container_buttons}>
           {!isFirst ? (
             <Button
               onClick={() => {
                 decrementPage();
               }}
-              className={styles.pagination_projects_button}
+              className={commonStyles.pagination_button}
             >
               Anterior
             </Button>
@@ -193,7 +193,7 @@ const ProjectsManagement = () => {
               onClick={() => {
                 incrementPage();
               }}
-              className={styles.pagination_projects_button}
+              className={commonStyles.pagination_button}
             >
               Próximo
             </Button>

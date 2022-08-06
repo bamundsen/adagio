@@ -32,7 +32,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import io.adagio.adagioapi.dto.CadastroProjetoForm;
 import io.adagio.adagioapi.dto.OperationType;
 import io.adagio.adagioapi.dto.ProjectDto;
+import io.adagio.adagioapi.dto.TaskDto;
 import io.adagio.adagioapi.models.Project;
+import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.repositories.ProjectRepository;
 import io.adagio.adagioapi.repositories.TaskRepository;
@@ -58,11 +60,27 @@ public class ProjectController {
 
 	@GetMapping
 	public Page<ProjectDto> listar(@PageableDefault(sort="dateTimeEnd",page=0,size=10,
-			direction=Direction.DESC) Pageable paginacao){
-			User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			direction=Direction.DESC) Pageable pagination){
+			User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-			Page<Project> projects = projectRepository.findByUser(logado,paginacao);
+			Page<Project> projects = projectRepository.findByUser(logged,pagination);
 			return Project.converter(projects);	
+	}
+	
+	@GetMapping("/{id}/tasks")
+	public ResponseEntity<Page<TaskDto>> getTasksByProject(@PageableDefault(sort="dateTimeStart", page=0, size=10,
+			direction=Direction.ASC) Pageable pagination, @PathVariable("id") Long id){
+		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		Optional<Project> project = projectRepository.findById(id);
+		
+		if(project.isPresent()) {
+			Page<Task> tasks = taskRepository.findByProjectAndUser(project.get(), logged, pagination);
+			
+			return ResponseEntity.ok().body(Task.converter(tasks));
+		}
+		
+		return ResponseEntity.notFound().build();
 	}
 	
 	@GetMapping("/{id}")
@@ -100,7 +118,7 @@ public class ProjectController {
 	@Transactional
 	public ResponseEntity<ProjectDto> atualizar(@PathVariable("id") Long id, @RequestBody @Valid CadastroProjetoForm projectForm){
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
+		System.out.println("o ID DO PROJECT "+ id);
 		Optional<Project> optionalProject = projectRepository.findByIdAndUser(id,logado);
 		
 		if(optionalProject.isPresent()) {
@@ -114,7 +132,7 @@ public class ProjectController {
 			
 			return ResponseEntity.ok(new ProjectDto(project));
 		}
-		
+		System.out.println("NOT FOUND "+ id);
 		return ResponseEntity.notFound().build();
 	}
 	

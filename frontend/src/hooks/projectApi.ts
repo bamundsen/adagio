@@ -55,4 +55,19 @@ export const ProjectApi = () => ({
       console.log(erro);
     }
   },
+
+  getTasksByProject: async (id: number, size?: number, page?: number) => {
+    console.log(size, page);
+    try {
+      const response = await api.get(
+        `users/projects/${id}/tasks?size=${
+          size === undefined ? 7 : size
+        }&page=${page === undefined ? 0 : page}`
+      );
+
+      return response.data;
+    } catch (erro) {
+      console.log(erro);
+    }
+  },
 });

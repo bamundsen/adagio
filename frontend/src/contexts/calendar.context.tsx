@@ -4,6 +4,7 @@ export type CalendarContextType = {
   triggerAlignCurrentMonth: boolean;
   setTriggerAlignCurrentMonth: React.Dispatch<React.SetStateAction<boolean>>;
   setTriggerUpdateCalendar: React.Dispatch<React.SetStateAction<boolean>>;
+  activeTriggerUpdateCalendar: () => void;
   triggerUpdateCalendar: boolean;
 };
 
@@ -14,9 +15,13 @@ export const CalendarProvider = ({ children }: { children: JSX.Element }) => {
     useState(false);
   const [triggerUpdateCalendar, setTriggerUpdateCalendar] = useState(false);
 
+  const activeTriggerUpdateCalendar = () => {
+    setTriggerUpdateCalendar(!triggerUpdateCalendar);
+  };
+
   const value: CalendarContextType = {
     setTriggerAlignCurrentMonth,
-
+    activeTriggerUpdateCalendar,
     triggerAlignCurrentMonth,
     setTriggerUpdateCalendar,
     triggerUpdateCalendar,

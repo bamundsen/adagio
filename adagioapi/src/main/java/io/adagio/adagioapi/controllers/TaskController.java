@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -32,6 +33,7 @@ import io.adagio.adagioapi.dto.StartAndEndDateDto;
 import io.adagio.adagioapi.dto.TaskDto;
 import io.adagio.adagioapi.models.ColorOfPriority;
 import io.adagio.adagioapi.models.Priority;
+import io.adagio.adagioapi.models.Project;
 import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.repositories.ProjectRepository;
@@ -60,6 +62,7 @@ public class TaskController {
 			return Task.converter(tasks);	
 	}
 
+	
 	@PostMapping("/list-by-start-datetime-filter")
 	public ResponseEntity<List<TaskDto>> listByStartDateAndEndDate(@RequestBody @Valid StartAndEndDateDto startDateDto){
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

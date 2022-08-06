@@ -11,6 +11,7 @@ import style from "./relatory_modal.module.scss";
 import commonStyles from "./../../utils/common_styles.module.scss";
 import ConfirmationModal from "../confirmation-modal/confirmation_modal.component";
 import { tabEnterClickEffect } from "../../utils/acessibilityAux";
+import { CalendarContext } from "../../contexts/calendar.context";
 
 interface RelatoryModalProps {
   modalIsOpen: boolean;
@@ -34,6 +35,7 @@ const RelatoryModal = ({
   const navigate = useNavigate();
   const { listByStartDateTimeFilter } = useContext(TaskContext);
   const [tasksToShow, setTasksToShow] = useState<any[]>([]);
+  const { activeTriggerUpdateCalendar } = useContext(CalendarContext);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [thereIsNoData, setThereIsNoData] = useState(false);
@@ -85,8 +87,10 @@ const RelatoryModal = ({
     if (id) {
       deleteById(id).then((response: any) => {
         console.log(response);
+
         if (response.status === 200) {
           setTriggerToSearchTasksAgain(!triggerToSearchTasksAgain);
+          activeTriggerUpdateCalendar();
         }
       });
     }
@@ -138,6 +142,7 @@ const RelatoryModal = ({
           tabIndex={1}
           onKeyDown={tabEnterClickEffect}
           onClick={() => {
+            activeTriggerUpdateCalendar();
             setModalIsOpen(false);
           }}
           className={`${commonStyles.close_modal_button}`}
@@ -175,6 +180,7 @@ const RelatoryModal = ({
                     title="Esse botão irá causar a deleção da tarefa"
                     onClick={() => {
                       setIsConfirmationModalOpen(true);
+
                       setIdToConfirmationModal(task.id);
                     }}
                     style={{

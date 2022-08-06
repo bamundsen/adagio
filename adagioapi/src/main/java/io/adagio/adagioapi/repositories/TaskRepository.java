@@ -16,8 +16,9 @@ import io.adagio.adagioapi.models.User;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 	
 	Optional<Task> findByIdAndUser(Long id, User user);
+	Page<Task> findByProjectAndUser(Project project, User user, Pageable pagination);
 	List<Task> findByProjectAndUser(Project project, User user);
-	Page<Task> findByUser(User user , Pageable paginacao);
+	Page<Task> findByUser(User user , Pageable pagination);
 
 	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeEndLessThanEqual(User user,LocalDateTime dateTimeStart,LocalDateTime dateTimeEnd);
 	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanEqual(User user,LocalDateTime dateTimeStartMin,LocalDateTime dateTimeStartMax);
@@ -28,3 +29,4 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 	void deleteByIdAndUser(Long id, User user);
 
 }
+

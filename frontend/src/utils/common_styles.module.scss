@@ -21,6 +21,20 @@
   justify-content: center;
 }
 
+.container_buttons {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pagination_button {
+  margin: 20px;
+}
+
+.operation_area {
+  text-align: center;
+}
+
 .title_modal {
   flex: 1;
   width: 90%;

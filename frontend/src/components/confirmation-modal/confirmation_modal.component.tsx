@@ -1,8 +1,10 @@
 import { Button, Modal } from "react-bootstrap";
 import styles from "./confirmation_modal.module.scss";
 import commonStyles from "./../../utils/common_styles.module.scss";
-import { getActiveElement } from "@testing-library/user-event/dist/utils";
 import { tabEnterClickEffect } from "../../utils/acessibilityAux";
+import { CalendarContext } from "../../contexts/calendar.context";
+import { useContext } from "react";
+import { act } from "react-dom/test-utils";
 
 interface ConfirmationModalProps {
   functionToPositiveConfirmationExecuteById?: (id: number | undefined) => void;

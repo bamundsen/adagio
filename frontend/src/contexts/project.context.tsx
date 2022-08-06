@@ -19,6 +19,7 @@ export type ProjectContextType = {
     React.SetStateAction<boolean>
   >;
   getProjects: (size?: number, page?: number) => any;
+  getTasksByProject: (id: number, size?: number, page?: number) => any;
   getProject: (idProject: number) => any;
   createProject: (project: Project) => any;
   editProject: (project: Project, id: number) => any;
@@ -45,8 +46,8 @@ export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
   const apiProject = ProjectApi();
 
   const getProjects = async (size?: number, page?: number) => {
-    const listOfProjects = await apiProject.getProjects(size, page);
-    return listOfProjects;
+    const paginationOfProjects = await apiProject.getProjects(size, page);
+    return paginationOfProjects;
   };
 
   const getProject = async (idProject: number) => {
@@ -75,12 +76,27 @@ export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
     return responseToDelete;
   };
 
+  const getTasksByProject = async (
+    id: number,
+    size?: number,
+    page?: number
+  ) => {
+    const paginationOfTasksByProject = await apiProject.getTasksByProject(
+      id,
+      size,
+      page
+    );
+
+    return paginationOfTasksByProject;
+  };
+
   const value: ProjectContextType = {
     setTriggerToSearchProjectsAgainAfterRegister,
     triggerToSearchProjectsAgainAfterRegister,
     triggerToSearchProjectsAgainAfterDelete,
     setTriggerToSearchProjectsAgainAfterDelete,
     getProjects,
+    getTasksByProject,
     getProject,
     setIsToRestartFormAgain,
     isToRestartFormAgain,
