@@ -2,6 +2,7 @@ import { triggerAsyncId } from "async_hooks";
 import React, { useContext, useEffect, useState } from "react";
 import { CalendarContext } from "../../../contexts/calendar.context";
 import { TaskContext } from "../../../contexts/task.context";
+import { tabEnterClickEffect } from "../../../utils/acessibilityAux";
 import styles from "./day.module.scss";
 
 interface DayProps {
@@ -131,6 +132,7 @@ const Day = ({
     >
       <span
         tabIndex={1}
+        onKeyDown={tabEnterClickEffect}
         className={`${returnClassName()}`}
         style={{ padding: !isToShowOneMonth ? "4px" : undefined }}
       >

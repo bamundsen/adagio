@@ -1,6 +1,8 @@
 import { Button, Modal } from "react-bootstrap";
 import styles from "./confirmation_modal.module.scss";
 import commonStyles from "./../../utils/common_styles.module.scss";
+import { getActiveElement } from "@testing-library/user-event/dist/utils";
+import { tabEnterClickEffect } from "../../utils/acessibilityAux";
 
 interface ConfirmationModalProps {
   functionToPositiveConfirmationExecuteById?: (id: number | undefined) => void;
@@ -36,6 +38,7 @@ const ConfirmationModal = ({
         </h4>
         <div
           tabIndex={1}
+          onKeyDown={tabEnterClickEffect}
           onClick={() => {
             setModalIsOpen(false);
           }}

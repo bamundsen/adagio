@@ -10,6 +10,7 @@ import AdagioSpinner from "../adagio-spinner/adagio_spinner.component";
 import style from "./relatory_modal.module.scss";
 import commonStyles from "./../../utils/common_styles.module.scss";
 import ConfirmationModal from "../confirmation-modal/confirmation_modal.component";
+import { tabEnterClickEffect } from "../../utils/acessibilityAux";
 
 interface RelatoryModalProps {
   modalIsOpen: boolean;
@@ -135,6 +136,7 @@ const RelatoryModal = ({
 
         <div
           tabIndex={1}
+          onKeyDown={tabEnterClickEffect}
           onClick={() => {
             setModalIsOpen(false);
           }}
@@ -155,6 +157,8 @@ const RelatoryModal = ({
                     {task.title} ({task.hourAndMinute})
                   </span>
                   <BsFillPenFill
+                    tabIndex={1}
+                    onKeyDown={tabEnterClickEffect}
                     title="Esse botão redirecionará você para a tela de edição dessa tarefa"
                     onClick={() => {
                       alert("Essa feature ainda será implementada !");
@@ -166,6 +170,8 @@ const RelatoryModal = ({
                     }}
                   />
                   <BsTrash
+                    tabIndex={1}
+                    onKeyDown={tabEnterClickEffect}
                     title="Esse botão irá causar a deleção da tarefa"
                     onClick={() => {
                       setIsConfirmationModalOpen(true);
