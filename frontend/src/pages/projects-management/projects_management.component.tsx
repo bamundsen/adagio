@@ -10,6 +10,7 @@ import { ProjectContext } from "../../contexts/project.context";
 import { Project } from "../../types/ProjectType";
 import { Link, useNavigate } from "react-router-dom";
 import AdagioSpinner from "../../components/adagio-spinner/adagio_spinner.component";
+import ConfirmationModal from "../../components/confirmation-modal/confirmation_modal.component";
 
 const ProjectsManagement = () => {
   const navigate = useNavigate();
@@ -29,6 +30,9 @@ const ProjectsManagement = () => {
   const [isLast, setIsLast] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [thereIsNoData, setThereIsNoData] = useState(false);
+  const [confirmationModalIsOpen, setModalConfirmationIsOpen] = useState(false);
+  const [idOfElementToDeleteForModal, setIdOfElementToDeleteForModel] =
+    useState<number>();
 
   useEffect(() => {
     getProjects(size, page).then((response: any) => {
@@ -89,14 +93,31 @@ const ProjectsManagement = () => {
     navigate(`/adagio/editar_projeto/${project.id}`);
   };
 
-  const deleteProjectById = (id: number) => {
-    deleteProject(id).then((response: any) => {
-      console.log(response);
-    });
+  const deleteProjectById = (id: number | undefined) => {
+    if (id) {
+      deleteProject(id).then((response: any) => {
+        console.log(response);
+      });
+    }
   };
 
   const returnSpinner = () => {
     return <AdagioSpinner thereIsNoData={thereIsNoData} />;
+  };
+
+  const returnConfirmationModal = () => {
+    return (
+      <ConfirmationModal
+        functionToPositiveConfirmationExecuteById={deleteProjectById}
+        idToOperation={idOfElementToDeleteForModal}
+        titleConfirmationMessage={"Realmente deseja deletar esse projeto ?"}
+        explanationMessage={
+          "Todas as tarefas vinculadas a esse projeto serão excluídas"
+        }
+        isModalOpen={confirmationModalIsOpen}
+        setModalIsOpen={setModalConfirmationIsOpen}
+      />
+    );
   };
 
   return (
@@ -136,9 +157,12 @@ const ProjectsManagement = () => {
                     <td className={styles.operation_area}>
                       <BsTrash
                         onClick={() => {
-                          if (project.id !== undefined)
-                            deleteProjectById(project.id);
+                          if (project.id !== undefined) {
+                            setIdOfElementToDeleteForModel(project.id);
+                            setModalConfirmationIsOpen(true);
+                          }
                         }}
+                        className={commonStyles.trash_button_delete}
                         style={{ cursor: "pointer", color: "#ff1209" }}
                       ></BsTrash>
                     </td>
@@ -174,6 +198,7 @@ const ProjectsManagement = () => {
           ) : null}
         </section>
       </section>
+      {returnConfirmationModal()}
     </main>
   );
 };
