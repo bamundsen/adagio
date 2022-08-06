@@ -12,7 +12,7 @@ import { AuthContext } from "./contexts/auth.context";
 import FormProjetos from "./pages/form-projetos/form_projetos.component";
 import ProjectsManagement from "./pages/projects-management/projects_management.component";
 import FormTarefas from "./pages/form-tarefas/form_tarefas.component";
-
+import TasksManagement from "./pages/tasks-management/tasks_management.component";
 
 const ApplicationRoutes = () => {
   return (
@@ -26,10 +26,11 @@ const ApplicationRoutes = () => {
           <Route path="calendario" element={<CompleteCalendar />} />
           <Route path="home" element={<Home />} />
           <Route path="projetos" element={<ProjectsManagement />} />
+          <Route path="projetos/:id/tarefas" element={<TasksManagement />} />
           <Route path="editar_projeto/:id" element={<FormProjetos />} />
           <Route path="criar_projeto" element={<FormProjetos />} />
-          <Route path="criar_projeto" element={<FormProjetos />}/>
-          <Route path="cadastrar_tarefa" element={<FormTarefas/>}/>
+          <Route path="criar_projeto" element={<FormProjetos />} />
+          <Route path="cadastrar_tarefa" element={<FormTarefas />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

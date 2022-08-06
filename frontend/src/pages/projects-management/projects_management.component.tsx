@@ -144,7 +144,9 @@ const ProjectsManagement = () => {
                     <td>{project.description}</td>
                     <td>{project?.progress}</td>
                     <td>
-                      <Link to="#">Gerenciar tarefas</Link>
+                      <Link to={`/adagio/projetos/${project.id}/tarefas`}>
+                        Gerenciar tarefas
+                      </Link>
                     </td>
                     <td className={styles.operation_area}>
                       <BsFillPenFill
