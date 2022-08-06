@@ -39,12 +39,10 @@ const Day = ({
   const [color, setColor] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log("CHAMADO");
     getColorThatIsToBeShowed(
       returnThisDateWithHour("00:00:00"),
       returnThisDateWithHour("23:59:59")
     ).then((response: any) => {
-      console.log(response.colorThatIsToBeShowed);
       if (response.colorThatIsToBeShowed !== null) {
         setColor(response.colorThatIsToBeShowed);
       } else {

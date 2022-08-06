@@ -1,10 +1,10 @@
 import AdagioSideBar from "../../components/adagio-sidebar/adagio_sidebar.component";
+import { Button, Pagination, Spinner, Table } from "react-bootstrap";
 import commonStyles from "../../utils/common_styles.module.scss";
 import styles from "./projects_management.module.scss";
 import sideBarData from "../../utils/sideBarData";
 import { BsFillPenFill } from "react-icons/bs";
 import { BsTrash } from "react-icons/bs";
-import { Button, Spinner, Table } from "react-bootstrap";
 import { useContext, useEffect, useState } from "react";
 import { ProjectContext } from "../../contexts/project.context";
 import { Project } from "../../types/ProjectType";
@@ -25,17 +25,20 @@ const ProjectsManagement = () => {
 
   const [projects, setProjects] = useState<any[] | Project[]>([]);
   const [page, setPage] = useState(0);
-  const [size, setSize] = useState(6);
+  const [size, setSize] = useState(8);
   const [isFirst, setIsFirst] = useState(false);
   const [isLast, setIsLast] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [thereIsNoData, setThereIsNoData] = useState(false);
+  const [totalPages, setTotalPages] = useState(0);
+  const [paginationAux, setPaginationAux] = useState<number[]>([]);
   const [confirmationModalIsOpen, setModalConfirmationIsOpen] = useState(false);
   const [idOfElementToDeleteForModal, setIdOfElementToDeleteForModel] =
     useState<number>();
 
   useEffect(() => {
     getProjects(size, page).then((response: any) => {
+      console.log(`total pages: ${totalPages}`);
       if (response?.last) {
         setIsLast(true);
       } else {
@@ -47,7 +50,7 @@ const ProjectsManagement = () => {
       } else {
         setIsFirst(false);
       }
-
+      setTotalPages(response?.totalPages);
       setProjects(response?.content);
     });
   }, [
@@ -68,6 +71,15 @@ const ProjectsManagement = () => {
       setThereIsNoData(true);
     }
   }, [projects]);
+
+  useEffect(() => {
+    let arr = [];
+    for (let i = 0; i < totalPages; i++) {
+      arr[i] = i;
+    }
+
+    setPaginationAux([...arr]);
+  }, [totalPages]);
 
   useEffect(() => {
     setPage(0);
@@ -150,6 +162,7 @@ const ProjectsManagement = () => {
                     </td>
                     <td className={styles.operation_area}>
                       <BsFillPenFill
+                        tabIndex={1}
                         onClick={() => {
                           goToEdit(project);
                         }}
@@ -158,6 +171,7 @@ const ProjectsManagement = () => {
                     </td>
                     <td className={styles.operation_area}>
                       <BsTrash
+                        tabIndex={1}
                         onClick={() => {
                           if (project.id !== undefined) {
                             setIdOfElementToDeleteForModel(project.id);
@@ -179,6 +193,7 @@ const ProjectsManagement = () => {
         <section className={commonStyles.container_buttons}>
           {!isFirst ? (
             <Button
+              title="Anterior"
               onClick={() => {
                 decrementPage();
               }}
@@ -190,6 +205,7 @@ const ProjectsManagement = () => {
 
           {!isLast ? (
             <Button
+              title="Próximo"
               onClick={() => {
                 incrementPage();
               }}
