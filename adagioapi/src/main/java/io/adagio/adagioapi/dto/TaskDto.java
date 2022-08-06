@@ -43,7 +43,9 @@ public class TaskDto {
 			this.idProject = task.getProject().getId();
 		
 		this.priority = task.getPriority();
-		this.notifications = task.getNotifications();
+		
+		if(task.getNotifications() != null)
+			this.notifications = task.getNotifications();
 	}
 
 	public Long getId() {

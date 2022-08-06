@@ -2,6 +2,7 @@ package io.adagio.adagioapi.dto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.constraints.NotBlank;
@@ -12,8 +13,9 @@ import io.adagio.adagioapi.models.Priority;
 import io.adagio.adagioapi.models.Project;
 import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
+import io.adagio.adagioapi.repositories.NotificationRepository;
 import io.adagio.adagioapi.repositories.ProjectRepository;
-import io.adagio.adagioapi.repositories.UserRepository;
+import io.adagio.adagioapi.repositories.TaskRepository;
 
 public class CadastroTarefaForm {
 
@@ -30,10 +32,12 @@ public class CadastroTarefaForm {
 
 	private boolean finishedStatus;
 
-	private Long idProject;
-
-	private ArrayList <Notification> notifications;
-
+	private Long projectId;
+	
+	private ArrayList<Long> notificationsIds;
+	
+	private ArrayList<Notification> notifications;
+	
 	@NotNull
 	private Priority priority;
 
@@ -78,11 +82,11 @@ public class CadastroTarefaForm {
 	}
 
 	public Long getIdProject() {
-		return idProject;
+		return projectId;
 	}
 
-	public void setIdProject(Long idProject) {
-		this.idProject = idProject;
+	public void setIdProject(Long projectId) {
+		this.projectId = projectId;
 	}
 
 	public Priority getPriority() {
@@ -91,24 +95,39 @@ public class CadastroTarefaForm {
 
 	public void setPriority(Priority priority) {
 		this.priority = priority;
+		
 	}
 
+	public Long getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(Long projectId) {
+		this.projectId = projectId;
+	}
+
+	public ArrayList<Long> getNotificationsIds() {
+		return notificationsIds;
+	}
+
+	public void setNotificationsIds(ArrayList<Long> notificationIds) {
+		this.notificationsIds = notificationIds;
+	}
+	
 	public ArrayList<Notification> getNotifications() {
 		return notifications;
 	}
 
 	public void setNotifications(ArrayList<Notification> notifications) {
-		
 		this.notifications = notifications;
-		
 	}
 
-	public Task converter(User user, ProjectRepository projectRepository ) {
+	public Task converter(User user, ProjectRepository projectRepository) {
 		
-		if(idProject == null)
+		if(projectId == null)
 			return new Task(this, user, null);
 		
-		Optional<Project> project = projectRepository.findById(idProject);
+		Optional<Project> project = projectRepository.findById(projectId);
 		
 		if(project.isEmpty())
 			return new Task(this, user, null);
@@ -116,4 +135,19 @@ public class CadastroTarefaForm {
 		return new Task(this, user, project.get());
 	}
 	
+	public Task update(Long id, TaskRepository taskRepository, ProjectRepository projectRepository) {
+		Task task = taskRepository.getById(id);
+		Project project = projectRepository.getById(projectId);
+
+		task.setDateTimeEnd(dateTimeEnd);
+		task.setDateTimeStart(dateTimeStart);
+		task.setTitle(title);
+		task.setDescription(description);
+		task.setFinishedStatus(finishedStatus);
+		task.setPriority(priority);
+		task.setNotifications(notifications);
+		task.setProject(project);
+		
+		return task;
+	}
 }
