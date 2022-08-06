@@ -9,9 +9,13 @@ import { ProjectContext } from "../../contexts/project.context";
 import { Button, Table } from "react-bootstrap";
 import AdagioSpinner from "../../components/adagio-spinner/adagio_spinner.component";
 import { BsFillPenFill, BsTrash } from "react-icons/bs";
+import { TaskContext } from "../../contexts/task.context";
+import ConfirmationModal from "../../components/confirmation-modal/confirmation_modal.component";
 
 const TasksManagement = () => {
   const { getTasksByProject } = useContext(ProjectContext);
+  const { deleteTask, triggerToSearchTasksAgainAfterDelete } =
+    useContext(TaskContext);
   const { idProject } = useParams();
   const [tasks, setTasks] = useState<any[] | Task[]>([]);
   const [page, setPage] = useState(0);
@@ -21,6 +25,9 @@ const TasksManagement = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [thereIsNoData, setThereIsNoData] = useState(false);
+  const [confirmationModalIsOpen, setModalConfirmationIsOpen] = useState(false);
+  const [idOfElementToDeleteForModal, setIdOfElementToDeleteForModel] =
+    useState<number>();
 
   useEffect(() => {
     if (idProject !== undefined) {
@@ -40,7 +47,7 @@ const TasksManagement = () => {
         setTasks(response.content);
       });
     }
-  }, [page, size, isFirst, isLast]);
+  }, [page, size, isFirst, isLast, triggerToSearchTasksAgainAfterDelete]);
 
   useEffect(() => {
     if (tasks.length > 0) {
@@ -61,10 +68,30 @@ const TasksManagement = () => {
     setPage(page + 1);
   };
 
+  const deleteTaskById = (id: number | undefined) => {
+    if (id) {
+      deleteTask(id).then((response: any) => {
+        console.log(response);
+      });
+    }
+  };
+
   const returnSpinner = () => {
     return <AdagioSpinner thereIsNoData={thereIsNoData} />;
   };
 
+  const returnConfirmationModal = () => {
+    return (
+      <ConfirmationModal
+        functionToPositiveConfirmationExecuteById={deleteTaskById}
+        idToOperation={idOfElementToDeleteForModal}
+        titleConfirmationMessage={"Realmente deseja deletar essa tarefa ?"}
+        explanationMessage={"Essa tarefa será definitivamente excluída."}
+        isModalOpen={confirmationModalIsOpen}
+        setModalIsOpen={setModalConfirmationIsOpen}
+      />
+    );
+  };
   return (
     <main className={`${commonStyles.main_content}`}>
       <AdagioSideBar itemsNav={sideBarData} />
@@ -98,10 +125,10 @@ const TasksManagement = () => {
                     <td>
                       <BsTrash
                         onClick={() => {
-                          // if (task.id !== undefined) {
-                          //     setIdOfElementToDeleteForModel(project.id);
-                          //     setModalConfirmationIsOpen(true);
-                          // }
+                          if (task.id !== undefined) {
+                            setIdOfElementToDeleteForModel(task.id);
+                            setModalConfirmationIsOpen(true);
+                          }
                         }}
                         className={commonStyles.trash_button_delete}
                         style={{ cursor: "pointer", color: "#ff1209" }}
@@ -139,6 +166,7 @@ const TasksManagement = () => {
           ) : null}
         </section>
       </section>
+      {returnConfirmationModal()}
     </main>
   );
 };

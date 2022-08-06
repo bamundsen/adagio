@@ -1,10 +1,10 @@
-import { createContext, useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
 import { TaskApi } from "../hooks/taskApi";
 import { Task } from "../types/TaskType";
 
 export type TaskContextType = {
   createTask: (task: Task) => any;
-  deleteById: (id: number) => any;
+  deleteTask: (id: number) => any;
   listByStartDateTimeFilter: (
     startDateTime: string,
     dateFinalToSearch: string
@@ -14,12 +14,17 @@ export type TaskContextType = {
     startDateTime: string,
     dateFinalToSearch: string
   ) => any;
+  triggerToSearchTasksAgainAfterDelete: boolean;
 };
 
 export const TaskContext = createContext<TaskContextType>(null!);
 
 export const TaskProvider = ({ children }: { children: JSX.Element }) => {
   const taskApi = TaskApi();
+  const [
+    triggerToSearchTasksAgainAfterDelete,
+    setTriggerToSearchTasksAgainAfterDelete,
+  ] = useState(false);
 
   const createTask = async (task: Task) => {
     const response = await taskApi.createTask(task);
@@ -37,10 +42,17 @@ export const TaskProvider = ({ children }: { children: JSX.Element }) => {
     return response;
   };
 
-  const deleteById = async (id: number) => {
+  const deleteTask = async (id: number) => {
     const response = await taskApi.deleteById(id);
+
+    if (response?.status === 200) {
+      setTriggerToSearchTasksAgainAfterDelete(
+        !triggerToSearchTasksAgainAfterDelete
+      );
+    }
     return response;
   };
+
   const getColorThatIsToBeShowed = async (
     startDateTime: string,
     dateFinalToSearch: string
@@ -54,7 +66,8 @@ export const TaskProvider = ({ children }: { children: JSX.Element }) => {
   };
   const value: TaskContextType = {
     createTask,
-    deleteById,
+    triggerToSearchTasksAgainAfterDelete,
+    deleteTask,
     listByStartDateTimeFilter,
     getColorThatIsToBeShowed,
   };

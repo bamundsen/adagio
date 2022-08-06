@@ -39,7 +39,7 @@ const RelatoryModal = ({
   const [isLoaded, setIsLoaded] = useState(false);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [thereIsNoData, setThereIsNoData] = useState(false);
-  const { deleteById } = useContext(TaskContext);
+  const { deleteTask } = useContext(TaskContext);
   const [idToConfirmationModal, setIdToConfirmationModal] = useState<number>();
   const [triggerToSearchTasksAgain, setTriggerToSearchTasksAgain] =
     useState(false);
@@ -85,7 +85,7 @@ const RelatoryModal = ({
 
   const deleteTaskById = (id: number | undefined) => {
     if (id) {
-      deleteById(id).then((response: any) => {
+      deleteTask(id).then((response: any) => {
         console.log(response);
 
         if (response.status === 200) {
