@@ -1,15 +1,13 @@
 package io.adagio.adagioapi.repositories;
 
 import java.time.LocalDateTime;
-<<<<<<< HEAD
-=======
-import java.util.ArrayList;
 import java.util.List;
->>>>>>> bd363d476d95aa466c0e81d1054a9dacde9ae986
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
@@ -26,10 +24,11 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 	
 	void deleteByIdAndUser(Long id, User user);
 	
-	Optional<Task> findByTitleAndUser(String title, User user);
+	@Query(value = "SELECT * FROM tasks t WHERE t.title LIKE CONCAT ('%',?1,'%') AND t.user_id= ?2", nativeQuery = true)
+	Page<Task> findByTitleAndUser_IdNative(String title, Long user_id, Pageable pageable);
 	
-	Page<Task> findByProjectIdAndUser (Long id, User user);
+	@Query(value = "SELECT * FROM tasks t WHERE t.title LIKE CONCAT ('%',?1,'%') AND t.user_id= ?2 AND t.project_id IS null", nativeQuery = true)
+	Page<Task> findByTitleAndNoProjectaAndUser_IdNative(String title, Long user_id, Pageable pageable);
 	
-	Page<Task> findByDateAndUser (LocalDateTime date, User user);
-
+	Page<Task> findByProject_IdAndUser (Long project_id, User user, Pageable pageable);
 }

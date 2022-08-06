@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,15 +14,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.adagio.adagioapi.dto.CadastroTarefaForm;
-import io.adagio.adagioapi.dto.ProjectDto;
+import io.adagio.adagioapi.dto.NotificationDto;
 import io.adagio.adagioapi.dto.TaskDto;
+import io.adagio.adagioapi.repositories.NotificationRepository;
 
 @Entity
 @Table(name="tasks")
@@ -51,7 +57,6 @@ public class Task {
 
 	private boolean finishedStatus;
 
-	//optativamente a tarefa terá um projeto relacionado a ela
 	@ManyToOne
 	@JoinColumn(name="project_id", nullable=true)
 	private Project project;
@@ -60,7 +65,10 @@ public class Task {
 	@JoinColumn(name="user_id", nullable=true)
 	private User user;
 
-	@OneToMany(mappedBy = "task")
+	@Valid
+	@Nullable
+	@OneToMany(cascade = CascadeType.ALL, mappedBy="task", targetEntity = Notification.class)
+	@JsonManagedReference
 	private List<Notification> notifications;
 
 	@NotNull
@@ -76,7 +84,10 @@ public class Task {
 		this.dateTimeEnd = cadastroTaskForm.getDateTimeEnd();
 		this.project = project;
 		this.user = user;
-		this.notifications = cadastroTaskForm.getNotifications();
+		
+		//if (cadastroTaskForm.getNotifications().get(0).getTask() != null)
+			this.notifications = cadastroTaskForm.getNotifications();
+		
 		this.priority = cadastroTaskForm.getPriority();
 	}
 
@@ -150,10 +161,6 @@ public class Task {
 		return notifications;
 	}
 
-	public void setNotification(ArrayList<Notification> notifications) {
-		this.notifications = notifications;
-	}
-
 	public User getUser() {
 		return user;
 	}
@@ -169,7 +176,7 @@ public class Task {
 	public static Page<TaskDto> converter(Page<Task> tasks){
 		return tasks.map(TaskDto::new);
 	}
-	
+
 	public static List<TaskDto> converter(List<Task> tasks){
 		List<TaskDto> tasksDto = new ArrayList<>();
 		
@@ -178,5 +185,14 @@ public class Task {
 			tasksDto.add(taskDto);
 		}
 		return tasksDto;
+	}
+	
+	public List<Long> convertNotificationsToIds(List<Notification> notifications){
+		List<Long> notificationsIds = new ArrayList<>();
+		
+		for (Notification notification : notifications) {
+			notificationsIds.add(notification.getId());
+		}
+		return notificationsIds;
 	}
 }
