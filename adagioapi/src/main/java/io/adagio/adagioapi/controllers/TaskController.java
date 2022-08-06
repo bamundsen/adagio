@@ -166,7 +166,7 @@ public class TaskController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<TaskDto> preUpdate(@PathVariable ("id") Long id){
+	public ResponseEntity<TaskDto> detail(@PathVariable ("id") Long id){
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Optional<Task> task = taskRepository.findByIdAndUser(id, logado);
 		
