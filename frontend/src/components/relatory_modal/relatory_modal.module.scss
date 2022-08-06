@@ -1,18 +1,3 @@
-.close_modal_button {
-  text-transform: uppercase;
-  cursor: pointer;
-  font-size: 20px;
-  font-weight: 400;
-}
-
-.title_modal_relatory {
-  flex: 1;
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .title_modal_relatory_weekday {
   font-weight: 500;
   font-size: 16px !important;
@@ -24,19 +9,16 @@
   font-size: 16px;
 }
 
-.body_modal {
-  min-height: 65vh;
-}
-
 .body_modal_title {
   font-size: 18px;
 }
 
+/*
 .footer_modal {
   display: flex;
   padding: 0;
 }
-
+*/
 .footer_modal_create_task_link {
   margin: 0;
   flex: 1;
@@ -45,8 +27,12 @@
   display: flex;
   border-right: 1px solid #000;
   justify-content: center;
+  cursor: pointer;
 }
-
+.footer_modal_create_task_link :hover {
+  text-decoration: underline;
+  color: rgb(37, 128, 212);
+}
 .footer_modal_create_task_link_icon {
   width: 20px;
   margin-right: 10px;

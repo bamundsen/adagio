@@ -13,6 +13,7 @@ import { User } from "../../types/UserType";
 import useWindowDimensions from "../../utils/useWindowDimensions.utils";
 import { CalendarContext } from "../../contexts/calendar.context";
 import { ProjectContext } from "../../contexts/project.context";
+import { NotificationContext } from "../../contexts/notification.context";
 
 const Navigation = () => {
   const { setTriggerAlignCurrentMonth, triggerAlignCurrentMonth } =
@@ -25,6 +26,9 @@ const Navigation = () => {
   const [loginOrRegisterPageAux, setLoginOrRegisterPageAux] =
     useState<string>();
   const [displayDropdown, setDisplayDropdown] = useState("none");
+  const { triggerUpdateCalendar, setTriggerUpdateCalendar } =
+    useContext(CalendarContext);
+  const { showMessage, isToShowAlert } = useContext(NotificationContext);
 
   useEffect(() => {
     const checkIfClickOutside = (e: any) => {
@@ -55,7 +59,6 @@ const Navigation = () => {
   };
 
   const closeDisplayDropDown = () => {
-    console.log("ON BLUR");
     if (displayDropdown !== "none") setDisplayDropdown("none");
   };
 
@@ -85,8 +88,11 @@ const Navigation = () => {
             loginOrRegisterPageAux === "/register") &&
             !isAuthenticated && (
               <li
+                tabIndex={1}
                 className={`${styles["item-navegacao"]}`}
-                onClick={toggleLoginOrRegisterPageAux}
+                onClick={() => {
+                  toggleLoginOrRegisterPageAux();
+                }}
               >
                 <Link
                   to={`${
@@ -102,7 +108,7 @@ const Navigation = () => {
 
           {isAuthenticated ? (
             <>
-              <li className={`${styles["item-navegacao"]}`}>
+              <li tabIndex={1} className={`${styles["item-navegacao"]}`}>
                 <img
                   src={WhiteBell}
                   style={{
@@ -112,11 +118,13 @@ const Navigation = () => {
                 />
               </li>
               <li
+                tabIndex={1}
                 className={`${styles["item-navegacao"]} ${styles["user-name-login"]}`}
               >
                 {user?.login}
               </li>
               <li
+                tabIndex={1}
                 ref={refDropdown}
                 onClick={toggleDisplayDropDown}
                 className={`${styles["item-navegacao"]} ${styles["item-container-icon-user"]}`}
@@ -139,6 +147,7 @@ const Navigation = () => {
                   alt={"User Navigation Icon"}
                 />
                 <div
+                  tabIndex={1}
                   style={{
                     position: "absolute",
                     display: `${displayDropdown}`,
@@ -197,9 +206,9 @@ const Navigation = () => {
           <Link
             to={`${isAuthenticated ? "/adagio/home" : "/"}`}
             onClick={() => {
-              console.log("VENHO SIM");
               setLoginOrRegisterPageAux("/register");
               setTriggerAlignCurrentMonth(!triggerAlignCurrentMonth);
+              setTriggerUpdateCalendar(!triggerUpdateCalendar);
             }}
           >
             <img
@@ -208,7 +217,7 @@ const Navigation = () => {
               alt={"Adagio Logo"}
             />
           </Link>
-
+          {showMessage()}
           {isAuthenticated ? (
             <ul
               className={`${styles["left-region-list-of-entities"]}`}

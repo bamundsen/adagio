@@ -77,8 +77,11 @@ public class CadastroProjetoForm {
 		List<Task> tasks = new ArrayList<>();
 		
 		for(Long taskId : tasksIds) {
-			Task task = taskRepository.getById(taskId);
-			tasks.add(task);
+			Optional<Task> task = taskRepository.findById(taskId);
+			
+			if(task.isPresent()) {
+				tasks.add(task.get());
+			}
 		}
 		
 		return new Project(this, tasks, user);
@@ -95,8 +98,11 @@ public class CadastroProjetoForm {
 		List<Task> tasks = new ArrayList<>();
 		
 		for(Long taskId : tasksIds) {
-			Task task = taskRepository.getById(taskId);
-			tasks.add(task);
+			Optional<Task> task = taskRepository.findById(taskId);
+			
+			if(task.isPresent()) {
+				tasks.add(task.get());
+			}
 		}
 		
 		project.setTasks(tasks);

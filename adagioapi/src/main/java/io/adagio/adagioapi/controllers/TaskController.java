@@ -29,10 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import io.adagio.adagioapi.dto.CadastroTarefaForm;
+import io.adagio.adagioapi.dto.ColorThatIsToBeShowedBasedOnPriorityDto;
 import io.adagio.adagioapi.dto.StartAndEndDateDto;
 import io.adagio.adagioapi.dto.TaskDto;
 import io.adagio.adagioapi.dto.TaskQueryDTO;
 import io.adagio.adagioapi.models.Notification;
+import io.adagio.adagioapi.models.ColorOfPriority;
+import io.adagio.adagioapi.models.Priority;
 import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.repositories.NotificationRepository;
@@ -59,8 +62,10 @@ public class TaskController {
 	@GetMapping
 	public Page<TaskDto> list(@PageableDefault(sort="dateTimeEnd",page=0,size=10,
 			direction=Direction.ASC) Pageable pagination){
-			Page<Task> tasks = taskRepository.findAll(pagination);
 			
+			User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			
+			Page<Task> tasks = taskRepository.findByUser(logado,pagination);
 			return Task.converter(tasks);	
 	}
 
@@ -68,7 +73,7 @@ public class TaskController {
 	public ResponseEntity<List<TaskDto>> listByStartDateAndEndDate(@RequestBody @Valid StartAndEndDateDto startDateDto){
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		List<Task> tasks = taskRepository.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThan(logado,
+		List<Task> tasks = taskRepository.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanAndProjectIsNull(logado,
 				startDateDto.getDateTimeStart(),
 				startDateDto.getDateTimeEnd());
 		
@@ -77,6 +82,21 @@ public class TaskController {
 		return ResponseEntity.ok().body(tasksDto);
 	}
 	
+	@PostMapping("/get-color-that-is-to-be-showed")
+	public ResponseEntity<ColorThatIsToBeShowedBasedOnPriorityDto> getColor(@RequestBody @Valid StartAndEndDateDto form){
+		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		List<Task> tasks = taskRepository.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanAndProjectIsNull(logado,
+				form.getDateTimeStart(),
+				form.getDateTimeEnd());
+		
+
+		ColorOfPriority hexadecimalOfColor = ColorThatIsToBeShowedBasedOnPriorityDto.defineColorThatIsToBeShowed(tasks);
+		
+		
+		ColorThatIsToBeShowedBasedOnPriorityDto color = new ColorThatIsToBeShowedBasedOnPriorityDto(hexadecimalOfColor);
+		return ResponseEntity.ok().body(color);
+	}
 	
 	@PostMapping
 	@Transactional
@@ -184,7 +204,7 @@ public class TaskController {
 		
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		Page<Task> tasks = taskRepository.findByTitleAndNoProjectaAndUser_IdNative(taskQueryDto.getTitle(), logado.getId(), pageable);
+		Page<Task> tasks = taskRepository.findByTitleAndAndUser_IdAndProjectIsNullNative(taskQueryDto.getTitle(), logado.getId(), pageable);
 		
 		Page<TaskDto> tasksDto = Task.converter(tasks);
 		

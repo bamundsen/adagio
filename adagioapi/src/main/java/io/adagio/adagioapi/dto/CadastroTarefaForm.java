@@ -129,6 +129,9 @@ public class CadastroTarefaForm {
 		
 		Optional<Project> project = projectRepository.findById(projectId);
 		
+		if(project.isEmpty())
+			return new Task(this, user, null);
+			
 		return new Task(this, user, project.get());
 	}
 	

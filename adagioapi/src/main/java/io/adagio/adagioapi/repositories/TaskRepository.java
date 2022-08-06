@@ -9,16 +9,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import io.adagio.adagioapi.models.Project;
 import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 	
 	Optional<Task> findByIdAndUser(Long id, User user);
-	
+	List<Task> findByProjectAndUser(Project project, User user);
+	Page<Task> findByUser(User user , Pageable paginacao);
+	Page<Task> findByUserAndProjectIsNull(User user);
 	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeEndLessThanEqual(User user,LocalDateTime dateTimeStart,LocalDateTime dateTimeEnd);
 	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanEqual(User user,LocalDateTime dateTimeStartMin,LocalDateTime dateTimeStartMax);
-	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThan(User user,LocalDateTime dateTimeStartMin,LocalDateTime dateTimeStartMax);
+	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanAndProjectIsNull(User user,LocalDateTime dateTimeStartMin,LocalDateTime dateTimeStartMax);
 	
 	List<Task> findByUserAndDateTimeStartGreaterThanEqual(User user,LocalDateTime dateTimeStartMin);
 	
@@ -28,7 +31,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 	Page<Task> findByTitleAndUser_IdNative(String title, Long user_id, Pageable pageable);
 	
 	@Query(value = "SELECT * FROM tasks t WHERE t.title LIKE CONCAT ('%',?1,'%') AND t.user_id= ?2 AND t.project_id IS null", nativeQuery = true)
-	Page<Task> findByTitleAndNoProjectaAndUser_IdNative(String title, Long user_id, Pageable pageable);
+	Page<Task> findByTitleAndAndUser_IdAndProjectIsNullNative(String title, Long user_id, Pageable pageable);
 	
 	Page<Task> findByProject_IdAndUser (Long project_id, User user, Pageable pageable);
 }

@@ -24,6 +24,8 @@ import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import io.adagio.adagioapi.dto.CadastroTarefaForm;
 import io.adagio.adagioapi.dto.NotificationDto;
 import io.adagio.adagioapi.dto.TaskDto;
@@ -58,6 +60,7 @@ public class Task {
 	private boolean finishedStatus;
 
 	@ManyToOne
+	@JsonBackReference
 	@JoinColumn(name="project_id", nullable=true)
 	private Project project;
 	

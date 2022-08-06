@@ -4,7 +4,13 @@ import { Task } from "../types/TaskType";
 
 export type TaskContextType = {
   createTask: (task: Task) => any;
+  deleteById: (id: number) => any;
   listByStartDateTimeFilter: (
+    startDateTime: string,
+    dateFinalToSearch: string
+  ) => any;
+
+  getColorThatIsToBeShowed: (
     startDateTime: string,
     dateFinalToSearch: string
   ) => any;
@@ -30,9 +36,27 @@ export const TaskProvider = ({ children }: { children: JSX.Element }) => {
     );
     return response;
   };
+
+  const deleteById = async (id: number) => {
+    const response = await taskApi.deleteById(id);
+    return response;
+  };
+  const getColorThatIsToBeShowed = async (
+    startDateTime: string,
+    dateFinalToSearch: string
+  ) => {
+    const response = await taskApi.getColorThatIsToBeShowed(
+      startDateTime,
+      dateFinalToSearch
+    );
+
+    return response;
+  };
   const value: TaskContextType = {
     createTask,
+    deleteById,
     listByStartDateTimeFilter,
+    getColorThatIsToBeShowed,
   };
 
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
