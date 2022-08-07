@@ -5,6 +5,8 @@ import { tabEnterClickEffect } from "../../utils/acessibilityAux";
 import { CalendarContext } from "../../contexts/calendar.context";
 import { useContext } from "react";
 import { act } from "react-dom/test-utils";
+import ModalHeader from "../modal-header/modal_header.component";
+import NegativeButtonModal from "../negative-button-modal/negative_button_modal.component";
 
 interface ConfirmationModalProps {
   functionToPositiveConfirmationExecuteById?: (id: number | undefined) => void;
@@ -25,42 +27,14 @@ const ConfirmationModal = ({
 }: ConfirmationModalProps) => {
   return (
     <Modal show={isModalOpen}>
-      <Modal.Header style={{ padding: "10px" }}>
-        <h4
-          className={`${commonStyles.title_modal}`}
-          style={{
-            paddingLeft: "0",
-            marginLeft: "0",
-            alignItems: "flex-start",
-
-            fontWeight: "400",
-          }}
-        >
-          {titleConfirmationMessage}
-        </h4>
-        <div
-          tabIndex={1}
-          onKeyDown={tabEnterClickEffect}
-          onClick={() => {
-            setModalIsOpen(false);
-          }}
-          className={`${commonStyles.close_modal_button}`}
-        >
-          X
-        </div>
-      </Modal.Header>
+      <ModalHeader
+        message={titleConfirmationMessage}
+        setModalIsOpen={setModalIsOpen}
+      />
       <Modal.Body>{explanationMessage}</Modal.Body>
       <Modal.Footer>
-        <div className={styles.confirmation_modal_buttons_container}>
-          <Button
-            tabIndex={1}
-            onClick={() => {
-              setModalIsOpen(false);
-            }}
-            variant="light"
-          >
-            Não
-          </Button>
+        <div className={commonStyles.confirmation_modal_buttons_container}>
+          <NegativeButtonModal setModalIsOpen={setModalIsOpen} text={"Não"} />
           <Button
             tabIndex={1}
             style={{ marginLeft: "25px" }}

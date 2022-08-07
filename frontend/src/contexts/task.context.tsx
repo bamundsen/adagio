@@ -14,6 +14,11 @@ export type TaskContextType = {
     startDateTime: string,
     dateFinalToSearch: string
   ) => any;
+  getTasksWithNoProjectByTitle: (
+    title: string,
+    page: number,
+    size: number
+  ) => any;
   triggerToSearchTasksAgainAfterDelete: boolean;
 };
 
@@ -53,6 +58,20 @@ export const TaskProvider = ({ children }: { children: JSX.Element }) => {
     return response;
   };
 
+  const getTasksWithNoProjectByTitle = async (
+    title: string,
+    page: number,
+    size: number
+  ) => {
+    const response = await taskApi.getTasksWithNoProjectByTitle(
+      title,
+      page,
+      size
+    );
+
+    return response;
+  };
+
   const getColorThatIsToBeShowed = async (
     startDateTime: string,
     dateFinalToSearch: string
@@ -64,8 +83,10 @@ export const TaskProvider = ({ children }: { children: JSX.Element }) => {
 
     return response;
   };
+
   const value: TaskContextType = {
     createTask,
+    getTasksWithNoProjectByTitle,
     triggerToSearchTasksAgainAfterDelete,
     deleteTask,
     listByStartDateTimeFilter,

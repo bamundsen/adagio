@@ -39,6 +39,26 @@ export const TaskApi = () => ({
       console.log(erro);
     }
   },
+
+  getTasksWithNoProjectByTitle: async (
+    title: string,
+    page: number,
+    size: number
+  ) => {
+    try {
+      const response = await api.post(
+        `/users/tasks/list-by-no-project?page=${page}&size=${size}`,
+        {
+          title,
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
   getColorThatIsToBeShowed: async (
     startDateTime: string,
     dateFinalToSearch: string

@@ -11,6 +11,8 @@ import { Project } from "../../types/ProjectType";
 import { Link, useNavigate } from "react-router-dom";
 import AdagioSpinner from "../../components/adagio-spinner/adagio_spinner.component";
 import ConfirmationModal from "../../components/confirmation-modal/confirmation_modal.component";
+import { SpinnerState } from "../../utils/spinner_type";
+import RegionPaginationButtons from "../../components/region-pagination-buttons/region_pagination_buttons.component";
 
 const ProjectsManagement = () => {
   const navigate = useNavigate();
@@ -28,7 +30,7 @@ const ProjectsManagement = () => {
   const [size, setSize] = useState(8);
   const [isFirst, setIsFirst] = useState(false);
   const [isLast, setIsLast] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(SpinnerState.Pending);
   const [thereIsNoData, setThereIsNoData] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [paginationAux, setPaginationAux] = useState<number[]>([]);
@@ -65,9 +67,9 @@ const ProjectsManagement = () => {
 
   useEffect(() => {
     if (projects.length > 0) {
-      setIsLoaded(true);
+      setIsLoaded(SpinnerState.Finished);
     } else {
-      setIsLoaded(false);
+      setIsLoaded(SpinnerState.There_is_no_content);
       setThereIsNoData(true);
     }
   }, [projects]);
@@ -114,7 +116,7 @@ const ProjectsManagement = () => {
   };
 
   const returnSpinner = () => {
-    return <AdagioSpinner thereIsNoData={thereIsNoData} />;
+    return <AdagioSpinner loadingState={isLoaded} />;
   };
 
   const returnConfirmationModal = () => {
@@ -148,7 +150,7 @@ const ProjectsManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {isLoaded &&
+            {isLoaded === SpinnerState.Finished &&
               projects?.map((project: Project) => {
                 return (
                   <tr key={project?.id + project?.title}>
@@ -188,33 +190,14 @@ const ProjectsManagement = () => {
           </tbody>
         </Table>
 
-        {!isLoaded && returnSpinner()}
+        {returnSpinner()}
 
-        <section className={commonStyles.container_buttons}>
-          {!isFirst ? (
-            <Button
-              title="Anterior"
-              onClick={() => {
-                decrementPage();
-              }}
-              className={commonStyles.pagination_button}
-            >
-              Anterior
-            </Button>
-          ) : null}
-
-          {!isLast ? (
-            <Button
-              title="Próximo"
-              onClick={() => {
-                incrementPage();
-              }}
-              className={commonStyles.pagination_button}
-            >
-              Próximo
-            </Button>
-          ) : null}
-        </section>
+        <RegionPaginationButtons
+          isFirst={isFirst}
+          isLast={isLast}
+          incrementFunction={incrementPage}
+          decrementFunction={decrementPage}
+        />
       </section>
       {returnConfirmationModal()}
     </main>

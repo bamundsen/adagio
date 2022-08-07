@@ -1,8 +1,11 @@
 package io.adagio.adagioapi.dto;
 
+import javax.validation.constraints.Null;
+
 public class TaskQueryDTO {
 	
 	private String title;
+	
 	private Long projectId;
 
 	public String getTitle() {
@@ -18,7 +21,8 @@ public class TaskQueryDTO {
 	}
 
 	public void setProjectId(Long projectId) {
-		this.projectId = projectId;
+		if(projectId != null)
+			this.projectId = projectId;
 	}
 
 }

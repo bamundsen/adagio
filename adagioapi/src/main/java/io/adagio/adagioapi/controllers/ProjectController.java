@@ -103,15 +103,22 @@ public class ProjectController {
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		Project project = projectForm.converter( taskRepository,logado);
-		projectService.vinculateTasksToProject(project.getTasks(),project);
-		
-		projectRepository.save(project);
-		
-		URI uri = uriBuilder.path(base_da_url_do_servico+"/projects/{id}")
-				.buildAndExpand(project.getId()).toUri();
-		
-		
-		return ResponseEntity.created(uri).body(new ProjectDto(project));
+
+		if(project.getId() == null) {
+			
+			projectService.vinculateTasksToProject(project.getTasks(),project);
+			
+			projectRepository.save(project);
+			
+			URI uri = uriBuilder.path(base_da_url_do_servico+"/projects/{id}")
+					.buildAndExpand(project.getId()).toUri();
+			
+			
+			return ResponseEntity.created(uri).body(new ProjectDto(project));
+		}
+
+		return ResponseEntity.badRequest().build();
+
 	}
 	
 	@PutMapping("/{id}")
@@ -132,7 +139,7 @@ public class ProjectController {
 			
 			return ResponseEntity.ok(new ProjectDto(project));
 		}
-		System.out.println("NOT FOUND "+ id);
+	
 		return ResponseEntity.notFound().build();
 	}
 	

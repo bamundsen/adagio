@@ -20,6 +20,7 @@ import { AuthContext } from "../../contexts/auth.context";
 import { Project } from "../../types/ProjectType";
 import { ProjectContext } from "../../contexts/project.context";
 import { Navigate, useLocation, useParams } from "react-router-dom";
+import ChooseTasksModal from "./components/choose_tasks_modal.component";
 
 const FormProjetos = () => {
   const { user } = useContext(AuthContext);
@@ -34,9 +35,11 @@ const FormProjetos = () => {
   } = useContext(ProjectContext);
   const windowDimensions = useWindowDimensions();
   const { id } = useParams();
+  const [tasksModalIsOpen, setTasksModalIsOpen] = useState(false);
   const [isToGoToProjects, setIsToGoToProjects] = useState(false);
   const [titulo, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [idsTasks, setIdsTasks] = useState<number[]>([]);
   const [startHour, setStartHour] = useState("");
   const [startHourAux, setStartHourAux] = useState<Date>(new Date());
   const [startDate, setStartDate] = useState("");
@@ -50,7 +53,6 @@ const FormProjetos = () => {
   const [isToEdit, setIsToEdit] = useState(false);
 
   useEffect(() => {
-    console.log("ei ou djfkdjfdjkfdkfj", id);
     if (id !== undefined) {
       getProject(Number(id)).then((response: any) => {
         setTitle(response.title);
@@ -118,6 +120,16 @@ const FormProjetos = () => {
   const goToProjects = () => {
     setIsToGoToProjects(true);
   };
+
+  const returnTasksModal = () => {
+    return (
+      <ChooseTasksModal
+        isModalOpen={tasksModalIsOpen}
+        setModalIsOpen={setTasksModalIsOpen}
+      />
+    );
+  };
+
   const onSubmit = async (ev: any) => {
     ev.preventDefault();
 
@@ -126,12 +138,10 @@ const FormProjetos = () => {
       description: description.trim(),
       dateTimeStart: `${startDate}T${startHour}`,
       dateTimeEnd: `${endDate}T${endHour}`,
-      tasksIds: [],
+      tasksIds: idsTasks,
     };
 
     try {
-      let responseToOperation: any = undefined;
-
       if (isToEdit === false) {
         const responseToOperation = await createProject(
           projectToRegisterOrEdit
@@ -252,6 +262,7 @@ const FormProjetos = () => {
                         }}
                       >
                         <button
+                          title="Inclua tarefas"
                           style={{
                             color: "#FFFFFF",
                             borderRadius: "5px",
@@ -259,8 +270,11 @@ const FormProjetos = () => {
                             borderColor: "#463a8b",
                           }}
                           type="button"
+                          onClick={() => {
+                            setTasksModalIsOpen(true);
+                          }}
                         >
-                          Clique aqui
+                          {`Clique aqui - ${idsTasks.length} tarefas estão vinculadas`}
                         </button>
                       </div>
                     </Form.Group>
@@ -381,6 +395,7 @@ const FormProjetos = () => {
           </Row>
         </Container>
       </section>
+      {returnTasksModal()}
     </main>
   ) : (
     <Navigate to="/adagio/projetos" />

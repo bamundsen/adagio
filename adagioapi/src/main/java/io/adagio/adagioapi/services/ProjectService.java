@@ -43,8 +43,10 @@ public class ProjectService {
 	public void vinculateTasksToProject(List<Task> tasks, Project project) {
 		
 		for(Task task:tasks) {
-			task.setProject(project);
-			taskRepository.save(task);
+			if(task.getProject() == null) {
+				task.setProject(project);
+				taskRepository.save(task);
+			}
 		}
 	}
 }

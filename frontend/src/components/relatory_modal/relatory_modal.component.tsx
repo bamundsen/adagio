@@ -12,6 +12,7 @@ import commonStyles from "./../../utils/common_styles.module.scss";
 import ConfirmationModal from "../confirmation-modal/confirmation_modal.component";
 import { tabEnterClickEffect } from "../../utils/acessibilityAux";
 import { CalendarContext } from "../../contexts/calendar.context";
+import { SpinnerState } from "../../utils/spinner_type";
 
 interface RelatoryModalProps {
   modalIsOpen: boolean;
@@ -36,7 +37,7 @@ const RelatoryModal = ({
   const { listByStartDateTimeFilter } = useContext(TaskContext);
   const [tasksToShow, setTasksToShow] = useState<any[]>([]);
   const { activeTriggerUpdateCalendar } = useContext(CalendarContext);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(SpinnerState.Pending);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [thereIsNoData, setThereIsNoData] = useState(false);
   const { deleteTask } = useContext(TaskContext);
@@ -63,12 +64,6 @@ const RelatoryModal = ({
               return { id, title, hourAndMinute };
             }),
           ]);
-
-          if (response.data.length > 0) {
-            setIsLoaded(true);
-          } else if (response.data.length === 0) {
-            setThereIsNoData(true);
-          }
         }
       );
     }
@@ -76,9 +71,10 @@ const RelatoryModal = ({
 
   useEffect(() => {
     if (tasksToShow.length > 0) {
-      setIsLoaded(true);
+      setIsLoaded(SpinnerState.Finished);
     } else {
-      setIsLoaded(false);
+      console.log("VENHA AGORA !!!!");
+      setIsLoaded(SpinnerState.There_is_no_content);
       setThereIsNoData(true);
     }
   }, [tasksToShow]);
@@ -101,7 +97,7 @@ const RelatoryModal = ({
   };
 
   const returnSpinner = () => {
-    return <AdagioSpinner thereIsNoData={thereIsNoData} />;
+    return <AdagioSpinner loadingState={isLoaded} />;
   };
 
   const returnConfirmationModal = () => {
@@ -154,7 +150,7 @@ const RelatoryModal = ({
         <h2 className={`${style.body_modal_title}`}>Tarefas</h2>
 
         <ul>
-          {isLoaded &&
+          {isLoaded === SpinnerState.Finished &&
             tasksToShow.map((task: any, i) => {
               return (
                 <li key={task.title + task.hourAndMinute + i}>
@@ -194,7 +190,7 @@ const RelatoryModal = ({
             })}
         </ul>
 
-        {!isLoaded && returnSpinner()}
+        {returnSpinner()}
       </Modal.Body>
       <Modal.Footer className={`${commonStyles.footer_modal}`}>
         <span

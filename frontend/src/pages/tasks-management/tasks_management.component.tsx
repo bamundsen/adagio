@@ -11,6 +11,8 @@ import AdagioSpinner from "../../components/adagio-spinner/adagio_spinner.compon
 import { BsFillPenFill, BsTrash } from "react-icons/bs";
 import { TaskContext } from "../../contexts/task.context";
 import ConfirmationModal from "../../components/confirmation-modal/confirmation_modal.component";
+import { SpinnerState } from "../../utils/spinner_type";
+import RegionPaginationButtons from "../../components/region-pagination-buttons/region_pagination_buttons.component";
 
 const TasksManagement = () => {
   const { getTasksByProject } = useContext(ProjectContext);
@@ -23,7 +25,7 @@ const TasksManagement = () => {
   const [isFirst, setIsFirst] = useState(false);
   const [isLast, setIsLast] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(SpinnerState.Pending);
   const [thereIsNoData, setThereIsNoData] = useState(false);
   const [confirmationModalIsOpen, setModalConfirmationIsOpen] = useState(false);
   const [idOfElementToDeleteForModal, setIdOfElementToDeleteForModel] =
@@ -51,9 +53,9 @@ const TasksManagement = () => {
 
   useEffect(() => {
     if (tasks.length > 0) {
-      setIsLoaded(true);
+      setIsLoaded(SpinnerState.Finished);
     } else {
-      setIsLoaded(false);
+      setIsLoaded(SpinnerState.There_is_no_content);
       setThereIsNoData(true);
     }
   }, [tasks]);
@@ -77,7 +79,7 @@ const TasksManagement = () => {
   };
 
   const returnSpinner = () => {
-    return <AdagioSpinner thereIsNoData={thereIsNoData} />;
+    return <AdagioSpinner loadingState={isLoaded} />;
   };
 
   const returnConfirmationModal = () => {
@@ -107,7 +109,7 @@ const TasksManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {isLoaded &&
+            {isLoaded === SpinnerState.Finished &&
               tasks?.map((task: Task) => {
                 return (
                   <tr key={task.id + task.title}>
@@ -140,31 +142,14 @@ const TasksManagement = () => {
           </tbody>
         </Table>
 
-        {!isLoaded && returnSpinner()}
+        {returnSpinner()}
 
-        <section className={commonStyles.container_buttons}>
-          {!isFirst ? (
-            <Button
-              onClick={() => {
-                decrementPage();
-              }}
-              className={commonStyles.pagination_button}
-            >
-              Anterior
-            </Button>
-          ) : null}
-
-          {!isLast ? (
-            <Button
-              onClick={() => {
-                incrementPage();
-              }}
-              className={commonStyles.pagination_button}
-            >
-              Próximo
-            </Button>
-          ) : null}
-        </section>
+        <RegionPaginationButtons
+          isFirst={isFirst}
+          isLast={isLast}
+          decrementFunction={decrementPage}
+          incrementFunction={incrementPage}
+        />
       </section>
       {returnConfirmationModal()}
     </main>
