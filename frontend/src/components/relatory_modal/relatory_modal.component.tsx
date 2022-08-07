@@ -39,16 +39,17 @@ const RelatoryModal = ({
   const { activeTriggerUpdateCalendar } = useContext(CalendarContext);
   const [isLoaded, setIsLoaded] = useState(SpinnerState.Pending);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-  const [thereIsNoData, setThereIsNoData] = useState(false);
   const { deleteTask } = useContext(TaskContext);
   const [idToConfirmationModal, setIdToConfirmationModal] = useState<number>();
   const [triggerToSearchTasksAgain, setTriggerToSearchTasksAgain] =
     useState(false);
+  const [requestWasDone, setRequestWasDone] = useState(false);
 
   useEffect(() => {
     if (modalIsOpen) {
       listByStartDateTimeFilter(dateToSearch, dateFinalToSearch).then(
         (response: any) => {
+          setRequestWasDone(true);
           setTasksToShow([
             ...response.data.map((task: Task) => {
               const title = task.title;
@@ -72,10 +73,8 @@ const RelatoryModal = ({
   useEffect(() => {
     if (tasksToShow.length > 0) {
       setIsLoaded(SpinnerState.Finished);
-    } else {
-      console.log("VENHA AGORA !!!!");
+    } else if (requestWasDone) {
       setIsLoaded(SpinnerState.There_is_no_content);
-      setThereIsNoData(true);
     }
   }, [tasksToShow]);
 

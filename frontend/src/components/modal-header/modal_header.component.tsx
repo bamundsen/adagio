@@ -5,8 +5,13 @@ import commonStyles from "../../utils/common_styles.module.scss";
 interface ModalHeaderProps {
   message: string;
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  resetStateOfAuxState?: () => void;
 }
-const ModalHeader = ({ message, setModalIsOpen }: ModalHeaderProps) => {
+const ModalHeader = ({
+  message,
+  setModalIsOpen,
+  resetStateOfAuxState,
+}: ModalHeaderProps) => {
   return (
     <Modal.Header style={{ padding: "10px" }}>
       <h4
@@ -25,6 +30,9 @@ const ModalHeader = ({ message, setModalIsOpen }: ModalHeaderProps) => {
         tabIndex={1}
         onKeyDown={tabEnterClickEffect}
         onClick={() => {
+          if (resetStateOfAuxState) {
+            resetStateOfAuxState();
+          }
           setModalIsOpen(false);
         }}
         className={`${commonStyles.close_modal_button}`}

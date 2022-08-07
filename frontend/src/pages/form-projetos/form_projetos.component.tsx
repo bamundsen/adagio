@@ -21,6 +21,7 @@ import { Project } from "../../types/ProjectType";
 import { ProjectContext } from "../../contexts/project.context";
 import { Navigate, useLocation, useParams } from "react-router-dom";
 import ChooseTasksModal from "./components/choose_tasks_modal.component";
+import { Task } from "../../types/TaskType";
 
 const FormProjetos = () => {
   const { user } = useContext(AuthContext);
@@ -39,6 +40,7 @@ const FormProjetos = () => {
   const [isToGoToProjects, setIsToGoToProjects] = useState(false);
   const [titulo, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [auxSelectedTasks, setAuxSelectedTasks] = useState<number[]>([]);
   const [idsTasks, setIdsTasks] = useState<number[]>([]);
   const [startHour, setStartHour] = useState("");
   const [startHourAux, setStartHourAux] = useState<Date>(new Date());
@@ -52,6 +54,7 @@ const FormProjetos = () => {
   );
   const [isToEdit, setIsToEdit] = useState(false);
 
+  /* Incluir ids de tasks,no caso de edição de projeto, e também incluir as tasks de projetos marcadas no modal, como padrão */
   useEffect(() => {
     if (id !== undefined) {
       getProject(Number(id)).then((response: any) => {
@@ -61,6 +64,9 @@ const FormProjetos = () => {
         setStartHourAux(new Date(response.dateTimeStart));
         setEndDateAux(new Date(response.dateTimeEnd));
         setEndHourAux(new Date(response.dateTimeEnd));
+
+        console.log(response.tasks);
+
         setIsToEdit(true);
       });
     } else {
@@ -80,6 +86,18 @@ const FormProjetos = () => {
     setEndDate(filterAndReturnDate(endDateAux));
     setEndHour(filterAndReturnHour(endHourAux));
   }, [startDateAux, startHourAux, endDateAux, endHourAux]);
+
+  const setIdsTasksWithAcumulatedSelected = (selectedIdsTasks: number[]) => {
+    setIdsTasks(selectedIdsTasks);
+  };
+
+  const isTaskSelected = (idTask: number) => {
+    return auxSelectedTasks.includes(idTask);
+  };
+
+  const equalizeAuxSelectedTasksToIdsTasks = () => {
+    setAuxSelectedTasks([...idsTasks]);
+  };
 
   const onChangeStartHour = (date: Date) => {
     setStartHourAux(date);
@@ -124,6 +142,11 @@ const FormProjetos = () => {
   const returnTasksModal = () => {
     return (
       <ChooseTasksModal
+        auxSelectedTasks={auxSelectedTasks}
+        equalizeAuxSelectedTasksToIdsTasks={equalizeAuxSelectedTasksToIdsTasks}
+        setAuxSelectedTasks={setAuxSelectedTasks}
+        setIdsTasksWithAcumulatedSelected={setIdsTasksWithAcumulatedSelected}
+        isTaskSelected={isTaskSelected}
         isModalOpen={tasksModalIsOpen}
         setModalIsOpen={setTasksModalIsOpen}
       />

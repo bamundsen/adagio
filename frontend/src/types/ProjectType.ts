@@ -6,5 +6,6 @@ export type Project = {
   dateTimeStart: string;
   dateTimeEnd: string;
   idUser?: number;
+  tasks?: any[];
   tasksIds: number[];
 };

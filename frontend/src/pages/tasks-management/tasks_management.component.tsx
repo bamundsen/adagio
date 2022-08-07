@@ -26,10 +26,10 @@ const TasksManagement = () => {
   const [isLast, setIsLast] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoaded, setIsLoaded] = useState(SpinnerState.Pending);
-  const [thereIsNoData, setThereIsNoData] = useState(false);
   const [confirmationModalIsOpen, setModalConfirmationIsOpen] = useState(false);
   const [idOfElementToDeleteForModal, setIdOfElementToDeleteForModel] =
     useState<number>();
+  const [requestWasDone, setRequestWasDone] = useState(false);
 
   useEffect(() => {
     if (idProject !== undefined) {
@@ -46,6 +46,7 @@ const TasksManagement = () => {
           setIsFirst(false);
         }
         setTotalPages(response.totalPages);
+        setRequestWasDone(true);
         setTasks(response.content);
       });
     }
@@ -54,9 +55,8 @@ const TasksManagement = () => {
   useEffect(() => {
     if (tasks.length > 0) {
       setIsLoaded(SpinnerState.Finished);
-    } else {
+    } else if (requestWasDone) {
       setIsLoaded(SpinnerState.There_is_no_content);
-      setThereIsNoData(true);
     }
   }, [tasks]);
 

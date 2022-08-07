@@ -11,13 +11,24 @@ import { Task } from "../../../types/TaskType";
 import styles from "./choose_tasks_modal.module.scss";
 import commonStyles from "../../../utils/common_styles.module.scss";
 import { SpinnerState } from "../../../utils/spinner_type";
+import { BsFillArrowLeftSquareFill } from "react-icons/bs";
 
 interface ChooseTasksModalProps {
   isModalOpen: boolean;
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIdsTasksWithAcumulatedSelected: (ids: number[]) => void;
+  isTaskSelected: (id: number) => boolean;
+  auxSelectedTasks: number[];
+  setAuxSelectedTasks: React.Dispatch<React.SetStateAction<number[]>>;
+  equalizeAuxSelectedTasksToIdsTasks: () => void;
 }
 
 const ChooseTasksModal = ({
+  equalizeAuxSelectedTasksToIdsTasks,
+  auxSelectedTasks,
+  setAuxSelectedTasks,
+  setIdsTasksWithAcumulatedSelected,
+  isTaskSelected,
   isModalOpen,
   setModalIsOpen,
 }: ChooseTasksModalProps) => {
@@ -25,10 +36,12 @@ const ChooseTasksModal = ({
   const [tasksToShow, setTasksToShow] = useState<Task[]>([]);
   const [isLoaded, setIsLoaded] = useState(SpinnerState.Pending);
   const [searchString, setSearchString] = useState("");
+  const [searchStringAux, setSearchStringAux] = useState("");
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(6);
   const [isLast, setIsLast] = useState(false);
   const [isFirst, setIsFirst] = useState(false);
+  const [requestWasDone, setRequestWasDone] = useState(false);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -46,21 +59,32 @@ const ChooseTasksModal = ({
             setIsFirst(false);
           }
 
+          setRequestWasDone(true);
           if (response?.content) {
             setTasksToShow(response.content);
           }
         }
       );
     }
-  }, [isModalOpen, page, size]);
+  }, [isModalOpen, page, size, searchString]);
 
   useEffect(() => {
     if (tasksToShow.length > 0) {
       setIsLoaded(SpinnerState.Finished);
-    } else {
+    } else if (requestWasDone) {
       setIsLoaded(SpinnerState.There_is_no_content);
     }
   }, [tasksToShow]);
+
+  const addOrRemoveSelectedOrUnselected = (id: number, marked: boolean) => {
+    if (!auxSelectedTasks.includes(id) && marked) {
+      setAuxSelectedTasks([...auxSelectedTasks, id]);
+    } else if (auxSelectedTasks.includes(id) && !marked) {
+      setAuxSelectedTasks([
+        ...auxSelectedTasks.filter((s: number) => s !== id),
+      ]);
+    }
+  };
 
   const decrementPage = () => {
     if (page > 0) {
@@ -80,50 +104,83 @@ const ChooseTasksModal = ({
     <Modal show={isModalOpen}>
       <ModalHeader
         message={"Escolha tarefas para o projeto"}
+        resetStateOfAuxState={equalizeAuxSelectedTasksToIdsTasks}
         setModalIsOpen={setModalIsOpen}
       />
 
       <Modal.Body className={`${commonStyles.body_modal}`}>
+        <section>
+          <Form.Control
+            type="search"
+            onInput={(e: any) => {
+              setSearchStringAux(e.target.value);
+              console.log(e.code);
+              console.log("teste INPUT", searchStringAux);
+
+              if (e.target.value.trim() === "") {
+                setSearchString(e.target.value);
+              }
+            }}
+            onKeyDown={(e: any) => {
+              if (e.code.toLowerCase().trim() === "enter") {
+                setSearchString(searchStringAux);
+              }
+            }}
+            placeholder="Pesquiser por uma tarefa"
+          ></Form.Control>
+        </section>
         {isLoaded === SpinnerState.Finished && (
-          <section>
-            {tasksToShow.map((task: Task) => {
-              return (
-                <div key={task.id + task.title}>
-                  <Form.Group
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      marginBottom: "0",
-                    }}
-                    className="mb-1"
-                    controlId="formBasicEmail"
-                  >
-                    <Form.Control
-                      value={task.id}
-                      type="checkbox"
-                      style={{
-                        width: "22px",
-                        height: "18px",
-                      }}
-                      onClick={(e: any) => {
-                        console.log(e.target.value);
-                      }}
-                    />
-                    <Form.Label
+          <>
+            <section>
+              {tasksToShow.map((task: Task) => {
+                return (
+                  <div key={task.id + task.title}>
+                    <Form.Group
                       style={{
                         display: "flex",
-                        marginTop: "8px",
-                        marginLeft: "8px",
                         alignItems: "center",
+                        marginBottom: "0",
                       }}
+                      className="mb-1"
                     >
-                      {task.title}
-                    </Form.Label>
-                  </Form.Group>
-                </div>
-              );
-            })}
-          </section>
+                      <Form.Control
+                        value={task.id}
+                        id={`task-${task.id}`}
+                        type="checkbox"
+                        defaultChecked={
+                          task.id !== undefined
+                            ? isTaskSelected(task.id)
+                            : false
+                        }
+                        style={{
+                          width: "22px",
+                          height: "18px",
+                        }}
+                        onClick={(e: any) => {
+                          console.log(e.target.value);
+                          addOrRemoveSelectedOrUnselected(
+                            Number(e.target.value),
+                            e.target.checked
+                          );
+                        }}
+                      />
+                      <Form.Label
+                        htmlFor={`task-${task.id}`}
+                        style={{
+                          display: "flex",
+                          marginTop: "8px",
+                          marginLeft: "8px",
+                          alignItems: "center",
+                        }}
+                      >
+                        {task.title}
+                      </Form.Label>
+                    </Form.Group>
+                  </div>
+                );
+              })}
+            </section>
+          </>
         )}
 
         <RegionPaginationButtons
@@ -139,12 +196,14 @@ const ChooseTasksModal = ({
         <div className={commonStyles.confirmation_modal_buttons_container}>
           <NegativeButtonModal
             setModalIsOpen={setModalIsOpen}
+            resetStateOfAuxState={equalizeAuxSelectedTasksToIdsTasks}
             text={"Cancelar"}
           />
           <Button
             tabIndex={1}
             style={{ marginLeft: "25px" }}
             onClick={() => {
+              setIdsTasksWithAcumulatedSelected(auxSelectedTasks);
               setModalIsOpen(false);
             }}
             variant="success"

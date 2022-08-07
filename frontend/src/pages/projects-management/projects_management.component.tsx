@@ -31,12 +31,12 @@ const ProjectsManagement = () => {
   const [isFirst, setIsFirst] = useState(false);
   const [isLast, setIsLast] = useState(false);
   const [isLoaded, setIsLoaded] = useState(SpinnerState.Pending);
-  const [thereIsNoData, setThereIsNoData] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [paginationAux, setPaginationAux] = useState<number[]>([]);
   const [confirmationModalIsOpen, setModalConfirmationIsOpen] = useState(false);
   const [idOfElementToDeleteForModal, setIdOfElementToDeleteForModel] =
     useState<number>();
+  const [requestWasDone, setRequestWasDone] = useState(false);
 
   useEffect(() => {
     getProjects(size, page).then((response: any) => {
@@ -53,6 +53,7 @@ const ProjectsManagement = () => {
         setIsFirst(false);
       }
       setTotalPages(response?.totalPages);
+      setRequestWasDone(true);
       setProjects(response?.content);
     });
   }, [
@@ -68,9 +69,8 @@ const ProjectsManagement = () => {
   useEffect(() => {
     if (projects.length > 0) {
       setIsLoaded(SpinnerState.Finished);
-    } else {
+    } else if (requestWasDone) {
       setIsLoaded(SpinnerState.There_is_no_content);
-      setThereIsNoData(true);
     }
   }, [projects]);
 
