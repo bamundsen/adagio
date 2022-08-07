@@ -16,6 +16,7 @@ export type TaskContextType = {
   ) => any;
   getTasksWithNoProjectByTitle: (
     title: string,
+    projectIdIfItIsToEdit: string | undefined,
     page: number,
     size: number
   ) => any;
@@ -60,11 +61,13 @@ export const TaskProvider = ({ children }: { children: JSX.Element }) => {
 
   const getTasksWithNoProjectByTitle = async (
     title: string,
+    projectIdIfItIsToEdit: string | undefined,
     page: number,
     size: number
   ) => {
     const response = await taskApi.getTasksWithNoProjectByTitle(
       title,
+      projectIdIfItIsToEdit,
       page,
       size
     );

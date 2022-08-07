@@ -35,6 +35,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 	@Query(value = "SELECT * FROM tasks t WHERE t.title LIKE CONCAT ('%',?1,'%') AND t.user_id= ?2 AND t.project_id IS null", nativeQuery = true)
 	Page<Task> findByTitleAndAndUser_IdAndProjectIsNullNative(String title, Long user_id, Pageable pageable);
 	
+	@Query(value = "SELECT * FROM tasks t WHERE t.title LIKE CONCAT ('%',?1,'%') AND t.user_id= ?2 AND (t.project_id IS null OR t.project_id = ?3)",
+			nativeQuery = true)
+	Page<Task> findByTitleAndAndUser_IdAndProjectIsNullOrProjectIsEqualNative(String title, Long user_id,Long project_id, Pageable pageable);
+	
 	Page<Task> findByProject_IdAndUser (Long project_id, User user, Pageable pageable);
 }
 

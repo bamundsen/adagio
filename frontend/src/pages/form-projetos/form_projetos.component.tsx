@@ -64,8 +64,17 @@ const FormProjetos = () => {
         setStartHourAux(new Date(response.dateTimeStart));
         setEndDateAux(new Date(response.dateTimeEnd));
         setEndHourAux(new Date(response.dateTimeEnd));
-
-        console.log(response.tasks);
+        setIdsTasks([
+          ...response.tasks.map((task: Task) => {
+            return task.id;
+          }),
+        ]);
+        setAuxSelectedTasks([
+          ...response.tasks.map((task: Task) => {
+            return task.id;
+          }),
+        ]);
+        // console.log(response.tasks);
 
         setIsToEdit(true);
       });
@@ -146,6 +155,7 @@ const FormProjetos = () => {
         equalizeAuxSelectedTasksToIdsTasks={equalizeAuxSelectedTasksToIdsTasks}
         setAuxSelectedTasks={setAuxSelectedTasks}
         setIdsTasksWithAcumulatedSelected={setIdsTasksWithAcumulatedSelected}
+        projectIdIfItIsToEdit={id}
         isTaskSelected={isTaskSelected}
         isModalOpen={tasksModalIsOpen}
         setModalIsOpen={setTasksModalIsOpen}

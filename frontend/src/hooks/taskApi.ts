@@ -42,6 +42,7 @@ export const TaskApi = () => ({
 
   getTasksWithNoProjectByTitle: async (
     title: string,
+    projectIdIfItIsToEdit: string | undefined,
     page: number,
     size: number
   ) => {
@@ -50,6 +51,10 @@ export const TaskApi = () => ({
         `/users/tasks/list-by-no-project?page=${page}&size=${size}`,
         {
           title,
+          projectId:
+            projectIdIfItIsToEdit !== undefined
+              ? Number(projectIdIfItIsToEdit)
+              : undefined,
         }
       );
 

@@ -207,7 +207,8 @@ public class TaskController {
 		
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		Page<Task> tasks = taskRepository.findByTitleAndAndUser_IdAndProjectIsNullNative(taskQueryDto.getTitle(), logado.getId(), pageable);
+		Page<Task> tasks = taskRepository.findByTitleAndAndUser_IdAndProjectIsNullOrProjectIsEqualNative(taskQueryDto.getTitle(),
+				logado.getId(),taskQueryDto.getProjectId(), pageable);
 		
 		Page<TaskDto> tasksDto = Task.converter(tasks);
 		

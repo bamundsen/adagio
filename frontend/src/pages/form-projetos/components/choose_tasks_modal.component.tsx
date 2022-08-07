@@ -18,6 +18,7 @@ interface ChooseTasksModalProps {
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIdsTasksWithAcumulatedSelected: (ids: number[]) => void;
   isTaskSelected: (id: number) => boolean;
+  projectIdIfItIsToEdit: string | undefined;
   auxSelectedTasks: number[];
   setAuxSelectedTasks: React.Dispatch<React.SetStateAction<number[]>>;
   equalizeAuxSelectedTasksToIdsTasks: () => void;
@@ -28,6 +29,7 @@ const ChooseTasksModal = ({
   auxSelectedTasks,
   setAuxSelectedTasks,
   setIdsTasksWithAcumulatedSelected,
+  projectIdIfItIsToEdit,
   isTaskSelected,
   isModalOpen,
   setModalIsOpen,
@@ -45,26 +47,29 @@ const ChooseTasksModal = ({
 
   useEffect(() => {
     if (isModalOpen) {
-      getTasksWithNoProjectByTitle(searchString, page, size).then(
-        (response: any) => {
-          if (response?.last) {
-            setIsLast(true);
-          } else {
-            setIsLast(false);
-          }
-
-          if (response?.first) {
-            setIsFirst(true);
-          } else {
-            setIsFirst(false);
-          }
-
-          setRequestWasDone(true);
-          if (response?.content) {
-            setTasksToShow(response.content);
-          }
+      getTasksWithNoProjectByTitle(
+        searchString,
+        projectIdIfItIsToEdit,
+        page,
+        size
+      ).then((response: any) => {
+        if (response?.last) {
+          setIsLast(true);
+        } else {
+          setIsLast(false);
         }
-      );
+
+        if (response?.first) {
+          setIsFirst(true);
+        } else {
+          setIsFirst(false);
+        }
+
+        setRequestWasDone(true);
+        if (response?.content) {
+          setTasksToShow(response.content);
+        }
+      });
     }
   }, [isModalOpen, page, size, searchString]);
 
