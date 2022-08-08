@@ -18,9 +18,14 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 	Optional<Task> findByIdAndUser(Long id, User user);
 	Page<Task> findByProjectAndUser(Project project, User user, Pageable pagination);
 	List<Task> findByProjectAndUser(Project project, User user);
+<<<<<<< Updated upstream
 
 	Page<Task> findByUser(User user , Pageable pagination);
 
+=======
+	Page<Task> findByUser(User user , Pageable paginacao);
+	List<Task> findByUserAndProjectIsNull(User user);
+>>>>>>> Stashed changes
 	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeEndLessThanEqual(User user,LocalDateTime dateTimeStart,LocalDateTime dateTimeEnd);
 	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanEqual(User user,LocalDateTime dateTimeStartMin,LocalDateTime dateTimeStartMax);
 	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanAndProjectIsNull(User user,LocalDateTime dateTimeStartMin,LocalDateTime dateTimeStartMax);
