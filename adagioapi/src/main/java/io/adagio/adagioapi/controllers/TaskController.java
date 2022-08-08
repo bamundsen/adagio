@@ -67,7 +67,7 @@ public class TaskController {
 			
 			User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			
-			Page<Task> tasks = taskRepository.findByUser(logado,pagination);
+			Page<Task> tasks = taskRepository.findByUser(logado, pagination);
 			return Task.converter(tasks);	
 	}
 
