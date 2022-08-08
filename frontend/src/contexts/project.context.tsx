@@ -24,6 +24,7 @@ export type ProjectContextType = {
   createProject: (project: Project) => any;
   editProject: (project: Project, id: number) => any;
   deleteProject: (id: number) => any;
+  getProjectsByTitle: (title: string, size?: number, page?: number) => void;
 };
 
 export const ProjectContext = createContext<ProjectContextType>(null!);
@@ -90,12 +91,22 @@ export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
     return paginationOfTasksByProject;
   };
 
+  const getProjectsByTitle = async (
+    title: string,
+    size?: number,
+    page?: number
+  ) => {
+    const projects = await apiProject.getProjectsByTitle(title, size, page);
+
+    return projects;
+  };
   const value: ProjectContextType = {
     setTriggerToSearchProjectsAgainAfterRegister,
     triggerToSearchProjectsAgainAfterRegister,
     triggerToSearchProjectsAgainAfterDelete,
     setTriggerToSearchProjectsAgainAfterDelete,
     getProjects,
+    getProjectsByTitle,
     getTasksByProject,
     getProject,
     setIsToRestartFormAgain,

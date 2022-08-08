@@ -15,6 +15,7 @@ import completeWeekDays from "../../../utils/weekDays";
 import { Link } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import { CalendarContext } from "../../../contexts/calendar.context";
+import { tabEnterClickEffect } from "../../../utils/acessibilityAux";
 
 interface MonthProps {
   occupiedDates: any[];
@@ -161,6 +162,7 @@ const Month = ({
         {isToShowOneMonth ? (
           <>
             <img
+              onKeyDown={tabEnterClickEffect}
               tabIndex={1}
               onClick={decrementCurrentMonth}
               className={style.icon_arrow_calendar}
@@ -169,6 +171,7 @@ const Month = ({
             />
             {monthAux + ` ${currentYear}`}
             <img
+              onKeyDown={tabEnterClickEffect}
               tabIndex={1}
               onClick={incrementCurrentMonth}
               className={style.icon_arrow_calendar}

@@ -33,6 +33,7 @@ import io.adagio.adagioapi.dto.CadastroProjetoForm;
 import io.adagio.adagioapi.dto.OperationType;
 import io.adagio.adagioapi.dto.ProjectDto;
 import io.adagio.adagioapi.dto.TaskDto;
+import io.adagio.adagioapi.dto.TitleOrAndIdProjectQueryDTO;
 import io.adagio.adagioapi.models.Project;
 import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
@@ -67,8 +68,18 @@ public class ProjectController {
 			return Project.converter(projects);	
 	}
 	
+	@PostMapping("/list-by-title")
+	public Page<ProjectDto> listByTitle(@PageableDefault(sort="title",page=0, size=10,
+			direction=Direction.DESC) Pageable pagination,@RequestBody @Valid TitleOrAndIdProjectQueryDTO queryDto){
+		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		Page<Project> projects = projectRepository.findByTitleAndUser_IdNative(queryDto.getTitle(), logged.getId(), pagination);
+		
+		return Project.converter(projects);
+	}
+	
 	@GetMapping("/{id}/tasks")
-	public ResponseEntity<Page<TaskDto>> getTasksByProject(@PageableDefault(sort="dateTimeStart", page=0, size=10,
+	public ResponseEntity<Page<TaskDto>> getTasksByProject(@PageableDefault(sort="title", page=0, size=10,
 			direction=Direction.ASC) Pageable pagination, @PathVariable("id") Long id){
 		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		

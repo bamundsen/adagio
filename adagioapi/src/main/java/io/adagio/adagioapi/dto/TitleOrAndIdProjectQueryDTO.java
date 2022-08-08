@@ -2,7 +2,7 @@ package io.adagio.adagioapi.dto;
 
 import javax.validation.constraints.Null;
 
-public class TaskQueryDTO {
+public class TitleOrAndIdProjectQueryDTO {
 	
 	private String title;
 	

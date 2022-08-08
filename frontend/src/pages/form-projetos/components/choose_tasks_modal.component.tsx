@@ -131,7 +131,8 @@ const ChooseTasksModal = ({
                 setSearchString(searchStringAux);
               }
             }}
-            placeholder="Pesquiser por uma tarefa"
+            title={"Pesquise por uma tarefa, teclando ENTER "}
+            placeholder="Pesquise por uma tarefa, teclando ENTER "
           ></Form.Control>
         </section>
         {isLoaded === SpinnerState.Finished && (

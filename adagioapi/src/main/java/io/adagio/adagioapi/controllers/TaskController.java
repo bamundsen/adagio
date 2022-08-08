@@ -33,7 +33,7 @@ import io.adagio.adagioapi.dto.CadastroTarefaForm;
 import io.adagio.adagioapi.dto.ColorThatIsToBeShowedBasedOnPriorityDto;
 import io.adagio.adagioapi.dto.StartAndEndDateDto;
 import io.adagio.adagioapi.dto.TaskDto;
-import io.adagio.adagioapi.dto.TaskQueryDTO;
+import io.adagio.adagioapi.dto.TitleOrAndIdProjectQueryDTO;
 import io.adagio.adagioapi.models.Notification;
 import io.adagio.adagioapi.models.ColorOfPriority;
 import io.adagio.adagioapi.models.Priority;
@@ -143,7 +143,7 @@ public class TaskController {
 	
 	@PostMapping("/list-by-title-filter")
 	public ResponseEntity<Page<TaskDto>> listByTitle(@PageableDefault(sort="title",page=0,size=10,
-			direction=Direction.DESC) Pageable pageable, @RequestBody @Valid TaskQueryDTO taskQueryDto){
+			direction=Direction.DESC) Pageable pageable, @RequestBody @Valid TitleOrAndIdProjectQueryDTO taskQueryDto){
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		Page<Task> tasks = taskRepository.findByTitleAndUser_IdNative(taskQueryDto.getTitle(), logado.getId(), pageable);
@@ -155,7 +155,7 @@ public class TaskController {
 	
 	@PostMapping("/list-by-project-filter")
 	public ResponseEntity<Page<TaskDto>> listByProjectId(@PageableDefault(sort="dateTimeEnd",page=0,size=10,
-			direction=Direction.DESC) Pageable pageable, @RequestBody @Valid TaskQueryDTO taskQueryDto){
+			direction=Direction.DESC) Pageable pageable, @RequestBody @Valid TitleOrAndIdProjectQueryDTO taskQueryDto){
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		Page<Task> tasks = taskRepository.findByProject_IdAndUser(taskQueryDto.getProjectId(), logado, pageable);
@@ -203,7 +203,7 @@ public class TaskController {
 	
 	@PostMapping("/list-by-no-project")
 	public ResponseEntity<Page<TaskDto>> listByTitleNoProject(@PageableDefault(sort="title",page=0,size=10,
-			direction=Direction.DESC) Pageable pageable, @RequestBody @Valid TaskQueryDTO taskQueryDto){
+			direction=Direction.DESC) Pageable pageable, @RequestBody @Valid TitleOrAndIdProjectQueryDTO taskQueryDto){
 		
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
