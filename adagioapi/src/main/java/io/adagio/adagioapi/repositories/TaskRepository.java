@@ -20,7 +20,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 	List<Task> findByProjectAndUser(Project project, User user);
 
 	Page<Task> findByUser(User user , Pageable pagination);
-
+	List<Task> findByUser(User user);
+	
 	List<Task> findByUserAndProjectIsNull(User user);
 
 	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeEndLessThanEqual(User user,LocalDateTime dateTimeStart,LocalDateTime dateTimeEnd);

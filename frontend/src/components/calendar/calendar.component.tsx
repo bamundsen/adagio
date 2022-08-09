@@ -89,9 +89,8 @@ const Calendar = ({
   }, [isToShowOneMonth, triggerToUpdateButtonAndValue]);
 
   useEffect(() => {
-    console.log("????");
     if (exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_MONTH) {
-      setValueReferenceToSearch(`${currentMonth + 1}`);
+      setValueReferenceToSearch([currentMonth, currentYear]);
     } else if (exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_YEAR) {
       setValueReferenceToSearch(`${currentYear}`);
     }
