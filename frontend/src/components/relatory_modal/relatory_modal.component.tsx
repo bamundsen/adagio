@@ -1,5 +1,5 @@
 import { setDefaultResultOrder } from "dns";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { Form, Modal } from "react-bootstrap";
 import { BsFillPenFill, BsTrash } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,6 +13,8 @@ import ConfirmationModal from "../confirmation-modal/confirmation_modal.componen
 import { tabEnterClickEffect } from "../../utils/acessibilityAux";
 import { CalendarContext } from "../../contexts/calendar.context";
 import { SpinnerState } from "../../utils/spinner_type";
+import { RelatoryContext } from "../../contexts/relatory.context";
+import { ExportCalendarType } from "../../types/ExportCalendarType";
 
 interface RelatoryModalProps {
   modalIsOpen: boolean;
@@ -35,8 +37,14 @@ const RelatoryModal = ({
 }: RelatoryModalProps) => {
   const navigate = useNavigate();
   const { listByStartDateTimeFilter } = useContext(TaskContext);
+  const {
+    setExportCalendarType,
+    setValueReferenceToSearch,
+    exportCalendarType,
+  } = useContext(RelatoryContext);
   const [tasksToShow, setTasksToShow] = useState<any[]>([]);
   const { activeTriggerUpdateCalendar } = useContext(CalendarContext);
+  const {changeTriggerToUpdateButtonAndValue} = useContext(RelatoryContext);
   const [isLoaded, setIsLoaded] = useState(SpinnerState.Pending);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const { deleteTask } = useContext(TaskContext);
@@ -77,6 +85,21 @@ const RelatoryModal = ({
       setIsLoaded(SpinnerState.There_is_no_content);
     }
   }, [tasksToShow]);
+
+  useLayoutEffect(() => {
+    if (modalIsOpen) {
+      setExportCalendarType(ExportCalendarType.EXPORT_TASKS_OF_DAY);
+    }
+  }, [modalIsOpen]);
+
+  useEffect(() => {
+    if (
+      modalIsOpen &&
+      exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_DAY
+    ) {
+      setValueReferenceToSearch([dateToSearch, dateFinalToSearch]);
+    }
+  }, [exportCalendarType]);
 
   const deleteTaskById = (id: number | undefined) => {
     if (id) {
@@ -138,6 +161,7 @@ const RelatoryModal = ({
           onKeyDown={tabEnterClickEffect}
           onClick={() => {
             activeTriggerUpdateCalendar();
+            changeTriggerToUpdateButtonAndValue();
             setModalIsOpen(false);
           }}
           className={`${commonStyles.close_modal_button}`}
@@ -208,14 +232,9 @@ const RelatoryModal = ({
           <span>Criar tarefa</span>
         </span>
         <div className={`${style.footer_modal_set_free_day}`}>
-          <span>Dia Livre</span>
-
-          <Form.Check
-            tabIndex={1}
-            className={`${style.footer_modal_set_free_day_checkbox}`}
-            type={"checkbox"}
-            id={`disabled-default-checkbox`}
-          />
+          <span style={{ fontWeight: "bold", cursor: "pointer" }}>
+            Gerar relatório do dia
+          </span>
         </div>
       </Modal.Footer>
       {returnConfirmationModal()}

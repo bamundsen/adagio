@@ -56,6 +56,7 @@ const Calendar = ({
     setExportCalendarType,
     setValueReferenceToSearch,
     exportCalendarType,
+    triggerToUpdateButtonAndValue,
     valueReferenceToSearch,
   } = useContext(RelatoryContext);
   const { trigger } = useContext(AuthContext);
@@ -85,7 +86,7 @@ const Calendar = ({
     } else {
       setExportCalendarType(ExportCalendarType.EXPORT_TASKS_OF_YEAR);
     }
-  }, [isToShowOneMonth]);
+  }, [isToShowOneMonth, triggerToUpdateButtonAndValue]);
 
   useEffect(() => {
     console.log("????");

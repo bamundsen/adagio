@@ -6,8 +6,12 @@ export type RelatoryContextType = {
   setExportCalendarType: React.Dispatch<
     React.SetStateAction<ExportCalendarType | null>
   >;
-  valueReferenceToSearch: string;
-  setValueReferenceToSearch: React.Dispatch<React.SetStateAction<string>>;
+  valueReferenceToSearch: number[] | string | string[];
+  setValueReferenceToSearch: React.Dispatch<
+    React.SetStateAction<number[] | string | string[]>
+  >;
+  triggerToUpdateButtonAndValue: boolean;
+  changeTriggerToUpdateButtonAndValue: () => void;
 };
 
 export const RelatoryContext = createContext<RelatoryContextType>(null!);
@@ -15,14 +19,24 @@ export const RelatoryContext = createContext<RelatoryContextType>(null!);
 export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
   const [exportCalendarType, setExportCalendarType] =
     useState<ExportCalendarType | null>(null);
-  const [valueReferenceToSearch, setValueReferenceToSearch] = useState("");
+  const [valueReferenceToSearch, setValueReferenceToSearch] = useState<
+    number[] | string | string[]
+  >("");
+  const [triggerToUpdateButtonAndValue, setTriggerToUpdateButtonAndValue] =
+    useState(false);
 
   useEffect(() => {
     console.log(exportCalendarType);
     console.log(valueReferenceToSearch);
   }, [valueReferenceToSearch, exportCalendarType]);
 
+  const changeTriggerToUpdateButtonAndValue = () => {
+    setTriggerToUpdateButtonAndValue(!triggerToUpdateButtonAndValue);
+  };
+
   const value: RelatoryContextType = {
+    changeTriggerToUpdateButtonAndValue,
+    triggerToUpdateButtonAndValue,
     exportCalendarType,
     setExportCalendarType,
     valueReferenceToSearch,

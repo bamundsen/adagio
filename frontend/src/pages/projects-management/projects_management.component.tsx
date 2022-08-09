@@ -5,7 +5,7 @@ import styles from "./projects_management.module.scss";
 import sideBarData from "../../utils/sideBarData";
 import { BsFillPenFill } from "react-icons/bs";
 import { BsTrash } from "react-icons/bs";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { ProjectContext } from "../../contexts/project.context";
 import { Project } from "../../types/ProjectType";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,6 +13,8 @@ import AdagioSpinner from "../../components/adagio-spinner/adagio_spinner.compon
 import ConfirmationModal from "../../components/confirmation-modal/confirmation_modal.component";
 import { SpinnerState } from "../../utils/spinner_type";
 import RegionPaginationButtons from "../../components/region-pagination-buttons/region_pagination_buttons.component";
+import { RelatoryContext } from "../../contexts/relatory.context";
+import { ExportCalendarType } from "../../types/ExportCalendarType";
 
 const ProjectsManagement = () => {
   const navigate = useNavigate();
@@ -24,7 +26,7 @@ const ProjectsManagement = () => {
     triggerToSearchProjectsAgainAfterRegister,
     triggerToSearchProjectsAgainAfterDelete,
   } = useContext(ProjectContext);
-
+  const { setExportCalendarType ,exportCalendarType,setValueReferenceToSearch} = useContext(RelatoryContext);
   const [projects, setProjects] = useState<any[] | Project[]>([]);
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(8);
@@ -73,6 +75,16 @@ const ProjectsManagement = () => {
       setIsLoaded(SpinnerState.There_is_no_content);
     }
   }, [projects]);
+
+  useLayoutEffect(() => {
+    setExportCalendarType(ExportCalendarType.EXPORT_PROJECTS_OF_PAGE);
+  }, []);
+
+  useEffect(()=>{
+    if(exportCalendarType === ExportCalendarType.EXPORT_PROJECTS_OF_PAGE){
+      setValueReferenceToSearch([size,page]);
+    }
+  },[exportCalendarType]);
 
   useEffect(() => {
     let arr = [];
