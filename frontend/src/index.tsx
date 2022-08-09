@@ -11,6 +11,7 @@ import {
   NotificationContext,
   NotificationProvider,
 } from "./contexts/notification.context";
+import { RelatoryProvider } from "./contexts/relatory.context";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -23,7 +24,9 @@ root.render(
           <TaskProvider>
             <CalendarProvider>
               <NotificationProvider>
-                <App />
+                <RelatoryProvider>
+                  <App />
+                </RelatoryProvider>
               </NotificationProvider>
             </CalendarProvider>
           </TaskProvider>

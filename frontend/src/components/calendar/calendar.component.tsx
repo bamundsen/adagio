@@ -7,6 +7,8 @@ import DatePicker from "react-datepicker";
 import Month from "./month/month.component";
 import { AuthContext } from "../../contexts/auth.context";
 import { CalendarContext } from "../../contexts/calendar.context";
+import { RelatoryContext } from "../../contexts/relatory.context";
+import { ExportCalendarType } from "../../types/ExportCalendarType";
 
 interface CalendarProps {
   isToShowChangeFormatOption?: boolean;
@@ -50,12 +52,19 @@ const Calendar = ({
   isToShowChangeYearOption,
   isToShowChangeMonthOption,
 }: CalendarProps) => {
+  const {
+    setExportCalendarType,
+    setValueReferenceToSearch,
+    exportCalendarType,
+    valueReferenceToSearch,
+  } = useContext(RelatoryContext);
   const { trigger } = useContext(AuthContext);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [auxCurrentYear, setAuxCurrentYear] = useState(
     new Date().getFullYear()
   );
+
   const [occupiedDates, setOccupiedDates] = useState<any[]>([]);
   const [isToShowOneMonth, setIsToShowOneMonth] = useState(true);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
@@ -69,6 +78,23 @@ const Calendar = ({
   useEffect(() => {
     setMonthToSend(months[currentMonth]);
   }, [currentMonth, trigger]);
+
+  useEffect(() => {
+    if (isToShowOneMonth) {
+      setExportCalendarType(ExportCalendarType.EXPORT_TASKS_OF_MONTH);
+    } else {
+      setExportCalendarType(ExportCalendarType.EXPORT_TASKS_OF_YEAR);
+    }
+  }, [isToShowOneMonth]);
+
+  useEffect(() => {
+    console.log("????");
+    if (exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_MONTH) {
+      setValueReferenceToSearch(`${currentMonth + 1}`);
+    } else if (exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_YEAR) {
+      setValueReferenceToSearch(`${currentYear}`);
+    }
+  }, [exportCalendarType]);
 
   const toggleIsToShowOneMonth = () => {
     setIsToShowOneMonth(!isToShowOneMonth);

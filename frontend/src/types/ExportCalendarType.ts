@@ -1,0 +1,6 @@
+export enum ExportCalendarType {
+  EXPORT_TASKS_OF_YEAR,
+  EXPORT_TASKS_OF_MONTH,
+  EXPORT_TASKS_OF_DAY,
+  EXPORT_PROJECTS_OF_PAGE,
+}
