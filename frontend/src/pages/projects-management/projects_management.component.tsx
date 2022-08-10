@@ -29,6 +29,7 @@ const ProjectsManagement = () => {
   const {
     setExportCalendarType,
     exportCalendarType,
+    triggerToUpdateButtonAndValue,
     setValueReferenceToSearch,
   } = useContext(RelatoryContext);
   const [projects, setProjects] = useState<any[] | Project[]>([]);
@@ -81,8 +82,9 @@ const ProjectsManagement = () => {
   }, [projects]);
 
   useLayoutEffect(() => {
+    console.log("definindo");
     setExportCalendarType(ExportCalendarType.EXPORT_PROJECTS_OF_PAGE);
-  }, []);
+  }, [triggerToUpdateButtonAndValue]);
 
   useEffect(() => {
     if (exportCalendarType === ExportCalendarType.EXPORT_PROJECTS_OF_PAGE) {

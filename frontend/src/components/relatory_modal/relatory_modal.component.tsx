@@ -170,9 +170,9 @@ const RelatoryModal = ({
           tabIndex={1}
           onKeyDown={tabEnterClickEffect}
           onClick={(e: any) => {
+            setModalIsOpen(false);
             activeTriggerUpdateCalendar();
             changeTriggerToUpdateButtonAndValue();
-            setModalIsOpen(false);
           }}
           onKeyPress={(e: any) => {
             e.target.style.backgroundColor = "#ccc";

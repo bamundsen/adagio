@@ -11,6 +11,7 @@ import {
 
 import { Navigate, Outlet, Route, useLocation } from "react-router-dom";
 import { AuthContext } from "../../contexts/auth.context";
+import { RelatoryContext } from "../../contexts/relatory.context";
 
 const PrivateRoute = () => {
   const { isAuthenticated, setTrigger, trigger } = useContext(AuthContext);
@@ -18,9 +19,9 @@ const PrivateRoute = () => {
   const location = useLocation();
   const [isToGo, setIsToGo] = useState(false);
   useEffect(() => {
-    if (isAuthenticated === false) {
-      setTrigger(!trigger);
-    }
+    // if (isAuthenticated === false) {
+    //   setTrigger(!trigger);
+    // }
   }, []);
 
   const renderComponent = () => {

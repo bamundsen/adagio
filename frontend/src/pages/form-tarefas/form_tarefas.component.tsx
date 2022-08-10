@@ -18,9 +18,11 @@ import DatePicker from "react-datepicker";
 import { Task } from "../../types/TaskType";
 import { TaskContext } from "../../contexts/task.context";
 import { findAllInRenderedTree } from "react-dom/test-utils";
+import { RelatoryContext } from "../../contexts/relatory.context";
 
 const FormTarefas = () => {
   const windowDimensions = useWindowDimensions();
+  const { setExportCalendarType } = useContext(RelatoryContext);
   const { createTask } = useContext(TaskContext);
   const [titulo, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -46,6 +48,10 @@ const FormTarefas = () => {
         endHourAux.getMinutes()
       ).padStart(2, "0")}:${String(endHourAux.getSeconds()).padStart(2, "0")}`
     );
+  }, []);
+
+  useEffect(() => {
+    setExportCalendarType(null);
   }, []);
 
   const onChangeStartHour = (date: Date) => {

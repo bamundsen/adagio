@@ -38,6 +38,8 @@ export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
   const relatoryApi = RelatoryApi();
 
   useEffect(() => {
+    console.log(exportCalendarType);
+    console.log(valueReferenceToSearch);
     if (triggerIsToRequestAndGenerateExcel && isToDownload) {
       if (exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_MONTH) {
         getByMonth().then((response: any) => {

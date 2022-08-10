@@ -22,6 +22,7 @@ import { ProjectContext } from "../../contexts/project.context";
 import { Navigate, useLocation, useParams } from "react-router-dom";
 import ChooseTasksModal from "./components/choose_tasks_modal.component";
 import { Task } from "../../types/TaskType";
+import { RelatoryContext } from "../../contexts/relatory.context";
 
 const FormProjetos = () => {
   const { user } = useContext(AuthContext);
@@ -34,6 +35,7 @@ const FormProjetos = () => {
     isToRestartFormAgain,
     setIsToRestartFormAgain,
   } = useContext(ProjectContext);
+  const { setExportCalendarType } = useContext(RelatoryContext);
   const windowDimensions = useWindowDimensions();
   const { id } = useParams();
   const [tasksModalIsOpen, setTasksModalIsOpen] = useState(false);
@@ -95,6 +97,10 @@ const FormProjetos = () => {
     setEndDate(filterAndReturnDate(endDateAux));
     setEndHour(filterAndReturnHour(endHourAux));
   }, [startDateAux, startHourAux, endDateAux, endHourAux]);
+
+  useEffect(() => {
+    setExportCalendarType(null);
+  }, []);
 
   const setIdsTasksWithAcumulatedSelected = (selectedIdsTasks: number[]) => {
     setIdsTasks(selectedIdsTasks);

@@ -75,9 +75,7 @@ public class RelatoryService {
 		for(TaskDto t:tasks) {
 			if(t.getDateTimeEnd().isAfter(t.getDateTimeStart())) {
 				LocalDateTime tempDateTime = LocalDateTime.from(t.getDateTimeStart());
-				
-				
-				
+							
 				totalHours += tempDateTime.until(t.getDateTimeEnd(), ChronoUnit.HOURS);
 				
 				System.out.println(tempDateTime.until(t.getDateTimeEnd(), ChronoUnit.DAYS));
