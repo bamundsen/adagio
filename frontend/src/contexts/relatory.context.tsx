@@ -62,6 +62,7 @@ export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
         });
       }
     }
+    setIsToDownload(false);
   }, [
     valueReferenceToSearch,
     exportCalendarType,
