@@ -2,8 +2,6 @@ package io.adagio.adagioapi.controllers;
 
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -36,8 +33,6 @@ import io.adagio.adagioapi.dto.TaskDto;
 import io.adagio.adagioapi.dto.TitleOrAndIdProjectQueryDTO;
 import io.adagio.adagioapi.models.Notification;
 import io.adagio.adagioapi.models.ColorOfPriority;
-import io.adagio.adagioapi.models.Priority;
-import io.adagio.adagioapi.models.Project;
 import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.repositories.NotificationRepository;
@@ -60,6 +55,8 @@ public class TaskController {
 	
 	@Value("${adagio.api.base_servico_de_rotas_privadas}")
 	private String base_da_url_do_servico;
+	
+	private TaskService taskService = new TaskService();
 	
 	@GetMapping
 	public Page<TaskDto> list(@PageableDefault(sort="dateTimeEnd",page=0,size=10,
@@ -108,15 +105,20 @@ public class TaskController {
 		
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Task task = taskForm.converter(logado, projectRepository);
-
+		 
+		if(!taskService.validTaskTime(task, logado.getId(), taskRepository))
+			return ResponseEntity.badRequest().build();
+		
 		taskRepository.save(task);
 		
-		 if (taskForm.getNotifications() != null) {
+		if (taskForm.getNotifications() != null) {
+			task.setNotifications(taskService.notificationPattern(task.getNotifications()));
 			 for (Notification n : task.getNotifications()) {
 				Notification notification = new Notification(n, task);
 				notificationRepository.save(notification);
 			 }
 		}
+		
 		
 		URI uri = uriBuilder.path(base_da_url_do_servico+"/task/{id}")
 				.buildAndExpand(task.getId()).toUri();
@@ -183,12 +185,18 @@ public class TaskController {
 		Optional<Task> optionalTask = taskRepository.findByIdAndUser(id, logado);
 		
 		if(optionalTask.isPresent()) {
+			Task taskValidator = taskForm.converter(logado, projectRepository);
+			
+			if(!taskService.validTaskTime(taskValidator, logado.getId(), taskRepository, id))
+				return ResponseEntity.badRequest().build();
+			
 			Task task = taskForm.update(id, taskRepository, projectRepository);
 			
 			if (optionalTask.get().getNotifications() != null)
 				notificationRepository.deleteByTask(optionalTask.get());
 				
 			if (taskForm.getNotifications() != null ) {
+				task.setNotifications(taskService.notificationPattern(task.getNotifications()));
 				 for (Notification n : taskForm.getNotifications()) {
 					Notification notification = new Notification(n, optionalTask.get());
 					notificationRepository.save(notification);

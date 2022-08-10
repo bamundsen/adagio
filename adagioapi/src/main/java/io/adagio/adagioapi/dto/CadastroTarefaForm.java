@@ -8,12 +8,12 @@ import java.util.Optional;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import io.adagio.adagioapi.models.Category;
 import io.adagio.adagioapi.models.Notification;
 import io.adagio.adagioapi.models.Priority;
 import io.adagio.adagioapi.models.Project;
 import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
-import io.adagio.adagioapi.repositories.NotificationRepository;
 import io.adagio.adagioapi.repositories.ProjectRepository;
 import io.adagio.adagioapi.repositories.TaskRepository;
 
@@ -123,13 +123,14 @@ public class CadastroTarefaForm {
 	}
 
 	public Task converter(User user, ProjectRepository projectRepository) {
+
+		// validar notificaçoes
 		
-		if(projectId == null)
-			return new Task(this, user, null);
+		// validar notificaçoes
 		
 		Optional<Project> project = projectRepository.findById(projectId);
 		
-		if(project.isEmpty())
+		if(project.isEmpty() || projectId == null)
 			return new Task(this, user, null);
 			
 		return new Task(this, user, project.get());
@@ -146,6 +147,7 @@ public class CadastroTarefaForm {
 		task.setFinishedStatus(finishedStatus);
 		task.setPriority(priority);
 		task.setNotifications(notifications);
+		
 		task.setProject(project);
 		
 		return task;
