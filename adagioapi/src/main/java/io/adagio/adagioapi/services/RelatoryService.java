@@ -7,10 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import io.adagio.adagioapi.dto.ReturnedRelatoryTaskSetData;
+import io.adagio.adagioapi.dto.ProjectDto;
 import io.adagio.adagioapi.dto.TaskDto;
+import io.adagio.adagioapi.dto.relatoryDto.ReturnedRelatoryProjectSetData;
+import io.adagio.adagioapi.dto.relatoryDto.ReturnedRelatoryTaskSetData;
+import io.adagio.adagioapi.models.Project;
 import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.repositories.ProjectRepository;
@@ -45,7 +50,7 @@ public class RelatoryService {
 		
 		}
 		
-		relatory.setQuantityOfTasks(tasksDto.size());
+		relatory.setQuantityOfElements(tasksDto.size());
 		relatory.setTotalHours(returnTotalHours(tasksDto));
 		relatory.setTasks(tasksDto);
 		
@@ -61,7 +66,7 @@ public class RelatoryService {
 		
 		List<TaskDto> tasksDto = Task.converter(tasks);
 		
-		relatory.setQuantityOfTasks(tasksDto.size());
+		relatory.setQuantityOfElements(tasksDto.size());
 		relatory.setTotalHours(returnTotalHours(tasksDto));
 		relatory.setTasks(tasksDto);
 		return relatory;
@@ -69,6 +74,22 @@ public class RelatoryService {
 	}
 	
 
+	public ReturnedRelatoryProjectSetData getProjectsByPage(User user, Pageable pagination) {
+		ReturnedRelatoryProjectSetData relatory = new ReturnedRelatoryProjectSetData();
+		
+		Page<Project> projects = projectRepository.findByUser(user, pagination);
+		
+		List<Project> projectsContent = new ArrayList<Project>();
+		
+		List<ProjectDto> projectsDto = Project.converter(projects.getContent());
+		
+		relatory.setQuantityOfElements(projectsDto.size());
+		relatory.setTotalHours(returnTotalHoursProjects(projectsDto));
+		relatory.setProjects(projectsDto);
+		
+		return relatory;
+	}
+	
 	public Long returnTotalHours(List<TaskDto> tasks) {
 		Long totalHours =(long) 0;
 		
@@ -79,6 +100,23 @@ public class RelatoryService {
 				totalHours += tempDateTime.until(t.getDateTimeEnd(), ChronoUnit.HOURS);
 				
 				System.out.println(tempDateTime.until(t.getDateTimeEnd(), ChronoUnit.DAYS));
+				System.out.println("DURAÇÃO "+totalHours);
+			}
+		}
+		
+		return totalHours;
+	}
+	
+	public Long returnTotalHoursProjects(List<ProjectDto> projects) {
+		Long totalHours =(long) 0;
+		
+		for(ProjectDto p:projects) {
+			if(p.getDateTimeEnd().isAfter(p.getDateTimeStart())) {
+				LocalDateTime tempDateTime = LocalDateTime.from(p.getDateTimeStart());
+							
+				totalHours += tempDateTime.until(p.getDateTimeEnd(), ChronoUnit.HOURS);
+				
+				System.out.println(tempDateTime.until(p.getDateTimeEnd(), ChronoUnit.DAYS));
 				System.out.println("DURAÇÃO "+totalHours);
 			}
 		}

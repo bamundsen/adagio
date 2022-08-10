@@ -1,6 +1,7 @@
 package io.adagio.adagioapi.models;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -20,6 +21,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import io.adagio.adagioapi.dto.CadastroProjetoForm;
 import io.adagio.adagioapi.dto.ProjectDto;
+import io.adagio.adagioapi.dto.TaskDto;
 
 @Entity
 @Table(name = "projects")
@@ -143,5 +145,15 @@ public class Project {
 	
 	public static Page<ProjectDto> converter(Page<Project> projects){
 		return projects.map(ProjectDto::new);
+	}
+	
+	public static List<ProjectDto> converter(List<Project> projects){
+		List<ProjectDto> projectsDto = new ArrayList<>();
+		
+		for(Project task : projects) {
+			ProjectDto taskDto = new ProjectDto(task);
+			projectsDto.add(taskDto);
+		}
+		return projectsDto;
 	}
 }
