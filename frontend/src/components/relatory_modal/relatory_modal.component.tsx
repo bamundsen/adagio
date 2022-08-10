@@ -45,7 +45,10 @@ const RelatoryModal = ({
   } = useContext(RelatoryContext);
   const [tasksToShow, setTasksToShow] = useState<any[]>([]);
   const { activeTriggerUpdateCalendar } = useContext(CalendarContext);
-  const { changeTriggerToUpdateButtonAndValue } = useContext(RelatoryContext);
+  const {
+    changeTriggerToUpdateButtonAndValue,
+    setModalConfirmationDownloadIsOpen,
+  } = useContext(RelatoryContext);
   const [isLoaded, setIsLoaded] = useState(SpinnerState.Pending);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const { deleteTask } = useContext(TaskContext);
@@ -131,6 +134,7 @@ const RelatoryModal = ({
         explanationMessage="Qualquer notificação associada a essa tarefa será deletada"
         titleConfirmationMessage="Deseja realmente deletar essa tarefa ?"
         idToOperation={idToConfirmationModal}
+        colorFlagNegativeButton={"danger"}
         functionToPositiveConfirmationExecuteById={deleteTaskById}
       />
     );
@@ -138,6 +142,7 @@ const RelatoryModal = ({
 
   const activateTriggerToSearchAndGenerateExcecl = () => {
     changeTriggerIsToRequestAndGenerateExcel();
+    setModalConfirmationDownloadIsOpen(true);
   };
 
   return (
@@ -164,10 +169,13 @@ const RelatoryModal = ({
         <div
           tabIndex={1}
           onKeyDown={tabEnterClickEffect}
-          onClick={() => {
+          onClick={(e: any) => {
             activeTriggerUpdateCalendar();
             changeTriggerToUpdateButtonAndValue();
             setModalIsOpen(false);
+          }}
+          onKeyPress={(e: any) => {
+            e.target.style.backgroundColor = "#ccc";
           }}
           className={`${commonStyles.close_modal_button}`}
         >

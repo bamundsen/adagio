@@ -90,6 +90,7 @@ const TasksManagement = () => {
         titleConfirmationMessage={"Realmente deseja deletar essa tarefa ?"}
         explanationMessage={"Essa tarefa será definitivamente excluída."}
         isModalOpen={confirmationModalIsOpen}
+        colorFlagNegativeButton={"danger"}
         setModalIsOpen={setModalConfirmationIsOpen}
       />
     );

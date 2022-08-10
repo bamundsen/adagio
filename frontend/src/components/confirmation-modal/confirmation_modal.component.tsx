@@ -11,16 +11,20 @@ import NegativeButtonModal from "../negative-button-modal/negative_button_modal.
 interface ConfirmationModalProps {
   functionToPositiveConfirmationExecuteById?: (id: number | undefined) => void;
   idToOperation?: number;
+  confirmDownload?: React.Dispatch<React.SetStateAction<boolean>>;
   isModalOpen: boolean;
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   titleConfirmationMessage: string;
   explanationMessage: string;
+  colorFlagNegativeButton: string;
 }
 
 const ConfirmationModal = ({
   functionToPositiveConfirmationExecuteById,
   idToOperation,
+  confirmDownload,
   isModalOpen,
+  colorFlagNegativeButton,
   setModalIsOpen,
   explanationMessage,
   titleConfirmationMessage,
@@ -44,8 +48,12 @@ const ConfirmationModal = ({
               if (functionToPositiveConfirmationExecuteById && idToOperation) {
                 functionToPositiveConfirmationExecuteById(idToOperation);
               }
+
+              if (confirmDownload) {
+                confirmDownload(true);
+              }
             }}
-            variant="danger"
+            variant={colorFlagNegativeButton}
           >
             Sim
           </Button>

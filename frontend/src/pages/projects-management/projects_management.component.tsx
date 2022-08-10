@@ -144,6 +144,7 @@ const ProjectsManagement = () => {
         explanationMessage={
           "Todas as tarefas vinculadas a esse projeto serão excluídas"
         }
+        colorFlagNegativeButton={"danger"}
         isModalOpen={confirmationModalIsOpen}
         setModalIsOpen={setModalConfirmationIsOpen}
       />

@@ -20,6 +20,7 @@ const Navigation = () => {
   const { setTriggerAlignCurrentMonth, triggerAlignCurrentMonth } =
     useContext(CalendarContext);
   const { user, isAuthenticated, signout } = useContext(AuthContext);
+  const { returnConfirmationModal } = useContext(RelatoryContext);
   const { setTriggerToSearchProjectsAgain, triggerToSearchProjectsAgain } =
     useContext(ProjectContext);
   const refDropdown = useRef<HTMLLIElement | null>(null);
@@ -243,6 +244,7 @@ const Navigation = () => {
         </div>
 
         {verifyCurrentUserState()}
+        {returnConfirmationModal()}
       </header>
 
       <Outlet />

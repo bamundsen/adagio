@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
+import ConfirmationModal from "../components/confirmation-modal/confirmation_modal.component";
 import { RelatoryApi } from "../hooks/relatoryApi";
 import { ExportCalendarType } from "../types/ExportCalendarType";
 
@@ -11,6 +12,11 @@ export type RelatoryContextType = {
   setValueReferenceToSearch: React.Dispatch<React.SetStateAction<any>>;
   changeTriggerIsToRequestAndGenerateExcel: () => void;
   triggerToUpdateButtonAndValue: boolean;
+  returnConfirmationModal: () => any;
+  setModalConfirmationDownloadIsOpen: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
+  setIsToDownload: React.Dispatch<React.SetStateAction<boolean>>;
   changeTriggerToUpdateButtonAndValue: () => void;
 };
 
@@ -26,26 +32,31 @@ export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
     triggerIsToRequestAndGenerateExcel,
     setTriggerIsToRequestAndGenerateExcel,
   ] = useState(false);
-
+  const [modalConfirmationDownloadIsOpen, setModalConfirmationDownloadIsOpen] =
+    useState(false);
+  const [isToDownload, setIsToDownload] = useState(false);
   const relatoryApi = RelatoryApi();
 
   useEffect(() => {
-    if (triggerIsToRequestAndGenerateExcel) {
+    if (triggerIsToRequestAndGenerateExcel && isToDownload) {
       if (exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_MONTH) {
         getByMonth().then((response: any) => {
           setTriggerIsToRequestAndGenerateExcel(false);
+          setIsToDownload(false);
         });
       } else if (
         exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_YEAR
       ) {
         getByYear().then((response: any) => {
           setTriggerIsToRequestAndGenerateExcel(false);
+          setIsToDownload(false);
         });
       } else if (
         exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_DAY
       ) {
         getByDay().then((response: any) => {
           setTriggerIsToRequestAndGenerateExcel(false);
+          setIsToDownload(false);
         });
       }
     }
@@ -53,6 +64,7 @@ export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
     valueReferenceToSearch,
     exportCalendarType,
     triggerIsToRequestAndGenerateExcel,
+    isToDownload,
   ]);
 
   const getByMonth = async () => {
@@ -83,12 +95,28 @@ export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
   };
 
   const changeTriggerIsToRequestAndGenerateExcel = () => {
-    setTriggerIsToRequestAndGenerateExcel(!triggerIsToRequestAndGenerateExcel);
+    setTriggerIsToRequestAndGenerateExcel(true);
+  };
+
+  const returnConfirmationModal = () => {
+    return (
+      <ConfirmationModal
+        colorFlagNegativeButton="success"
+        titleConfirmationMessage="Confirmação de download"
+        explanationMessage="Dependendo da quantidade de registros, o download pode ser demorado. Deseja baixar ?"
+        isModalOpen={modalConfirmationDownloadIsOpen}
+        setModalIsOpen={setModalConfirmationDownloadIsOpen}
+        confirmDownload={setIsToDownload}
+      />
+    );
   };
 
   const value: RelatoryContextType = {
     changeTriggerToUpdateButtonAndValue,
     triggerToUpdateButtonAndValue,
+    setModalConfirmationDownloadIsOpen,
+    returnConfirmationModal,
+    setIsToDownload,
     changeTriggerIsToRequestAndGenerateExcel,
     exportCalendarType,
     setExportCalendarType,

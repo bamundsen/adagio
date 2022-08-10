@@ -18,6 +18,7 @@ const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
   const {
     exportCalendarType,
     triggerToUpdateButtonAndValue,
+    setModalConfirmationDownloadIsOpen,
     changeTriggerIsToRequestAndGenerateExcel,
   } = useContext(RelatoryContext);
   const windowDimensions = useWindowDimensions();
@@ -31,6 +32,7 @@ const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
 
   const activeTriggerIsToRequestAndGenerateExcel = (e: any) => {
     changeTriggerIsToRequestAndGenerateExcel();
+    setModalConfirmationDownloadIsOpen(true);
   };
 
   const returnCalendarExportTrigger = (message: string, link: string) => {
