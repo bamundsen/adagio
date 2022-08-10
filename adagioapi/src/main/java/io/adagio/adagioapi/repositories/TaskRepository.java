@@ -1,5 +1,6 @@
 package io.adagio.adagioapi.repositories;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -20,10 +21,15 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 	List<Task> findByProjectAndUser(Project project, User user);
 
 	Page<Task> findByUser(User user , Pageable pagination);
+<<<<<<< Updated upstream
 	List<Task> findByUser(User user);
 	
 	List<Task> findByUserAndProjectIsNull(User user);
 
+=======
+
+	List<Task> findByUserAndProjectIsNull(User user);
+>>>>>>> Stashed changes
 	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeEndLessThanEqual(User user,LocalDateTime dateTimeStart,LocalDateTime dateTimeEnd);
 	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanEqual(User user,LocalDateTime dateTimeStartMin,LocalDateTime dateTimeStartMax);
 	List<Task> findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanAndProjectIsNull(User user,LocalDateTime dateTimeStartMin,LocalDateTime dateTimeStartMax);
@@ -43,5 +49,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 	Page<Task> findByTitleAndAndUser_IdAndProjectIsNullOrProjectIsEqualNative(String title, Long user_id,Long project_id, Pageable pageable);
 	
 	Page<Task> findByProject_IdAndUser (Long project_id, User user, Pageable pageable);
+	
+	@Query(value = "SELECT * FROM tasks t WHERE t.date_time_end LIKE CONCAT (?1,'%') AND t.user_id= ?2", nativeQuery = true)
+	List<Task> findByDate_Time_EndAndUser_IdNative(LocalDate localDate, Long userId);
+	
 }
 
