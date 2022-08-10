@@ -26,7 +26,11 @@ const ProjectsManagement = () => {
     triggerToSearchProjectsAgainAfterRegister,
     triggerToSearchProjectsAgainAfterDelete,
   } = useContext(ProjectContext);
-  const { setExportCalendarType ,exportCalendarType,setValueReferenceToSearch} = useContext(RelatoryContext);
+  const {
+    setExportCalendarType,
+    exportCalendarType,
+    setValueReferenceToSearch,
+  } = useContext(RelatoryContext);
   const [projects, setProjects] = useState<any[] | Project[]>([]);
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(8);
@@ -80,11 +84,11 @@ const ProjectsManagement = () => {
     setExportCalendarType(ExportCalendarType.EXPORT_PROJECTS_OF_PAGE);
   }, []);
 
-  useEffect(()=>{
-    if(exportCalendarType === ExportCalendarType.EXPORT_PROJECTS_OF_PAGE){
-      setValueReferenceToSearch([size,page]);
+  useEffect(() => {
+    if (exportCalendarType === ExportCalendarType.EXPORT_PROJECTS_OF_PAGE) {
+      setValueReferenceToSearch([size, page]);
     }
-  },[exportCalendarType]);
+  }, [exportCalendarType]);
 
   useEffect(() => {
     let arr = [];
@@ -149,7 +153,7 @@ const ProjectsManagement = () => {
   return (
     <main className={`${commonStyles.main_content}`}>
       <AdagioSideBar itemsNav={sideBarData} />
-      <section style={{ flex: 1 }}>
+      <section style={{ flex: 1, overflowX: "auto" }}>
         <Table striped hover bordered>
           <thead>
             <tr>

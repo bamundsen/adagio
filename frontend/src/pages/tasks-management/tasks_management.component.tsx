@@ -97,7 +97,7 @@ const TasksManagement = () => {
   return (
     <main className={`${commonStyles.main_content}`}>
       <AdagioSideBar itemsNav={sideBarData} />
-      <section style={{ flex: 1 }}>
+      <section style={{ flex: 1, overflowX: "auto" }}>
         <Table striped hover bordered>
           <thead>
             <tr>

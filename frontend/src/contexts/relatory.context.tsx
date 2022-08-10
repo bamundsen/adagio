@@ -9,6 +9,7 @@ export type RelatoryContextType = {
   >;
   valueReferenceToSearch: any;
   setValueReferenceToSearch: React.Dispatch<React.SetStateAction<any>>;
+  changeTriggerIsToRequestAndGenerateExcel: () => void;
   triggerToUpdateButtonAndValue: boolean;
   changeTriggerToUpdateButtonAndValue: () => void;
 };
@@ -21,29 +22,74 @@ export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
   const [valueReferenceToSearch, setValueReferenceToSearch] = useState<any>("");
   const [triggerToUpdateButtonAndValue, setTriggerToUpdateButtonAndValue] =
     useState(false);
+  const [
+    triggerIsToRequestAndGenerateExcel,
+    setTriggerIsToRequestAndGenerateExcel,
+  ] = useState(false);
 
   const relatoryApi = RelatoryApi();
 
   useEffect(() => {
-    console.log(exportCalendarType);
-    console.log(valueReferenceToSearch);
-  }, [valueReferenceToSearch, exportCalendarType]);
+    if (triggerIsToRequestAndGenerateExcel) {
+      if (exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_MONTH) {
+        getByMonth().then((response: any) => {
+          setTriggerIsToRequestAndGenerateExcel(false);
+        });
+      } else if (
+        exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_YEAR
+      ) {
+        getByYear().then((response: any) => {
+          setTriggerIsToRequestAndGenerateExcel(false);
+        });
+      } else if (
+        exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_DAY
+      ) {
+        getByDay().then((response: any) => {
+          setTriggerIsToRequestAndGenerateExcel(false);
+        });
+      }
+    }
+  }, [
+    valueReferenceToSearch,
+    exportCalendarType,
+    triggerIsToRequestAndGenerateExcel,
+  ]);
 
   const getByMonth = async () => {
-    let year: number = Number(valueReferenceToSearch[0]);
-    let month: number = Number(valueReferenceToSearch[1]);
+    let month: number = Number(valueReferenceToSearch[0]);
+    let year: number = Number(valueReferenceToSearch[1]);
     const response = await relatoryApi.getByMonth(month, year);
 
     return response;
   };
 
+  const getByYear = async () => {
+    let year = Number(valueReferenceToSearch);
+    const response = await relatoryApi.getByYear(year);
+
+    return response;
+  };
+
+  const getByDay = async () => {
+    let startDateTime = valueReferenceToSearch[0];
+    let endDateTime = valueReferenceToSearch[1];
+
+    const response = await relatoryApi.getByDay(startDateTime, endDateTime);
+
+    return response;
+  };
   const changeTriggerToUpdateButtonAndValue = () => {
     setTriggerToUpdateButtonAndValue(!triggerToUpdateButtonAndValue);
+  };
+
+  const changeTriggerIsToRequestAndGenerateExcel = () => {
+    setTriggerIsToRequestAndGenerateExcel(!triggerIsToRequestAndGenerateExcel);
   };
 
   const value: RelatoryContextType = {
     changeTriggerToUpdateButtonAndValue,
     triggerToUpdateButtonAndValue,
+    changeTriggerIsToRequestAndGenerateExcel,
     exportCalendarType,
     setExportCalendarType,
     valueReferenceToSearch,

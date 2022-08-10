@@ -1,10 +1,19 @@
 package io.adagio.adagioapi.controllers;
 
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +25,8 @@ import io.adagio.adagioapi.dto.RelatoryQueryDto;
 import io.adagio.adagioapi.dto.ReturnedRelatoryTaskSetData;
 import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.services.RelatoryService;
+import io.adagio.adagioapi.utils.RelatoryBy;
+import io.adagio.adagioapi.utils.ReturnedRelatoryTaskSetDataExcelExporter;
 
 @RestController
 @RequestMapping("${adagio.api.base_servico_de_rotas_privadas}/relatory")
@@ -24,12 +35,53 @@ public class RelatoryController {
 	@Autowired
 	private RelatoryService relatoryService;
 	
+	@Autowired
+	private ReturnedRelatoryTaskSetDataExcelExporter excelTaskExporter;
+	
 	@PostMapping("/get-by-month")
-	public ResponseEntity<ReturnedRelatoryTaskSetData> getByMonth(@RequestBody @Valid RelatoryQueryDto dto){
+	public ResponseEntity<Resource> getByMonth(HttpServletResponse response, @RequestBody @Valid RelatoryQueryDto dto){
+		
 		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		ReturnedRelatoryTaskSetData tasksRelatory = relatoryService.getByMonth(logged,dto.getMonth(),dto.getYear());
+		ReturnedRelatoryTaskSetData tasksRelatory = relatoryService.getByMonth(logged,dto.getMonth(),dto.getYear(), RelatoryBy.TASKS_BY_MONTH);
 		
-		return ResponseEntity.ok().body(tasksRelatory);
+		String filename = "tasks.xlsx";
+	    InputStreamResource file = new InputStreamResource(excelTaskExporter.load(tasksRelatory));
+	   
+	    return ResponseEntity.ok()
+	            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+	            .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+	            .body(file);
+	}
+	
+	@PostMapping("/get-by-year")
+	public ResponseEntity<Resource> getByYear(@RequestBody @Valid RelatoryQueryDto dto){
+		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		ReturnedRelatoryTaskSetData tasksRelatory = relatoryService.getByMonth(logged, dto.getMonth(), dto.getYear(), RelatoryBy.TASKS_BY_YEAR);
+		
+		String filename = "tasks.xlsx";
+		InputStreamResource file = new InputStreamResource(excelTaskExporter.load(tasksRelatory));
+		
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION,  "attachment; filename=" + filename)
+	            .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+	            .body(file);
+	}
+	
+	@PostMapping("/get-by-day")
+	public ResponseEntity<Resource> getByDay(@RequestBody @Valid RelatoryQueryDto dto){
+		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		ReturnedRelatoryTaskSetData tasksRelatory = relatoryService.getByDay(logged, dto.getStartDate(), dto.getEndDate(), RelatoryBy.TASKS_BY_DAY);
+		
+		String filename = "tasks.xlsx";
+		InputStreamResource file = new InputStreamResource(excelTaskExporter.load(tasksRelatory));
+		
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION,  "attachment; filename=" + filename)
+				.contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+	            .body(file);
 	}
 }
+

@@ -9,13 +9,17 @@ import { AuthContext } from "../../contexts/auth.context";
 import { ProjectContext } from "../../contexts/project.context";
 import { RelatoryContext } from "../../contexts/relatory.context";
 import { ExportCalendarType } from "../../types/ExportCalendarType";
+import { tabEnterClickEffect } from "../../utils/acessibilityAux";
 
 interface AdagioSideBarProps {
   itemsNav: any[];
 }
 const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
-  const { exportCalendarType, triggerToUpdateButtonAndValue } =
-    useContext(RelatoryContext);
+  const {
+    exportCalendarType,
+    triggerToUpdateButtonAndValue,
+    changeTriggerIsToRequestAndGenerateExcel,
+  } = useContext(RelatoryContext);
   const windowDimensions = useWindowDimensions();
   const [hideSideBar, setHideSideBar] = useState(false);
   const {
@@ -25,12 +29,33 @@ const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
     triggerToSearchProjectsAgain,
   } = useContext(ProjectContext);
 
+  const activeTriggerIsToRequestAndGenerateExcel = (e: any) => {
+    changeTriggerIsToRequestAndGenerateExcel();
+  };
+
   const returnCalendarExportTrigger = (message: string, link: string) => {
     return (
-      <Link className={`${styles.link_nav}`} to={link}>
-        <img src={CalendarSideBar} alt={"export calendar option"} />
-        <span>{message}</span>
-      </Link>
+      <div
+        onClick={activeTriggerIsToRequestAndGenerateExcel}
+        className={`${styles.generate_relatory} ${styles.link_nav} `}
+        onMouseOver={(e: any) => {
+          e.target.style.color = "#fff";
+          e.target.style.padding = "0";
+        }}
+        onMouseOut={(e: any) => {
+          e.target.style.color = "#000";
+        }}
+        onKeyDown={tabEnterClickEffect}
+        tabIndex={1}
+        style={{ cursor: "pointer", display: "flex", flexDirection: "row" }}
+      >
+        <img
+          src={CalendarSideBar}
+          alt={"export calendar option"}
+          style={{ paddingRight: "12px", height: "32px" }}
+        />
+        {message}
+      </div>
     );
   };
 
@@ -42,14 +67,14 @@ const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
       );
     } else if (exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_YEAR) {
       return returnCalendarExportTrigger(
-        "Gerar relatório das tarefas desse ano.",
+        "Gerar relatório das tarefas desse ano",
         item.link
       );
     } else if (
       exportCalendarType === ExportCalendarType.EXPORT_PROJECTS_OF_PAGE
     ) {
       return returnCalendarExportTrigger(
-        "Gerar relatório desses projetos.",
+        "Gerar relatório desses projetos",
         item.link
       );
     } else {

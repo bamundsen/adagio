@@ -5,21 +5,21 @@ import java.util.List;
 
 public class ReturnedRelatoryTaskSetData {
 
-	private long totalHours;
+	private Long totalHours;
 	
-	private long quantityOfTasks;
+	private Long quantityOfTasks;
 	
 	private List<TaskDto> tasks = new ArrayList<TaskDto>();
 
-	public long getTotalHours() {
+	public Long getTotalHours() {
 		return totalHours;
 	}
 
-	public void setTotalHours(long totalHours) {
-		this.totalHours = totalHours;
+	public void setTotalHours(Long totalHours) {
+		this.totalHours=totalHours;
 	}
 
-	public long getQuantityOfTasks() {
+	public Long getQuantityOfTasks() {
 		return quantityOfTasks;
 	}
 

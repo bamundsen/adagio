@@ -41,10 +41,11 @@ const RelatoryModal = ({
     setExportCalendarType,
     setValueReferenceToSearch,
     exportCalendarType,
+    changeTriggerIsToRequestAndGenerateExcel,
   } = useContext(RelatoryContext);
   const [tasksToShow, setTasksToShow] = useState<any[]>([]);
   const { activeTriggerUpdateCalendar } = useContext(CalendarContext);
-  const {changeTriggerToUpdateButtonAndValue} = useContext(RelatoryContext);
+  const { changeTriggerToUpdateButtonAndValue } = useContext(RelatoryContext);
   const [isLoaded, setIsLoaded] = useState(SpinnerState.Pending);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const { deleteTask } = useContext(TaskContext);
@@ -133,6 +134,10 @@ const RelatoryModal = ({
         functionToPositiveConfirmationExecuteById={deleteTaskById}
       />
     );
+  };
+
+  const activateTriggerToSearchAndGenerateExcecl = () => {
+    changeTriggerIsToRequestAndGenerateExcel();
   };
 
   return (
@@ -232,7 +237,10 @@ const RelatoryModal = ({
           <span>Criar tarefa</span>
         </span>
         <div className={`${style.footer_modal_set_free_day}`}>
-          <span style={{ fontWeight: "bold", cursor: "pointer" }}>
+          <span
+            onClick={activateTriggerToSearchAndGenerateExcecl}
+            style={{ fontWeight: "bold", cursor: "pointer" }}
+          >
             Gerar relatório do dia
           </span>
         </div>
