@@ -14,9 +14,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -105,9 +107,11 @@ public class TaskController {
 		
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Task task = taskForm.converter(logado, projectRepository);
-		 
+		
 		if(!taskService.validTaskTime(task, logado.getId(), taskRepository))
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.header("DateTimeConflict","Erro: conflito em horários cadastrados.")
+					.body(new TaskDto(task, "Erro: conflito em horários cadastrados."));
 		
 		taskRepository.save(task);
 		
@@ -188,7 +192,9 @@ public class TaskController {
 			Task taskValidator = taskForm.converter(logado, projectRepository);
 			
 			if(!taskService.validTaskTime(taskValidator, logado.getId(), taskRepository, id))
-				return ResponseEntity.badRequest().build();
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+						.header("DateTimeConflict","Erro: conflito em horários cadastrados.")
+						.body(new TaskDto(optionalTask.get(), "Erro: conflito em horários cadastrados."));
 			
 			Task task = taskForm.update(id, taskRepository, projectRepository);
 			

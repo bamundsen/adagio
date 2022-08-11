@@ -29,6 +29,8 @@ public class TaskDto {
 	
 	private List<Notification> notifications;
 	
+	private String excetpionMessage;
+	
 	public TaskDto(Task task) {
 		
 		this.id = task.getId();
@@ -46,6 +48,26 @@ public class TaskDto {
 		
 		if(task.getNotifications() != null)
 			this.notifications = task.getNotifications();
+	}
+	public TaskDto(Task task, String exceptionMessage) {
+		
+		this.id = task.getId();
+		this.title = task.getTitle();
+		this.description = task.getDescription();
+		this.dateTimeEnd = task.getDateTimeEnd();
+		this.dateTimeStart = task.getDateTimeStart();
+		this.idUser = task.getUser().getId();
+		this.finishedStatus = task.isFinishedStatus();
+		
+		if(task.getProject() != null)
+			this.idProject = task.getProject().getId();
+		
+		this.priority = task.getPriority();
+		
+		if(task.getNotifications() != null)
+			this.notifications = task.getNotifications();
+			
+		this.excetpionMessage = exceptionMessage;
 	}
 
 	public Long getId() {
@@ -87,6 +109,8 @@ public class TaskDto {
 	public List<Notification> getNotifications() {
 		return notifications;
 	}
+	public String getExcetpionMessage() {
+		return excetpionMessage;
+	}
 
-	
 }
