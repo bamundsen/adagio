@@ -50,14 +50,12 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter{
 		try {
 			String jwt = getJwtToken(request,true);
 			if(StringUtils.hasText(jwt) && tokenService.isTokenValid(jwt,"accesstoken")) {
-				System.out.println("BEM, AQUI EU CHEGIO - OLHA SÓ");
 				autenticarCliente(jwt);
 			}
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
-		
-		System.out.println("mas aqui chega");
+
 		filterChain.doFilter(request, response);
 	}
 
@@ -70,7 +68,7 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter{
 		SecurityContextHolder.
 		getContext().setAuthentication(authentication);
 		
-		System.out.println("CHEGA AQUI");
+	
 	}
 
 	private String getJwtFromRequest(HttpServletRequest request) {
@@ -89,11 +87,10 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter{
 	private String getJwtFromCookie(HttpServletRequest request) {
 	        Cookie[] cookies = request.getCookies();
 	        for (Cookie cookie : cookies) {
-	        	System.out.println("SEIIIIIIIIIIIII");
-	        	System.out.println("eita: "+cookie.getName()+ ""+ accessTokenCookieName);
+	        
 	            if (accessTokenCookieName != null && accessTokenCookieName.equals(cookie.getName())) {
 	                String accessToken = cookie.getValue();
-	                System.out.println("value: "+accessToken);
+	             
 	                if (accessToken == null) return null;
 
 //	                return SecurityCipher.decrypt(accessToken);

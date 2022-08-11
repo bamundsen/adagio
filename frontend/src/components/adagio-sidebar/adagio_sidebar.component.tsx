@@ -79,6 +79,13 @@ const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
         "Gerar relatório desses projetos",
         item.link
       );
+    } else if (
+      exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_PAGE_AND_PROJECT
+    ) {
+      return returnCalendarExportTrigger(
+        "Gerar relatório dessas tarefas",
+        item.link
+      );
     } else {
       return null;
     }

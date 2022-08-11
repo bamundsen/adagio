@@ -3,7 +3,7 @@ import sideBarData from "../../utils/sideBarData";
 import commonStyles from "../../utils/common_styles.module.scss";
 import styles from "./tasks_management.module.scss";
 import { useParams } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { Task } from "../../types/TaskType";
 import { ProjectContext } from "../../contexts/project.context";
 import { Button, Table } from "react-bootstrap";
@@ -13,6 +13,8 @@ import { TaskContext } from "../../contexts/task.context";
 import ConfirmationModal from "../../components/confirmation-modal/confirmation_modal.component";
 import { SpinnerState } from "../../utils/spinner_type";
 import RegionPaginationButtons from "../../components/region-pagination-buttons/region_pagination_buttons.component";
+import { RelatoryContext } from "../../contexts/relatory.context";
+import { ExportCalendarType } from "../../types/ExportCalendarType";
 
 const TasksManagement = () => {
   const { getTasksByProject } = useContext(ProjectContext);
@@ -25,6 +27,12 @@ const TasksManagement = () => {
   const [isFirst, setIsFirst] = useState(false);
   const [isLast, setIsLast] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
+  const {
+    setExportCalendarType,
+    setValueReferenceToSearch,
+    exportCalendarType,
+    triggerToUpdateButtonAndValue,
+  } = useContext(RelatoryContext);
   const [isLoaded, setIsLoaded] = useState(SpinnerState.Pending);
   const [confirmationModalIsOpen, setModalConfirmationIsOpen] = useState(false);
   const [idOfElementToDeleteForModal, setIdOfElementToDeleteForModel] =
@@ -61,6 +69,19 @@ const TasksManagement = () => {
       setIsLoaded(SpinnerState.There_is_no_content);
     }
   }, [tasks]);
+
+  useLayoutEffect(() => {
+    console.log("definindo");
+    setExportCalendarType(ExportCalendarType.EXPORT_TASKS_OF_PAGE_AND_PROJECT);
+  }, [triggerToUpdateButtonAndValue]);
+
+  useEffect(() => {
+    if (
+      exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_PAGE_AND_PROJECT
+    ) {
+      setValueReferenceToSearch([size, page, idProject]);
+    }
+  }, [exportCalendarType, size, page, idProject]);
 
   const decrementPage = () => {
     if (page > 0) {

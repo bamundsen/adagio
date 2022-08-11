@@ -21,12 +21,11 @@ public class AutenticacaoService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
 		Optional<User> usuario = repository.findByLogin(login);
 		
-		System.out.println("EI ESTOU AQUI VAIIIIIIIIIII");
 		if(usuario.isPresent()) {
 			return usuario.get();
 		}
 		
-		System.out.println("aqui chegou");
+	
 		throw new UsernameNotFoundException("Dados inválidos");
 	}
 

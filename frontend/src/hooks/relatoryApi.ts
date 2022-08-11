@@ -89,4 +89,28 @@ export const RelatoryApi = () => ({
       console.log(error);
     }
   },
+
+  getTasksByPageAndProject: async (
+    size: number,
+    page: number,
+    idProject: number
+  ) => {
+    try {
+      const response = await api.post(
+        `/users/relatory/get-tasks-by-page-and-project?page=${page}&size=${size}`,
+        { idProject },
+        { responseType: "blob" }
+      );
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `tasks_by_page_and_project.xlsx`);
+      link.click();
+
+      setTimeout(() => window.URL.revokeObjectURL(url), 0);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  },
 });

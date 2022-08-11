@@ -11,6 +11,8 @@ public class RelatoryQueryDto {
 	private LocalDateTime startDate;
 	
 	private LocalDateTime endDate;
+	
+	private Long idProject;
 
 	public int getYear() {
 		return year;
@@ -44,5 +46,12 @@ public class RelatoryQueryDto {
 		this.endDate = endDate;
 	}
 	
+	public Long getIdProject() {
+		return idProject;
+	}
+	
+	public void setIdProject(Long idProject) {
+		this.idProject=idProject;
+	}
 	
 }

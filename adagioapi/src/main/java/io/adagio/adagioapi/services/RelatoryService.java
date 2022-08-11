@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -73,7 +74,25 @@ public class RelatoryService {
 		
 	}
 	
-
+	public ReturnedRelatoryTaskSetData getByPageAndProject(User user, Long idProject, Pageable pagination) {
+		ReturnedRelatoryTaskSetData relatory = new ReturnedRelatoryTaskSetData();
+		
+		if(idProject != null) {
+			Optional<Project> project = projectRepository.findByIdAndUser(idProject, user);
+			
+			if(project.isPresent()) {
+				Page<Task> tasks = taskRepository.findByProjectAndUser(project.get(), user,pagination);
+				
+				List<TaskDto> tasksDto = Task.converter(tasks.getContent());
+				
+				relatory.setQuantityOfElements(tasksDto.size());
+				relatory.setTotalHours(returnTotalHours(tasksDto));
+				relatory.setTasks(tasksDto);
+			}
+		}
+		return relatory;
+	}
+	
 	public ReturnedRelatoryProjectSetData getProjectsByPage(User user, Pageable pagination) {
 		ReturnedRelatoryProjectSetData relatory = new ReturnedRelatoryProjectSetData();
 		
@@ -98,7 +117,7 @@ public class RelatoryService {
 				totalHours += tempDateTime.until(t.getDateTimeEnd(), ChronoUnit.HOURS);
 				
 				System.out.println(tempDateTime.until(t.getDateTimeEnd(), ChronoUnit.DAYS));
-				System.out.println("DURAÇÃO "+totalHours);
+	
 			}
 		}
 		

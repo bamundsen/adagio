@@ -25,7 +25,7 @@ import io.adagio.adagioapi.dto.relatoryDto.ReturnedRelatoryProjectSetData;
 import io.adagio.adagioapi.dto.relatoryDto.ReturnedRelatoryTaskSetData;
 
 @Service
-public class ReturnedRelatoryTaskSetDataExcelExporter {
+public class ReturnedRelatorySetDataExcelExporter {
 
 	  public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 	  static String[] TASKS_HEADERs = { "Id", "Title", "Description", "Priority" };
