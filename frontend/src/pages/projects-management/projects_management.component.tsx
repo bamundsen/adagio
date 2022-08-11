@@ -90,7 +90,7 @@ const ProjectsManagement = () => {
     if (exportCalendarType === ExportCalendarType.EXPORT_PROJECTS_OF_PAGE) {
       setValueReferenceToSearch([size, page]);
     }
-  }, [exportCalendarType]);
+  }, [exportCalendarType, size, page]);
 
   useEffect(() => {
     let arr = [];

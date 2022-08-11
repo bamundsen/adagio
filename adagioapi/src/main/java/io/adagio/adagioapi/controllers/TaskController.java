@@ -111,7 +111,7 @@ public class TaskController {
 		
 		taskRepository.save(task);
 		
-		if (taskForm.getNotifications() != null) {
+		if (taskForm.getNotifications() != null && taskForm.getNotifications().size() > 0) {
 			task.setNotifications(taskService.notificationPattern(task.getNotifications()));
 			 for (Notification n : task.getNotifications()) {
 				Notification notification = new Notification(n, task);

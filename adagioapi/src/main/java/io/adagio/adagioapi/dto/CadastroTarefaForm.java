@@ -128,10 +128,12 @@ public class CadastroTarefaForm {
 		
 		// validar notificaçoes
 		
-		Optional<Project> project = projectRepository.findById(projectId);
-		
-		if(project.isEmpty() || projectId == null)
+		if(projectId == null) {
 			return new Task(this, user, null);
+		}
+		
+		Optional<Project> project = projectRepository.findById(projectId);
+	
 			
 		return new Task(this, user, project.get());
 	}

@@ -71,4 +71,22 @@ export const RelatoryApi = () => ({
       console.log(error);
     }
   },
+  getProjectsByPage: async (size: number, page: number) => {
+    try {
+      const response = await api.get(
+        `/users/relatory/get-projects-by-page?page=${page}&size=${size}`,
+        { responseType: "blob" }
+      );
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `projects_by_page.xlsx`);
+      link.click();
+
+      setTimeout(() => window.URL.revokeObjectURL(url), 0);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  },
 });

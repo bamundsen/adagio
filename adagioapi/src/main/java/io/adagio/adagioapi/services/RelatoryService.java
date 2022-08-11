@@ -78,9 +78,7 @@ public class RelatoryService {
 		ReturnedRelatoryProjectSetData relatory = new ReturnedRelatoryProjectSetData();
 		
 		Page<Project> projects = projectRepository.findByUser(user, pagination);
-		
-		List<Project> projectsContent = new ArrayList<Project>();
-		
+
 		List<ProjectDto> projectsDto = Project.converter(projects.getContent());
 		
 		relatory.setQuantityOfElements(projectsDto.size());

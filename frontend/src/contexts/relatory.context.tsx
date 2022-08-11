@@ -60,6 +60,14 @@ export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
           setTriggerIsToRequestAndGenerateExcel(false);
           setIsToDownload(false);
         });
+      } else if (
+        exportCalendarType === ExportCalendarType.EXPORT_PROJECTS_OF_PAGE
+      ) {
+        getProjectsByPage().then((response: any) => {
+          console.log(response);
+          setTriggerIsToRequestAndGenerateExcel(false);
+          setIsToDownload(false);
+        });
       }
     }
     setIsToDownload(false);
@@ -90,6 +98,15 @@ export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
     let endDateTime = valueReferenceToSearch[1];
 
     const response = await relatoryApi.getByDay(startDateTime, endDateTime);
+
+    return response;
+  };
+
+  const getProjectsByPage = async () => {
+    let size = valueReferenceToSearch[0];
+    let page = valueReferenceToSearch[1];
+
+    const response = await relatoryApi.getProjectsByPage(size, page);
 
     return response;
   };
