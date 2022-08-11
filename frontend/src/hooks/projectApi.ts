@@ -56,7 +56,7 @@ export const ProjectApi = () => ({
     }
   },
 
-  getTasksByProject: async (id: number, size?: number, page?: number) => {
+  getTasksByProject: async (id: number, page?: number, size?: number) => {
     
     try {
       const response = await api.get(
