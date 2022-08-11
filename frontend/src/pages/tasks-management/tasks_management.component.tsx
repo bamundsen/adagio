@@ -33,6 +33,7 @@ const TasksManagement = () => {
 
   useEffect(() => {
     if (idProject !== undefined) {
+      console.log(size, page);
       getTasksByProject(Number(idProject), size, page).then((response: any) => {
         if (response.last) {
           setIsLast(true);
@@ -48,6 +49,7 @@ const TasksManagement = () => {
         setTotalPages(response.totalPages);
         setRequestWasDone(true);
         setTasks(response.content);
+        console.log(response);
       });
     }
   }, [page, size, isFirst, isLast, triggerToSearchTasksAgainAfterDelete]);

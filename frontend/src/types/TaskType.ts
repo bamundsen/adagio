@@ -7,6 +7,7 @@ export type Task = {
   finishedStatus: boolean;
   idUser?: number;
   idProject?: number;
+  projectId?: number | null;
   priority: string;
   notifications: number[];
 };

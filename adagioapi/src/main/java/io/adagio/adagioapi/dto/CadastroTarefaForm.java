@@ -134,14 +134,25 @@ public class CadastroTarefaForm {
 		
 		Optional<Project> project = projectRepository.findById(projectId);
 	
+		if(project.isEmpty()) {
+			return new Task(this, user, null);
+		}
 			
 		return new Task(this, user, project.get());
 	}
 	
 	public Task update(Long id, TaskRepository taskRepository, ProjectRepository projectRepository) {
 		Task task = taskRepository.getById(id);
-		Project project = projectRepository.getById(projectId);
+		
+		if(projectId != null) {
+			Optional<Project> project = projectRepository.findById(projectId);
 
+			
+			if(project.isPresent())
+				task.setProject(project.get());
+			
+		}
+	
 		task.setDateTimeEnd(dateTimeEnd);
 		task.setDateTimeStart(dateTimeStart);
 		task.setTitle(title);
@@ -150,8 +161,7 @@ public class CadastroTarefaForm {
 		task.setPriority(priority);
 		task.setNotifications(notifications);
 		
-		task.setProject(project);
-		
+
 		return task;
 	}
 }

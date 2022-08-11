@@ -37,8 +37,12 @@ const FormTarefas = () => {
   const [DateTAux, setDateTAux] = useState(new Date());
   const [startHour, setStartHour] = useState("");
   const [startHourAux, setAuxStartHour] = useState<Date>(new Date());
-  const [idProjectToChoose, setIdPRojectToChoose] = useState<number|null>(null);
-  const [nameOfProjectToShow, setNameOfProjectToShow] = useState<string|null>("");
+  const [idProjectToChoose, setIdPRojectToChoose] = useState<number | null>(
+    null
+  );
+  const [nameOfProjectToShow, setNameOfProjectToShow] = useState<string | null>(
+    ""
+  );
   const [endHour, setEndHour] = useState("");
   const [endHourAux, setAuxEndHour] = useState(
     new Date(new Date().setHours(23, 59))
@@ -46,7 +50,9 @@ const FormTarefas = () => {
   const [finishedOrNot, setFinishedOrNot] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<number[]>([]);
 
-  const setIdsProjectWithAcumulatedSelected = (selectedIdsProject: number[]) => {
+  const setIdsProjectWithAcumulatedSelected = (
+    selectedIdsProject: number[]
+  ) => {
     setIdsProject(selectedIdsProject);
   };
 
@@ -58,10 +64,10 @@ const FormTarefas = () => {
     setAuxSelectedProject([...idsProject]);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(idProjectToChoose);
     console.log("mudei");
-  },[idProjectToChoose]);
+  }, [idProjectToChoose]);
 
   const filterAndReturnDate = (date: Date) => {
     return `${String(date.getFullYear()).padStart(2, "0")}-${String(
@@ -92,27 +98,32 @@ const FormTarefas = () => {
   };
 
   const onChangeStartHour = (date: Date) => {
-    if(date.getHours() <= endHourAux.getHours() && date.getMinutes() <= endHourAux.getMinutes()){
+    if (
+      date.getHours() <= endHourAux.getHours() &&
+      date.getMinutes() <= endHourAux.getMinutes()
+    ) {
       setAuxStartHour(date);
       setStartHour(filterAndReturnHour(date));
       return true;
-    }else{
+    } else {
       alert("Hora inicial não pode ser maior que a final");
       return false;
     }
   };
 
   const onChangeEndHour = (date: Date) => {
-    if(date.getHours() >= startHourAux.getHours() && date.getMinutes() >= startHourAux.getMinutes()){
+    if (
+      date.getHours() >= startHourAux.getHours() &&
+      date.getMinutes() >= startHourAux.getMinutes()
+    ) {
       setAuxEndHour(date);
       setEndHour(filterAndReturnHour(date));
       return true;
-    }else{
+    } else {
       alert("Hora final não pode ser menor que a inicial");
       return false;
     }
   };
-
 
   const onChangeFinishedOrNot = (ev: any) => {
     if (ev.target.value === "true") {
@@ -131,13 +142,14 @@ const FormTarefas = () => {
       dateTimeStart: `${returnCurrentDate()}T${startHour}`,
       dateTimeEnd: `${returnCurrentDate()}T${endHour}`,
       priority: priority,
+      projectId: idProjectToChoose,
       finishedStatus: finishedOrNot,
       notifications: [],
     };
 
     try {
       const responseToOperation = await createTask(taskToRegisterOrEdit);
-            console.log(responseToOperation);
+      console.log(responseToOperation);
       if (responseToOperation.status === 201) {
         alert("Tarefa criada com sucesso !");
       }
@@ -145,7 +157,6 @@ const FormTarefas = () => {
       console.log(err);
     }
   };
-
 
   const returnCurrentDate = () => {
     return `${String(DateTAux.getFullYear()).padStart(2, "0")}-${String(
@@ -157,9 +168,13 @@ const FormTarefas = () => {
     return (
       <ChooseProjectModal
         auxSelectedProject={auxSelectedProject}
-        equalizeAuxSelectedProjectToIdsProject={ equalizeAuxSelectedProjectToIdsProject}
-        setAuxSelectedProject={ setAuxSelectedProject}
-        setIdsProjectWithAcumulatedSelected={ setIdsProjectWithAcumulatedSelected}
+        equalizeAuxSelectedProjectToIdsProject={
+          equalizeAuxSelectedProjectToIdsProject
+        }
+        setAuxSelectedProject={setAuxSelectedProject}
+        setIdsProjectWithAcumulatedSelected={
+          setIdsProjectWithAcumulatedSelected
+        }
         projectIdIfItIsToEdit={id}
         isProjectSelected={isProjectSelected}
         isOpen={isModalOpen}
@@ -363,13 +378,16 @@ const FormTarefas = () => {
                             borderColor: "#463a8b",
                           }}
                           type="button"
-                          onClick={()=>{setIsModalOpen(true)}}
+                          onClick={() => {
+                            setIsModalOpen(true);
+                          }}
                         >
-                          {`Clique aqui - ${idProjectToChoose === null ? "Nenhum projeto escolhido ":
-                           `Projeto: ${nameOfProjectToShow} foi escolhido`}`}
+                          {`Clique aqui - ${
+                            idProjectToChoose === null
+                              ? "Nenhum projeto escolhido "
+                              : `Projeto: ${nameOfProjectToShow} foi escolhido`
+                          }`}
                         </button>
-
-
                       </div>
                       <Form.Group
                         style={{
@@ -435,6 +453,6 @@ const FormTarefas = () => {
       {returnProjectModal()}
     </main>
   );
-}
+};
 
 export default FormTarefas;
