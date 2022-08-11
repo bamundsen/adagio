@@ -24,7 +24,7 @@ export type ProjectContextType = {
   createProject: (project: Project) => any;
   editProject: (project: Project, id: number) => any;
   deleteProject: (id: number) => any;
-  getProjectsByTitle: (title: string, size?: number, page?: number) => void;
+  getProjectsByTitle: (title: string, size?: number, page?: number) => any;
 };
 
 export const ProjectContext = createContext<ProjectContextType>(null!);
@@ -93,8 +93,8 @@ export const ProjectProvider = ({ children }: { children: JSX.Element }) => {
 
   const getProjectsByTitle = async (
     title: string,
-    size?: number,
-    page?: number
+    page?: number,
+    size?: number
   ) => {
     const projects = await apiProject.getProjectsByTitle(title, size, page);
 

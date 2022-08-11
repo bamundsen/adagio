@@ -32,7 +32,6 @@ const ApplicationRoutes = () => {
           />
           <Route path="editar_projeto/:id" element={<FormProjetos />} />
           <Route path="criar_projeto" element={<FormProjetos />} />
-          <Route path="criar_projeto" element={<FormProjetos />} />
           <Route path="cadastrar_tarefa" element={<FormTarefas />} />
           <Route path="*" element={<NotFound />} />
         </Route>

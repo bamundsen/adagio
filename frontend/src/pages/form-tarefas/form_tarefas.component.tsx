@@ -19,16 +19,26 @@ import { Task } from "../../types/TaskType";
 import { TaskContext } from "../../contexts/task.context";
 import { findAllInRenderedTree } from "react-dom/test-utils";
 import { RelatoryContext } from "../../contexts/relatory.context";
+import ChooseProjectModal from "./chooseProjectModal/chooseProjectModal.component";
+import { useParams } from "react-router-dom";
 
 const FormTarefas = () => {
   const windowDimensions = useWindowDimensions();
   const { setExportCalendarType } = useContext(RelatoryContext);
   const { createTask } = useContext(TaskContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { id } = useParams();
+  const [auxSelectedProject, setAuxSelectedProject] = useState<number[]>([]);
+  const [idsProject, setIdsProject] = useState<number[]>([]);
   const [titulo, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("LOW");
+  const [DateT, setDateT] = useState("");
+  const [DateTAux, setDateTAux] = useState(new Date());
   const [startHour, setStartHour] = useState("");
   const [startHourAux, setAuxStartHour] = useState<Date>(new Date());
+  const [idProjectToChoose, setIdPRojectToChoose] = useState<number|null>(null);
+  const [nameOfProjectToShow, setNameOfProjectToShow] = useState<string|null>("");
   const [endHour, setEndHour] = useState("");
   const [endHourAux, setAuxEndHour] = useState(
     new Date(new Date().setHours(23, 59))
@@ -36,43 +46,73 @@ const FormTarefas = () => {
   const [finishedOrNot, setFinishedOrNot] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<number[]>([]);
 
-  useEffect(() => {
-    setStartHour(
-      `${String(startHourAux.getHours()).padStart(2, "0")}:${String(
-        startHourAux.getMinutes()
-      ).padStart(2, "0")}:${String(startHourAux.getSeconds()).padStart(2, "0")}`
-    );
+  const setIdsProjectWithAcumulatedSelected = (selectedIdsProject: number[]) => {
+    setIdsProject(selectedIdsProject);
+  };
 
-    setEndHour(
-      `${String(endHourAux.getHours()).padStart(2, "0")}:${String(
-        endHourAux.getMinutes()
-      ).padStart(2, "0")}:${String(endHourAux.getSeconds()).padStart(2, "0")}`
-    );
-  }, []);
+  const isProjectSelected = (idProject: number) => {
+    return auxSelectedProject.includes(idProject);
+  };
+
+  const equalizeAuxSelectedProjectToIdsProject = () => {
+    setAuxSelectedProject([...idsProject]);
+  };
+
+  useEffect(()=>{
+    console.log(idProjectToChoose);
+    console.log("mudei");
+  },[idProjectToChoose]);
+
+  const filterAndReturnDate = (date: Date) => {
+    return `${String(date.getFullYear()).padStart(2, "0")}-${String(
+      date.getMonth() + 1
+    ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  };
+
+  const filterAndReturnHour = (hour: Date) => {
+    return `${String(hour.getHours()).padStart(2, "0")}:${String(
+      hour.getMinutes()
+    ).padStart(2, "0")}:${String(hour.getSeconds()).padStart(2, "0")}`;
+  };
+
+  useEffect(() => {
+    setDateT(filterAndReturnDate(DateTAux));
+    setStartHour(filterAndReturnHour(startHourAux));
+    setEndHour(filterAndReturnHour(endHourAux));
+  }, [DateTAux, startHourAux, endHourAux]);
 
   useEffect(() => {
     setExportCalendarType(null);
   }, []);
 
-  const onChangeStartHour = (date: Date) => {
-    setAuxStartHour(date);
-    setStartHour(
-      `${String(date.getHours()).padStart(2, "0")}:${String(
-        date.getMinutes()
-      ).padStart(2, "0")}:${String(date.getSeconds()).padStart(2, "0")}`
-    );
+  const onChangeDateT = (date: Date) => {
+    setDateT(filterAndReturnDate(date));
+    setDateTAux(date);
     return true;
   };
 
-  const onChangeEndHour = (date: Date) => {
-    setAuxEndHour(date);
-    setEndHour(
-      `${String(date.getHours()).padStart(2, "0")}:${String(
-        date.getMinutes()
-      ).padStart(2, "0")}:${String(date.getSeconds()).padStart(2, "0")}`
-    );
-    return true;
+  const onChangeStartHour = (date: Date) => {
+    if(date.getHours() <= endHourAux.getHours() && date.getMinutes() <= endHourAux.getMinutes()){
+      setAuxStartHour(date);
+      setStartHour(filterAndReturnHour(date));
+      return true;
+    }else{
+      alert("Hora inicial não pode ser maior que a final");
+      return false;
+    }
   };
+
+  const onChangeEndHour = (date: Date) => {
+    if(date.getHours() >= startHourAux.getHours() && date.getMinutes() >= startHourAux.getMinutes()){
+      setAuxEndHour(date);
+      setEndHour(filterAndReturnHour(date));
+      return true;
+    }else{
+      alert("Hora final não pode ser menor que a inicial");
+      return false;
+    }
+  };
+
 
   const onChangeFinishedOrNot = (ev: any) => {
     if (ev.target.value === "true") {
@@ -97,7 +137,7 @@ const FormTarefas = () => {
 
     try {
       const responseToOperation = await createTask(taskToRegisterOrEdit);
-
+            console.log(responseToOperation);
       if (responseToOperation.status === 201) {
         alert("Tarefa criada com sucesso !");
       }
@@ -106,13 +146,30 @@ const FormTarefas = () => {
     }
   };
 
+
   const returnCurrentDate = () => {
-    return `${String(new Date().getFullYear()).padStart(2, "0")}-${String(
-      new Date().getMonth() + 1
-    ).padStart(2, "0")}-${String(new Date().getDate()).padStart(2, "0")}`;
+    return `${String(DateTAux.getFullYear()).padStart(2, "0")}-${String(
+      DateTAux.getMonth() + 1
+    ).padStart(2, "0")}-${String(DateTAux.getDate()).padStart(2, "0")}`;
   };
 
-  /* Está faltando input date para escolha de um dia, modal para escolha de projeto e modal para configuração de notificação */
+  const returnProjectModal = () => {
+    return (
+      <ChooseProjectModal
+        auxSelectedProject={auxSelectedProject}
+        equalizeAuxSelectedProjectToIdsProject={ equalizeAuxSelectedProjectToIdsProject}
+        setAuxSelectedProject={ setAuxSelectedProject}
+        setIdsProjectWithAcumulatedSelected={ setIdsProjectWithAcumulatedSelected}
+        projectIdIfItIsToEdit={id}
+        isProjectSelected={isProjectSelected}
+        isOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        setIdPRojectToChoose={setIdPRojectToChoose}
+        setNameOfProjectToShow={setNameOfProjectToShow}
+      />
+    );
+  };
+
   return (
     <main className={`${commonStyles.main_content}`}>
       <AdagioSideBar itemsNav={sideBarData} />
@@ -165,7 +222,7 @@ const FormTarefas = () => {
                             setTitle(ev.target.value);
                           }}
                           name="title"
-                          placeholder="Defina um titulo para o projeto"
+                          placeholder="Defina um titulo para o Tarefa"
                         />
                       </InputGroup>
                     </Form.Group>
@@ -231,6 +288,23 @@ const FormTarefas = () => {
                         }`,
                       }}
                     >
+                      Data:
+                      <DatePicker
+                        className={`mt-2 ${styles.member_tarefas_form}`}
+                        selected={DateTAux}
+                        onChange={onChangeDateT}
+                        dateFormat="dd/MM/yyyy"
+                      />
+                    </FormGroup>
+
+                    <FormGroup
+                      style={{
+                        width: `${
+                          windowDimensions.width > 580 ? "95%" : "100%"
+                        }`,
+                        marginTop: "20px",
+                      }}
+                    >
                       Hora inicial:
                       <DatePicker
                         className={`mt-2 ${styles.member_tarefas_form}`}
@@ -289,9 +363,13 @@ const FormTarefas = () => {
                             borderColor: "#463a8b",
                           }}
                           type="button"
+                          onClick={()=>{setIsModalOpen(true)}}
                         >
-                          Clique aqui
+                          {`Clique aqui - ${idProjectToChoose === null ? "Nenhum projeto escolhido ":
+                           `Projeto: ${nameOfProjectToShow} foi escolhido`}`}
                         </button>
+
+
                       </div>
                       <Form.Group
                         style={{
@@ -354,7 +432,9 @@ const FormTarefas = () => {
           </Row>
         </Container>
       </section>
+      {returnProjectModal()}
     </main>
   );
-};
+}
+
 export default FormTarefas;
