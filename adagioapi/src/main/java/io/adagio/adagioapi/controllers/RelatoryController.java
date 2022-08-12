@@ -31,6 +31,7 @@ import io.adagio.adagioapi.dto.relatoryDto.ReturnedRelatoryProjectSetData;
 import io.adagio.adagioapi.dto.relatoryDto.ReturnedRelatoryTaskSetData;
 import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.services.RelatoryService;
+import io.adagio.adagioapi.utils.PaginatedSetOrNot;
 import io.adagio.adagioapi.utils.RelatoryBy;
 import io.adagio.adagioapi.utils.ReturnedRelatorySetDataExcelExporter;
 
@@ -49,10 +50,10 @@ public class RelatoryController {
 		
 		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		ReturnedRelatoryTaskSetData tasksRelatory = relatoryService.getByMonth(logged,dto.getMonth(),dto.getYear(), RelatoryBy.TASKS_BY_MONTH);
+		ReturnedRelatoryTaskSetData tasksRelatory = relatoryService.getByMonthOrYear(logged,dto.getMonth(),dto.getYear(), RelatoryBy.TASKS_BY_MONTH);
 		
 		String filename = "tasks.xlsx";
-	    InputStreamResource file = new InputStreamResource(excelExporter.load(tasksRelatory));
+	    InputStreamResource file = new InputStreamResource(excelExporter.load(tasksRelatory,PaginatedSetOrNot.NOT_PAGINATED));
 	   
 	    return ResponseEntity.ok()
 	            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
@@ -64,10 +65,10 @@ public class RelatoryController {
 	public ResponseEntity<Resource> getByYear(@RequestBody @Valid RelatoryQueryDto dto){
 		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		ReturnedRelatoryTaskSetData tasksRelatory = relatoryService.getByMonth(logged, dto.getMonth(), dto.getYear(), RelatoryBy.TASKS_BY_YEAR);
+		ReturnedRelatoryTaskSetData tasksRelatory = relatoryService.getByMonthOrYear(logged, dto.getMonth(), dto.getYear(), RelatoryBy.TASKS_BY_YEAR);
 		
 		String filename = "tasks.xlsx";
-		InputStreamResource file = new InputStreamResource(excelExporter.load(tasksRelatory));
+		InputStreamResource file = new InputStreamResource(excelExporter.load(tasksRelatory,PaginatedSetOrNot.NOT_PAGINATED));
 		
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION,  "attachment; filename=" + filename)
@@ -82,7 +83,8 @@ public class RelatoryController {
 		ReturnedRelatoryTaskSetData tasksRelatory = relatoryService.getByDay(logged, dto.getStartDate(), dto.getEndDate(), RelatoryBy.TASKS_BY_DAY);
 		
 		String filename = "tasks.xlsx";
-		InputStreamResource file = new InputStreamResource(excelExporter.load(tasksRelatory));
+		InputStreamResource file = new InputStreamResource(excelExporter.load(tasksRelatory, PaginatedSetOrNot.NOT_PAGINATED
+				));
 		
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION,  "attachment; filename=" + filename)
@@ -98,7 +100,7 @@ public class RelatoryController {
 		ReturnedRelatoryProjectSetData projectsRelatory = relatoryService.getProjectsByPage(logged, pagination);
 		
 		String filename = "projects.xlsx";
-		InputStreamResource file = new InputStreamResource(excelExporter.loadProjects(projectsRelatory));
+		InputStreamResource file = new InputStreamResource(excelExporter.loadProjects(projectsRelatory,PaginatedSetOrNot.PAGINATED));
 		
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION,  "attachment; filename=" + filename)
@@ -116,7 +118,7 @@ public class RelatoryController {
 		ReturnedRelatoryTaskSetData tasksRelatory = relatoryService.getByPageAndProject(logged, dto.getIdProject(), pagination);
 		
 		String filename = "tasks.xlsx";
-		InputStreamResource file = new InputStreamResource(excelExporter.load(tasksRelatory));
+		InputStreamResource file = new InputStreamResource(excelExporter.load(tasksRelatory,PaginatedSetOrNot.PAGINATED));
 		
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION,  "attachment; filename=" + filename)

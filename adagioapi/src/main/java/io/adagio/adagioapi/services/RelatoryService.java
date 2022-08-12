@@ -32,12 +32,12 @@ public class RelatoryService {
 	@Autowired
 	public TaskRepository taskRepository;
 	
-	public ReturnedRelatoryTaskSetData getByMonth(User logged, Integer month,Integer year,RelatoryBy relatoryBy ) {
+	public ReturnedRelatoryTaskSetData getByMonthOrYear(User logged, Integer month,Integer year,RelatoryBy relatoryBy ) {
 		
 		ReturnedRelatoryTaskSetData relatory = new ReturnedRelatoryTaskSetData();
 		List<TaskDto> tasksDto = new ArrayList<TaskDto>();
 		
-		List<Task> tasks = taskRepository.findByUser(logged);
+		List<Task> tasks = taskRepository.findByUserAndProjectIsNull(logged);
 		
 		for(Task task : tasks) {
 			
@@ -69,6 +69,7 @@ public class RelatoryService {
 		
 		relatory.setQuantityOfElements(tasksDto.size());
 		relatory.setTotalHours(returnTotalHours(tasksDto));
+		
 		relatory.setTasks(tasksDto);
 		return relatory;
 		
@@ -87,6 +88,8 @@ public class RelatoryService {
 				
 				relatory.setQuantityOfElements(tasksDto.size());
 				relatory.setTotalHours(returnTotalHours(tasksDto));
+				relatory.setProjectName(project.get().getTitle());
+				relatory.setPage(pagination.getPageNumber()+1);
 				relatory.setTasks(tasksDto);
 			}
 		}
@@ -102,6 +105,7 @@ public class RelatoryService {
 		
 		relatory.setQuantityOfElements(projectsDto.size());
 		relatory.setTotalHours(returnTotalHoursProjects(projectsDto));
+		relatory.setPage(pagination.getPageNumber()+1);
 		relatory.setProjects(projectsDto);
 		
 		return relatory;
@@ -133,13 +137,13 @@ public class RelatoryService {
 							
 				totalHours += tempDateTime.until(p.getDateTimeEnd(), ChronoUnit.HOURS);
 				
-				System.out.println(tempDateTime.until(p.getDateTimeEnd(), ChronoUnit.DAYS));
-				System.out.println("DURAÇÃO "+totalHours);
 			}
 		}
 		
 		return totalHours;
 	}
+	
+	
 	/*
 	public String returnDurationMessage(List<TaskDto> tasks) {
 		String message = "";

@@ -6,6 +6,8 @@ public class ReturnedRelatorySetData {
 	
 	private Long quantityOfElements;
 	
+	private int page;
+	
 	public Long getTotalHours() {
 		return totalHours;
 	}
@@ -20,5 +22,13 @@ public class ReturnedRelatorySetData {
 
 	public void setQuantityOfElements(long quantityOfElements) {
 		this.quantityOfElements = quantityOfElements;
+	}
+	
+	public int getPage(){
+		return page;
+	}
+	
+	public void setPage(int page) {
+		this.page = page;
 	}
 }

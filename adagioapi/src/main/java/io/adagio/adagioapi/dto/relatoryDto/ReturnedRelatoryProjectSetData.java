@@ -12,6 +12,7 @@ public class ReturnedRelatoryProjectSetData extends ReturnedRelatorySetData{
 
 	private List<ProjectDto> projects = new ArrayList<ProjectDto>();
 
+	
 	public List<ProjectDto> getProjects() {
 		return projects;
 	}
@@ -19,6 +20,5 @@ public class ReturnedRelatoryProjectSetData extends ReturnedRelatorySetData{
 	public void setProjects(List<ProjectDto> projects) {
 		this.projects = projects;
 	}
-	
 	
 }

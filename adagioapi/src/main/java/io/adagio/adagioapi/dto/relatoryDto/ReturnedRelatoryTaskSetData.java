@@ -8,8 +8,8 @@ import io.adagio.adagioapi.dto.TaskDto;
 public class ReturnedRelatoryTaskSetData extends ReturnedRelatorySetData {
 
 	private List<TaskDto> tasks = new ArrayList<TaskDto>();
-
-
+	private String projectName;
+	
 	public List<TaskDto> getTasks() {
 		return tasks;
 	}
@@ -18,5 +18,11 @@ public class ReturnedRelatoryTaskSetData extends ReturnedRelatorySetData {
 		this.tasks = tasks;
 	}
 	
+	public String getProjectName() {
+		return projectName;
+	}
 	
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
 }

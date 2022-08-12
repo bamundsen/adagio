@@ -83,7 +83,7 @@ public class ProjectController {
 			direction=Direction.ASC) Pageable pagination, @PathVariable("id") Long id){
 		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		Optional<Project> project = projectRepository.findById(id);
+		Optional<Project> project = projectRepository.findByIdAndUser(id,logged);
 		
 		if(project.isPresent()) {
 			Page<Task> tasks = taskRepository.findByProjectAndUser(project.get(), logged, pagination);
