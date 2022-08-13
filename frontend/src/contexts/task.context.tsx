@@ -5,6 +5,7 @@ import { Task } from "../types/TaskType";
 export type TaskContextType = {
   createTask: (task: Task) => any;
   deleteTask: (id: number) => any;
+  editTask: (task: Task, id: number) => any;
   listByStartDateTimeFilter: (
     startDateTime: string,
     dateFinalToSearch: string
@@ -59,6 +60,11 @@ export const TaskProvider = ({ children }: { children: JSX.Element }) => {
     return response;
   };
 
+  const editTask = async (task: Task, id: number) => {
+    const responseToEdit = await taskApi.editTask(task, id);
+    return responseToEdit;
+  };
+
   const getTasksWithNoProjectByTitle = async (
     title: string,
     projectIdIfItIsToEdit: string | undefined,
@@ -89,6 +95,7 @@ export const TaskProvider = ({ children }: { children: JSX.Element }) => {
 
   const value: TaskContextType = {
     createTask,
+    editTask,
     getTasksWithNoProjectByTitle,
     triggerToSearchTasksAgainAfterDelete,
     deleteTask,

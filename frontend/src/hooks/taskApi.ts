@@ -40,6 +40,16 @@ export const TaskApi = () => ({
     }
   },
 
+  editTask: async (task: Task, id: number) => {
+    try {
+      const response = await api.put(`users/tasks/${id}`, task);
+
+      return response;
+    } catch (erro) {
+      console.log(erro);
+    }
+  },
+
   getTasksWithNoProjectByTitle: async (
     title: string,
     projectIdIfItIsToEdit: string | undefined,

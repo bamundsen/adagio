@@ -62,6 +62,10 @@ const FormProjetos = () => {
   const [isToShowStartHourWarning, setIsToShowStartHourWarning] =
     useState(false);
   const [isToShowEndHourWarning, setIsToShowEndHourWarning] = useState(false);
+  const [isToShowStartDateWarning, setIsToShowStartDateWarning] =
+    useState(false);
+  const [isToShowEndDateWarning, setIsToShowEndDateWarning] = useState(false);
+
   /* Incluir ids de tasks,no caso de edição de projeto, e também incluir as tasks de projetos marcadas no modal, como padrão */
   useEffect(() => {
     if (id !== undefined) {
@@ -124,12 +128,15 @@ const FormProjetos = () => {
 
   const onChangeStartHour = (date: Date) => {
     if (
-      date.getHours() <= endHourAux.getHours() &&
-      date.getMinutes() < endHourAux.getMinutes()
+      (date.getHours() === endHourAux.getHours() &&
+        date.getMinutes() <= endHourAux.getMinutes()) ||
+      date.getHours() < endHourAux.getHours()
     ) {
       setIsToShowStartHourWarning(false);
+      setIsToShowEndHourWarning(false);
     } else {
       setIsToShowStartHourWarning(true);
+      setIsToShowEndHourWarning(true);
     }
 
     setStartHourAux(date);
@@ -137,43 +144,57 @@ const FormProjetos = () => {
   };
 
   const onChangeStartDate = (date: Date) => {
+    console.log(date, endDateAux);
     if (
-      date.getDate() <= endDateAux.getDate() &&
-      date.getMonth() <= endDateAux.getMonth() &&
-      date.getFullYear() <= endDateAux.getFullYear()
+      (date.getDate() <= endDateAux.getDate() &&
+        date.getMonth() <= endDateAux.getMonth() &&
+        date.getFullYear() <= endDateAux.getFullYear()) ||
+      (date.getDate() >= endDateAux.getDate() &&
+        date.getMonth() < endDateAux.getMonth() &&
+        date.getFullYear() <= endDateAux.getFullYear()) ||
+      date.getFullYear() < endDateAux.getFullYear()
     ) {
-      setStartDate(filterAndReturnDate(date));
-      setStartDateAux(date);
-      return true;
+      setIsToShowStartDateWarning(false);
+      setIsToShowEndDateWarning(false);
     } else {
-      alert("Data final não pode ser menor que data inicial");
-      return false;
+      setIsToShowStartDateWarning(true);
+      setIsToShowEndDateWarning(true);
     }
+    setStartDate(filterAndReturnDate(date));
+    setStartDateAux(date);
   };
 
   const onChangeEndDate = (date: Date) => {
     if (
-      date.getDate() >= startDateAux.getDate() &&
-      date.getMonth() >= startDateAux.getMonth() &&
-      date.getFullYear() >= startDateAux.getFullYear()
+      (date.getDate() >= startDateAux.getDate() &&
+        date.getMonth() >= startDateAux.getMonth() &&
+        date.getFullYear() >= startDateAux.getFullYear()) ||
+      (date.getDate() <= startDateAux.getDate() &&
+        date.getMonth() > startDateAux.getMonth() &&
+        date.getFullYear() >= startDateAux.getFullYear()) ||
+      date.getFullYear() > startDateAux.getFullYear()
     ) {
-      setEndDate(filterAndReturnDate(date));
-      setEndDateAux(date);
-      return true;
+      setIsToShowEndDateWarning(false);
+      setIsToShowStartDateWarning(false);
     } else {
-      alert("Data final nao pode ser menor que data inicial");
-      return false;
+      setIsToShowEndDateWarning(true);
+      setIsToShowStartDateWarning(true);
     }
+    setEndDate(filterAndReturnDate(date));
+    setEndDateAux(date);
   };
 
   const onChangeEndHour = (date: Date) => {
     if (
-      date.getHours() >= startHourAux.getHours() &&
-      date.getMinutes() > startHourAux.getMinutes()
+      (date.getHours() === startHourAux.getHours() &&
+        date.getMinutes() >= startHourAux.getMinutes()) ||
+      date.getHours() > startHourAux.getHours()
     ) {
       setIsToShowEndHourWarning(false);
+      setIsToShowStartHourWarning(false);
     } else {
       setIsToShowEndHourWarning(true);
+      setIsToShowStartHourWarning(true);
     }
     setEndHourAux(date);
     setEndHour(filterAndReturnHour(date));
@@ -221,7 +242,12 @@ const FormProjetos = () => {
       tasksIds: idsTasks,
     };
 
-    if (!isToShowEndHourWarning && !isToShowStartHourWarning) {
+    if (
+      !isToShowEndHourWarning &&
+      !isToShowStartHourWarning &&
+      !isToShowEndDateWarning &&
+      !isToShowStartDateWarning
+    ) {
       console.log(!isToShowEndHourWarning, !isToShowStartHourWarning);
       try {
         if (isToEdit === false) {
@@ -408,7 +434,12 @@ const FormProjetos = () => {
                         dateFormat="HH:mm"
                       />
                       {isToShowStartHourWarning ? (
-                        <span style={returnWarningStyles()}>
+                        <span
+                          style={returnWarningStyles()}
+                          title={
+                            " Hora inicial não pode ser maior que a final. Verifique os valores antes de submeter o formulário."
+                          }
+                        >
                           Hora inicial não pode ser maior que a final. Verifique
                           os valores antes de submeter o formulário.
                         </span>
@@ -430,6 +461,17 @@ const FormProjetos = () => {
                         onChange={onChangeStartDate}
                         dateFormat="dd/MM/yyyy"
                       />
+                      {isToShowStartDateWarning ? (
+                        <span
+                          style={returnWarningStyles()}
+                          title={
+                            " Data inicial não pode ser maior que data inicial. Verifique os valores antes de submeter o formulário."
+                          }
+                        >
+                          Data inicial não pode ser maior que data inicial.
+                          Verifique os valores antes de submeter o formulário.
+                        </span>
+                      ) : null}
                     </FormGroup>
 
                     <FormGroup
@@ -447,6 +489,17 @@ const FormProjetos = () => {
                         onChange={onChangeEndDate}
                         dateFormat="dd/MM/yyyy"
                       />
+                      {isToShowEndDateWarning ? (
+                        <span
+                          style={returnWarningStyles()}
+                          title={
+                            " Data final não pode ser menor que data inicial. Verifique os valores antes de submeter o formulário."
+                          }
+                        >
+                          Data final não pode ser menor que data inicial.
+                          Verifique os valores antes de submeter o formulário.
+                        </span>
+                      ) : null}
                     </FormGroup>
 
                     <FormGroup
@@ -469,7 +522,12 @@ const FormProjetos = () => {
                         dateFormat="HH:mm"
                       />
                       {isToShowEndHourWarning ? (
-                        <span style={returnWarningStyles()}>
+                        <span
+                          style={returnWarningStyles()}
+                          title={
+                            "   Hora final não pode ser menor que a inicial. Verifique os campos antes de submter o formulário."
+                          }
+                        >
                           Hora final não pode ser menor que a inicial. Verifique
                           os campos antes de submter o formulário.
                         </span>
