@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import io.adagio.adagioapi.dto.CadastroTarefaForm;
 import io.adagio.adagioapi.dto.TaskDto;
+import io.adagio.adagioapi.services.TaskService;
 
 @Entity
 @Table(name="tasks")
