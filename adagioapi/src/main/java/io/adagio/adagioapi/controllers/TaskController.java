@@ -34,7 +34,9 @@ import io.adagio.adagioapi.dto.StartAndEndDateDto;
 import io.adagio.adagioapi.dto.TaskDto;
 import io.adagio.adagioapi.dto.TitleOrAndIdProjectQueryDTO;
 import io.adagio.adagioapi.models.Notification;
+import io.adagio.adagioapi.models.Project;
 import io.adagio.adagioapi.models.ColorOfPriority;
+import io.adagio.adagioapi.models.DefaultMessages;
 import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.repositories.NotificationRepository;
@@ -108,12 +110,22 @@ public class TaskController {
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Task task = taskForm.converter(logado, projectRepository);
 		
+		if(!taskService.validTaskTimeEnd(task))
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.header("TimeConflict", DefaultMessages.TASK_BAD_TIME.getMessage())
+					.body(new TaskDto(task, DefaultMessages.TASK_BAD_TIME.getMessage()));
+		
 		if(!taskService.validTaskTime(task, logado.getId(), taskRepository))
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.header("DateTimeConflict","Erro: conflito em horários cadastrados.")
-					.body(new TaskDto(task, "Erro: conflito em horários cadastrados."));
+					.header("DateTimeConflict",DefaultMessages.TASK_CONFLICT_TIME.getMessage())
+					.body(new TaskDto(task, DefaultMessages.TASK_CONFLICT_TIME.getMessage()));
 		
 		taskRepository.save(task);
+		
+		if(task.getProject() != null) {
+			Optional<Project> project = projectRepository.findByIdAndUser(task.getProject().getId(), logado);
+			project.get().setProgressStatus(taskService.setProjectFinishedStatusByTasks(taskRepository.findByProjectAndUser(project.get(), logado)));
+		}
 		
 		if (taskForm.getNotifications() != null && taskForm.getNotifications().size() > 0) {
 			task.setNotifications(taskService.notificationPattern(task.getNotifications()));
@@ -141,6 +153,10 @@ public class TaskController {
 		if (task.isPresent()) {
 
 			taskRepository.deleteByIdAndUser(id, logado);
+			if(task.get().getProject() != null) {
+				Optional<Project> project = projectRepository.findByIdAndUser(task.get().getProject().getId(), logado);
+				project.get().setProgressStatus(taskService.setProjectFinishedStatusByTasks(taskRepository.findByProjectAndUser(project.get(), logado)));
+			}
 			return ResponseEntity.ok().build();
 		}
 		
@@ -191,12 +207,22 @@ public class TaskController {
 		if(optionalTask.isPresent()) {
 			Task taskValidator = taskForm.converter(logado, projectRepository);
 			
+			if(!taskService.validTaskTimeEnd(taskValidator))
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+						.header("TimeConflict", DefaultMessages.TASK_BAD_TIME.getMessage())
+						.body(new TaskDto(taskValidator, DefaultMessages.TASK_BAD_TIME.getMessage()));
+
 			if(!taskService.validTaskTime(taskValidator, logado.getId(), taskRepository, id))
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-						.header("DateTimeConflict","Erro: conflito em horários cadastrados.")
-						.body(new TaskDto(optionalTask.get(), "Erro: conflito em horários cadastrados."));
+						.header("DateTimeConflict",DefaultMessages.TASK_CONFLICT_TIME.getMessage())
+						.body(new TaskDto(optionalTask.get(), DefaultMessages.TASK_CONFLICT_TIME.getMessage()));
 			
 			Task task = taskForm.update(id, taskRepository, projectRepository);
+			
+			if(task.getProject() != null) {
+				Optional<Project> project = projectRepository.findByIdAndUser(task.getProject().getId(), logado);
+				project.get().setProgressStatus(taskService.setProjectFinishedStatusByTasks(taskRepository.findByProjectAndUser(project.get(), logado)));
+			}
 			
 			if (optionalTask.get().getNotifications() != null)
 				notificationRepository.deleteByTask(optionalTask.get());

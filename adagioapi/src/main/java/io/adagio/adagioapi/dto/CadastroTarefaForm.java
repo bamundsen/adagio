@@ -16,6 +16,7 @@ import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.repositories.ProjectRepository;
 import io.adagio.adagioapi.repositories.TaskRepository;
+import io.adagio.adagioapi.services.TaskService;
 
 public class CadastroTarefaForm {
 
@@ -123,21 +124,21 @@ public class CadastroTarefaForm {
 	}
 
 	public Task converter(User user, ProjectRepository projectRepository) {
-
-		// validar notificaçoes
 		
-		// validar notificaçoes
-		
+		this.setDateTimeEnd(new TaskService().taskDateBuilder(this));
 		if(projectId == null) {
 			return new Task(this, user, null);
 		}
 		
 		Optional<Project> project = projectRepository.findById(projectId);
+<<<<<<< Updated upstream
 	
 		if(project.isEmpty()) {
 			return new Task(this, user, null);
 		}
 			
+=======
+>>>>>>> Stashed changes
 		return new Task(this, user, project.get());
 	}
 	
@@ -147,6 +148,7 @@ public class CadastroTarefaForm {
 		if(projectId != null) {
 			Optional<Project> project = projectRepository.findById(projectId);
 
+<<<<<<< Updated upstream
 			
 			if(project.isPresent())
 				task.setProject(project.get());
@@ -154,6 +156,9 @@ public class CadastroTarefaForm {
 		}
 	
 		task.setDateTimeEnd(dateTimeEnd);
+=======
+		task.setDateTimeEnd(new TaskService().taskDateBuilder(this));
+>>>>>>> Stashed changes
 		task.setDateTimeStart(dateTimeStart);
 		task.setTitle(title);
 		task.setDescription(description);
