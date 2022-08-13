@@ -9,6 +9,7 @@ import { AuthContext } from "../../contexts/auth.context";
 import { CalendarContext } from "../../contexts/calendar.context";
 import { RelatoryContext } from "../../contexts/relatory.context";
 import { ExportCalendarType } from "../../types/ExportCalendarType";
+import { tabEnterClickEffect } from "../../utils/acessibilityAux";
 
 interface CalendarProps {
   isToShowChangeFormatOption?: boolean;
@@ -132,6 +133,8 @@ const Calendar = ({
               isToShowChangeMonthOption === undefined) ? (
               <div className={`${styles.calendar_set_change_month}`}>
                 <DropdownButton
+                  tabIndex={1}
+                  onKeyDown={tabEnterClickEffect}
                   variant="outline-secondary"
                   align="end"
                   title={`${monthsAux[currentMonth]} `}
@@ -140,6 +143,7 @@ const Calendar = ({
                   {monthsAux.map((month, index) => (
                     <Dropdown.Item
                       key={month + index}
+                      onKeyDown={tabEnterClickEffect}
                       onClick={changeMonth}
                       id={`${index}`}
                       eventKey={`${index}`}
@@ -155,6 +159,7 @@ const Calendar = ({
             isToShowChangeYearOption === undefined ? (
               <div className={`${styles.calendar_set_change_year}`}>
                 <Form.Label
+                  tabIndex={1}
                   style={{
                     marginRight: "15px",
                     marginLeft: "15%",
@@ -164,6 +169,7 @@ const Calendar = ({
                   Ano:
                 </Form.Label>
                 <DatePicker
+                  tabIndex={1}
                   className={`${styles.calendar_set_change_year_input}`}
                   selected={currentDate}
                   onChange={changeYear}
@@ -177,6 +183,7 @@ const Calendar = ({
             isToShowChangeFormatOption === undefined ? (
               <div className={`${styles.calendar_set_change_format_button}`}>
                 <Button
+                  tabIndex={1}
                   onClick={toggleIsToShowOneMonth}
                   variant="outline-secondary"
                 >

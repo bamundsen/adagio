@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Modal, Toast } from "react-bootstrap";
 import { BsInfo, BsInfoSquare } from "react-icons/bs";
+import { returnThisDateWithHour } from "../utils/returnThisDateWithHour.utils";
 import { TaskContext } from "./task.context";
 
 const defineHourAndMinuteOfNow = () => {
@@ -71,19 +72,7 @@ export const NotificationProvider = ({
     }
   }, [tasksFromToday]);
 
-  const returnThisDateWithHour = (hour: string) => {
-    return `${String(new Date().getFullYear()).padStart(2, "0")}-${String(
-      new Date().getMonth() + 1
-    ).padStart(2, "0")}-${String(new Date().getDate()).padStart(
-      2,
-      "0"
-    )}T${hour}`;
-  };
-
   const showMessage = () => {
-    console.log(isToShowAlert, message);
-
-    //   alert(`${message}!`);
     return (
       <Modal show={isToShowAlert}>
         <div
@@ -100,7 +89,7 @@ export const NotificationProvider = ({
           <span>
             <BsInfoSquare
               tabIndex={1}
-              title={"Uma tarefa foi iniciada"}
+              title={`${message}`}
               style={{
                 color: "blue",
                 width: "24px",

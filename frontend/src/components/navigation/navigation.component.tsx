@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/auth.context";
 import AdagioLogo from "../../assets/adagio_logo.svg";
 import WhiteBell from "../../assets/white_bell.svg";
-import YellowBell from "../../assets/white_bell.svg";
+import YellowBell from "../../assets/yellow_bell.svg";
 import UserNavigation from "../../assets/user_navigation.svg";
 import UserNavigationWithArrow from "../../assets/user_navigation_with_arrow.svg";
 import styles from "./navigation.module.scss";
@@ -15,6 +15,8 @@ import { CalendarContext } from "../../contexts/calendar.context";
 import { ProjectContext } from "../../contexts/project.context";
 import { NotificationContext } from "../../contexts/notification.context";
 import { RelatoryContext } from "../../contexts/relatory.context";
+import NotificationDropdown from "./components/notification-dropdown/notification_dropdown.component";
+import { AuxInformationApi } from "../../hooks/auxInformationApi";
 
 const Navigation = () => {
   const { setTriggerAlignCurrentMonth, triggerAlignCurrentMonth } =
@@ -24,13 +26,32 @@ const Navigation = () => {
   const { setTriggerToSearchProjectsAgain, triggerToSearchProjectsAgain } =
     useContext(ProjectContext);
   const refDropdown = useRef<HTMLLIElement | null>(null);
+  const refDropdownNotification = useRef<HTMLLIElement | null>(null);
   const windowDimensions = useWindowDimensions();
   const [loginOrRegisterPageAux, setLoginOrRegisterPageAux] =
     useState<string>();
   const [displayDropdown, setDisplayDropdown] = useState("none");
+  const [displayDropdownNotification, setDisplayDropdownNotification] =
+    useState("none");
   const { triggerUpdateCalendar, setTriggerUpdateCalendar } =
     useContext(CalendarContext);
+  const [thisDayHasMoreThanZeroTask, setThisDayHasMoreThanZeroTask] =
+    useState(false);
   const { showMessage, isToShowAlert } = useContext(NotificationContext);
+
+  const auxInformationApi = AuxInformationApi();
+
+  useEffect(() => {
+    auxInformationApi.getQuantityOfTasksOfToday().then((response: any) => {
+      if (response.quantityOfTasks > 0) {
+        setThisDayHasMoreThanZeroTask(true);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log(`EITA: ${thisDayHasMoreThanZeroTask}`);
+  }, [thisDayHasMoreThanZeroTask]);
 
   useEffect(() => {
     const checkIfClickOutside = (e: any) => {
@@ -51,6 +72,27 @@ const Navigation = () => {
   }, [displayDropdown]);
 
   useEffect(() => {
+    const checkIfClickOutsideNotification = (e: any) => {
+      if (
+        displayDropdownNotification !== "none" &&
+        refDropdownNotification.current &&
+        !refDropdownNotification.current.contains(e.target)
+      ) {
+        setDisplayDropdownNotification("none");
+      }
+    };
+
+    document.addEventListener("mousedown", checkIfClickOutsideNotification);
+
+    return () => {
+      document.removeEventListener(
+        "mousedown",
+        checkIfClickOutsideNotification
+      );
+    };
+  }, [displayDropdownNotification]);
+
+  useEffect(() => {
     // console.log("user data, authState", user, isAuthenticated);
     toggleLoginOrRegisterPageAux();
   }, [isAuthenticated]);
@@ -64,10 +106,22 @@ const Navigation = () => {
     if (displayDropdown !== "none") setDisplayDropdown("none");
   };
 
+  const toggleDisplayDropDownNotification = () => {
+    if (displayDropdownNotification === "none")
+      setDisplayDropdownNotification("flex");
+    else setDisplayDropdownNotification("none");
+  };
+
+  const closeDisplayDropDownNotification = () => {
+    if (displayDropdownNotification !== "none")
+      setDisplayDropdownNotification("none");
+  };
+
   const handleSignout = (e: any) => {
     e.preventDefault();
     signout();
   };
+
   const toggleLoginOrRegisterPageAux = () => {
     if (window.location.pathname === "/") {
       setLoginOrRegisterPageAux("/register");
@@ -83,7 +137,10 @@ const Navigation = () => {
       <nav className={`${styles["navegacao-container"]}`}>
         <ul
           style={returnStyleNavigationAux()}
-          onBlur={closeDisplayDropDown}
+          onBlur={(e: any) => {
+            closeDisplayDropDown();
+            closeDisplayDropDownNotification();
+          }}
           className={`${styles["lista-navegacao"]}`}
         >
           {(loginOrRegisterPageAux === "/" ||
@@ -110,13 +167,33 @@ const Navigation = () => {
 
           {isAuthenticated ? (
             <>
-              <li tabIndex={1} className={`${styles["item-navegacao"]}`}>
-                <img
-                  src={WhiteBell}
-                  style={{
-                    cursor: "pointer",
-                  }}
-                  alt={"White Bell"}
+              <li
+                tabIndex={1}
+                ref={refDropdownNotification}
+                onClick={toggleDisplayDropDownNotification}
+                className={`${styles["item-navegacao"]}`}
+              >
+                {thisDayHasMoreThanZeroTask ? (
+                  <img
+                    src={YellowBell}
+                    style={{
+                      cursor: "pointer",
+                    }}
+                    alt={"Yellow Notifications Bell - hoje há tarefas"}
+                  />
+                ) : (
+                  <img
+                    src={WhiteBell}
+                    style={{
+                      cursor: "pointer",
+                    }}
+                    alt={
+                      "White Notifications Bell - Não há notificações de hoje"
+                    }
+                  />
+                )}
+                <NotificationDropdown
+                  displayDropdownNotification={displayDropdownNotification}
                 />
               </li>
               <li

@@ -115,46 +115,58 @@ const FormProjetos = () => {
   };
 
   const onChangeStartHour = (date: Date) => {
-    if(date.getHours() <= endHourAux.getHours() && date.getMinutes() < endHourAux.getMinutes()){
+    if (
+      date.getHours() <= endHourAux.getHours() &&
+      date.getMinutes() < endHourAux.getMinutes()
+    ) {
       setStartHourAux(date);
       setStartHour(filterAndReturnHour(date));
       return true;
-    }else{
+    } else {
       alert("Hora inicial não pode ser maior que a final");
       return false;
     }
   };
 
   const onChangeStartDate = (date: Date) => {
-    if(date.getDate() <= endDateAux.getDate() && date.getMonth() <=
-     endDateAux.getMonth() && date.getFullYear() <= endDateAux.getFullYear()){
+    if (
+      date.getDate() <= endDateAux.getDate() &&
+      date.getMonth() <= endDateAux.getMonth() &&
+      date.getFullYear() <= endDateAux.getFullYear()
+    ) {
       setStartDate(filterAndReturnDate(date));
       setStartDateAux(date);
       return true;
-     }else{
+    } else {
       alert("Data final nao pode ser menor que data inicial");
       return false;
-     }
+    }
   };
 
   const onChangeEndDate = (date: Date) => {
-    if(date.getDate() >= startDateAux.getDate() && date.getMonth() >=
-     startDateAux.getMonth() && date.getFullYear()>= startDateAux.getFullYear()){
+    if (
+      date.getDate() >= startDateAux.getDate() &&
+      date.getMonth() >= startDateAux.getMonth() &&
+      date.getFullYear() >= startDateAux.getFullYear()
+    ) {
       setEndDate(filterAndReturnDate(date));
       setEndDateAux(date);
       return true;
-     }else{
+    } else {
       alert("Data final nao pode ser menor que data inicial");
       return false;
-     }
+    }
   };
 
   const onChangeEndHour = (date: Date) => {
-    if(date.getHours() >= startHourAux.getHours() && date.getMinutes()> startHourAux.getMinutes()){
+    if (
+      date.getHours() >= startHourAux.getHours() &&
+      date.getMinutes() > startHourAux.getMinutes()
+    ) {
       setEndHourAux(date);
       setEndHour(filterAndReturnHour(date));
       return true;
-    }else{
+    } else {
       alert("Hora final não pode ser menor que a inicial");
       return false;
     }
@@ -172,7 +184,7 @@ const FormProjetos = () => {
     ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
   };
 
-  const goToProjects = () => {
+  const goToProjects = (): any => {
     setIsToGoToProjects(true);
   };
 

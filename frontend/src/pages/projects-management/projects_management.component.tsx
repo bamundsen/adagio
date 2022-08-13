@@ -15,6 +15,7 @@ import { SpinnerState } from "../../utils/spinner_type";
 import RegionPaginationButtons from "../../components/region-pagination-buttons/region_pagination_buttons.component";
 import { RelatoryContext } from "../../contexts/relatory.context";
 import { ExportCalendarType } from "../../types/ExportCalendarType";
+import { tabEnterClickEffect } from "../../utils/acessibilityAux";
 
 const ProjectsManagement = () => {
   const navigate = useNavigate();
@@ -184,6 +185,7 @@ const ProjectsManagement = () => {
                     <td className={styles.operation_area}>
                       <BsFillPenFill
                         tabIndex={1}
+                        onKeyDown={tabEnterClickEffect}
                         onClick={() => {
                           goToEdit(project);
                         }}
@@ -193,6 +195,7 @@ const ProjectsManagement = () => {
                     <td className={styles.operation_area}>
                       <BsTrash
                         tabIndex={1}
+                        onKeyDown={tabEnterClickEffect}
                         onClick={() => {
                           if (project.id !== undefined) {
                             setIdOfElementToDeleteForModel(project.id);
