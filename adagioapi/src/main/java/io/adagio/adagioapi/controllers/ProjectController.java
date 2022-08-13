@@ -117,9 +117,9 @@ public class ProjectController {
 
 		if(project.getId() == null) {
 			
-			projectService.vinculateTasksToProject(project.getTasks(),project,logged);
-			
 			projectRepository.save(project);
+			
+			projectService.vinculateTasksToProject(project.getTasks(),project,logged);
 			
 			URI uri = uriBuilder.path(base_da_url_do_servico+"/projects/{id}")
 					.buildAndExpand(project.getId()).toUri();
