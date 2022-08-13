@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import io.adagio.adagioapi.dto.CadastroTarefaForm;
 import io.adagio.adagioapi.dto.TaskDto;
+import io.adagio.adagioapi.dto.TodayTaskToBeAlertedDto;
 import io.adagio.adagioapi.services.TaskService;
 
 @Entity
@@ -86,7 +87,7 @@ public class Task {
 		this.dateTimeEnd = cadastroTaskForm.getDateTimeEnd();
 		this.project = project;
 		this.user = user;
-		
+		this.finishedStatus=cadastroTaskForm.getFinishedStatus();
 		//if (cadastroTaskForm.getNotifications().get(0).getTask() != null)
 			this.notifications = cadastroTaskForm.getNotifications();
 		
@@ -196,5 +197,20 @@ public class Task {
 			notificationsIds.add(notification.getId());
 		}
 		return notificationsIds;
+	}
+	
+	public static List<TodayTaskToBeAlertedDto> convertToTodayTasks(List<Task> tasks){
+		List<TodayTaskToBeAlertedDto> todayTasks = new ArrayList<>();
+		
+		for(Task task : tasks) {
+			
+			if(task.finishedStatus == false) {
+				TodayTaskToBeAlertedDto todayTask = new TodayTaskToBeAlertedDto(task);
+				todayTasks.add(todayTask);
+			}
+			
+		}
+		
+		return todayTasks;
 	}
 }

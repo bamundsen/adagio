@@ -32,6 +32,7 @@ export const UserApi = () => ({
   logout: async () => {
     try {
       const response = await api.post("/auth/logout");
+      console.log(response);
     } catch (erro) {
       console.log(erro);
     }

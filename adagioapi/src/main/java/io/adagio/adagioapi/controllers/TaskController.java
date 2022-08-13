@@ -125,6 +125,7 @@ public class TaskController {
 		if(task.getProject() != null) {
 			Optional<Project> project = projectRepository.findByIdAndUser(task.getProject().getId(), logado);
 			project.get().setProgressStatus(taskService.setProjectFinishedStatusByTasks(taskRepository.findByProjectAndUser(project.get(), logado)));
+			projectRepository.save(project.get());
 		}
 		
 		if (taskForm.getNotifications() != null && taskForm.getNotifications().size() > 0) {
@@ -156,6 +157,7 @@ public class TaskController {
 			if(task.get().getProject() != null) {
 				Optional<Project> project = projectRepository.findByIdAndUser(task.get().getProject().getId(), logado);
 				project.get().setProgressStatus(taskService.setProjectFinishedStatusByTasks(taskRepository.findByProjectAndUser(project.get(), logado)));
+				projectRepository.save(project.get());
 			}
 			return ResponseEntity.ok().build();
 		}
@@ -222,6 +224,7 @@ public class TaskController {
 			if(task.getProject() != null) {
 				Optional<Project> project = projectRepository.findByIdAndUser(task.getProject().getId(), logado);
 				project.get().setProgressStatus(taskService.setProjectFinishedStatusByTasks(taskRepository.findByProjectAndUser(project.get(), logado)));
+				projectRepository.save(project.get());
 			}
 			
 			if (optionalTask.get().getNotifications() != null)

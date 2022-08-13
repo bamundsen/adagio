@@ -74,7 +74,7 @@ public class CadastroTarefaForm {
 		this.dateTimeEnd = dateTimeEnd;
 	}
 
-	public boolean isFinishedStatus() {
+	public boolean getFinishedStatus() {
 		return finishedStatus;
 	}
 
@@ -131,14 +131,11 @@ public class CadastroTarefaForm {
 		}
 		
 		Optional<Project> project = projectRepository.findById(projectId);
-<<<<<<< Updated upstream
-	
+
 		if(project.isEmpty()) {
 			return new Task(this, user, null);
 		}
 			
-=======
->>>>>>> Stashed changes
 		return new Task(this, user, project.get());
 	}
 	
@@ -148,17 +145,15 @@ public class CadastroTarefaForm {
 		if(projectId != null) {
 			Optional<Project> project = projectRepository.findById(projectId);
 
-<<<<<<< Updated upstream
-			
 			if(project.isPresent())
 				task.setProject(project.get());
 			
 		}
 	
 		task.setDateTimeEnd(dateTimeEnd);
-=======
+
 		task.setDateTimeEnd(new TaskService().taskDateBuilder(this));
->>>>>>> Stashed changes
+
 		task.setDateTimeStart(dateTimeStart);
 		task.setTitle(title);
 		task.setDescription(description);

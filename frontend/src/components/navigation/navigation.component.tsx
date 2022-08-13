@@ -47,7 +47,7 @@ const Navigation = () => {
         setThisDayHasMoreThanZeroTask(true);
       }
     });
-  }, []);
+  }, [displayDropdown]);
 
   useEffect(() => {
     console.log(`EITA: ${thisDayHasMoreThanZeroTask}`);
@@ -98,6 +98,7 @@ const Navigation = () => {
   }, [isAuthenticated]);
 
   const toggleDisplayDropDown = () => {
+    console.log("EIII");
     if (displayDropdown === "none") setDisplayDropdown("flex");
     else setDisplayDropdown("none");
   };
@@ -119,6 +120,7 @@ const Navigation = () => {
 
   const handleSignout = (e: any) => {
     e.preventDefault();
+    console.log("EI , OU !!!");
     signout();
   };
 
@@ -170,12 +172,12 @@ const Navigation = () => {
               <li
                 tabIndex={1}
                 ref={refDropdownNotification}
-                onClick={toggleDisplayDropDownNotification}
                 className={`${styles["item-navegacao"]}`}
               >
                 {thisDayHasMoreThanZeroTask ? (
                   <img
                     src={YellowBell}
+                    onClick={toggleDisplayDropDownNotification}
                     style={{
                       cursor: "pointer",
                     }}
@@ -184,6 +186,7 @@ const Navigation = () => {
                 ) : (
                   <img
                     src={WhiteBell}
+                    onClick={toggleDisplayDropDownNotification}
                     style={{
                       cursor: "pointer",
                     }}
@@ -203,9 +206,8 @@ const Navigation = () => {
                 {user?.login}
               </li>
               <li
-                tabIndex={1}
+                title={"Opções: logout"}
                 ref={refDropdown}
-                onClick={toggleDisplayDropDown}
                 className={`${styles["item-navegacao"]} ${styles["item-container-icon-user"]}`}
                 style={{
                   position: "relative",
@@ -213,8 +215,10 @@ const Navigation = () => {
                 }}
               >
                 <img
+                  title={"Abrir opções"}
                   src={UserNavigationWithArrow}
                   className={`${styles["user-navigation-icon"]}`}
+                  onClick={toggleDisplayDropDown}
                   style={{
                     width: `${windowDimensions.width < 360 ? "45px" : ""}`,
                     cursor: "pointer",
@@ -226,7 +230,9 @@ const Navigation = () => {
                   alt={"User Navigation Icon"}
                 />
                 <div
+                  title={"Botão de logout"}
                   tabIndex={1}
+                  onClick={handleSignout}
                   style={{
                     position: "absolute",
                     display: `${displayDropdown}`,
@@ -242,28 +248,21 @@ const Navigation = () => {
                     justifyContent: "center",
                   }}
                 >
-                  <Link
-                    to="/signout"
-                    onClick={handleSignout}
+                  <span
                     style={{
-                      color: "#000",
+                      color: "#fff",
+                      fontWeight: "bold",
+                      padding: "2px",
+                      cursor: "pointer",
                       textAlign: "center",
-                      padding: "0",
+
                       width: "inherit",
                       textDecoration: "none",
                       backgroundColor: "red",
                     }}
                   >
-                    <span
-                      style={{
-                        color: "#fff",
-                        fontWeight: "bold",
-                        padding: "5px",
-                      }}
-                    >
-                      Sair
-                    </span>
-                  </Link>
+                    Sair
+                  </span>
                 </div>
               </li>
             </>

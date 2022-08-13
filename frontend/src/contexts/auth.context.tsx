@@ -103,7 +103,9 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   };
 
   const signout = async () => {
-    await apiUser.logout();
+    const tst = await apiUser.logout();
+    console.log(tst);
+    console.log("CHAMADO É PELO MENSO");
     setUser(null);
     setIsAuthenticated(false);
   };

@@ -1,5 +1,7 @@
 package io.adagio.adagioapi.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.adagio.adagioapi.config.security.RestAuthenticationEntryPoint;
 import io.adagio.adagioapi.dto.QuantityOfTasksAuxDto;
+import io.adagio.adagioapi.dto.TodayTaskToBeAlertedDto;
 import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.services.AuxInformationService;
 
@@ -23,10 +26,17 @@ public class AuxInformationController {
 	@GetMapping("/get-quantity-of-tasks-of-today")
 	public ResponseEntity<QuantityOfTasksAuxDto> getQuantityOfTasksOfToday() {
 		
-		System.out.println("antes");
 		User logged  = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		System.out.println("depois");
+	
 		return auxInformationService.getQuantityOfTasksFromToday(logged);
+	}
+	
+	@GetMapping("/get-today-tasks-to-be-alerted")
+	public ResponseEntity<List<TodayTaskToBeAlertedDto>> getTodayTasksToBeAlerted(){
+		
+		User loggd = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		return auxInformationService.getTodayTasksToBeAlerted(loggd);
 	}
 }
 

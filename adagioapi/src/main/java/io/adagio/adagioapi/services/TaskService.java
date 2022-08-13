@@ -95,14 +95,18 @@ public class TaskService {
 	public float setProjectFinishedStatusByTasks(List<Task> tasks) {
 		int completedTasks = 0;
 		float finishedStatus = 0;
-		if(tasks.get(0).getProject() != null) {
-			for(Task t : tasks) {
-				if(t.isFinishedStatus())
-					completedTasks++;
+		
+		if(tasks.size() > 0) {
+			if(tasks.get(0).getProject() != null) {
+				for(Task t : tasks) {
+					if(t.isFinishedStatus())
+						completedTasks++;
+				}
+				finishedStatus = ((100*completedTasks)/tasks.size());
+				
 			}
-			finishedStatus = ((100*completedTasks)/tasks.size());
-			
 		}
+
 		
 		return finishedStatus;
 	}

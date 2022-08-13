@@ -12,4 +12,15 @@ export const AuxInformationApi = () => ({
       console.log(error);
     }
   },
+  getTodayTasksToBeAlerted: async () => {
+    try {
+      const response = await api.get(
+        "/users/aux-information/get-today-tasks-to-be-alerted"
+      );
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  },
 });

@@ -136,7 +136,7 @@ public class ProjectController {
 	@Transactional
 	public ResponseEntity<ProjectDto> atualizar(@PathVariable("id") Long id, @RequestBody @Valid CadastroProjetoForm projectForm){
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		System.out.println("o ID DO PROJECT "+ id);
+	
 		Optional<Project> optionalProject = projectRepository.findByIdAndUser(id,logado);
 		
 		if(optionalProject.isPresent()) {

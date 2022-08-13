@@ -56,6 +56,9 @@ const FormProjetos = () => {
   );
   const [isToEdit, setIsToEdit] = useState(false);
 
+  const [isToShowStartHourWarning, setIsToShowStartHourWarning] =
+    useState(false);
+  const [isToShowEndHourWarning, setIsToShowEndHourWarning] = useState(false);
   /* Incluir ids de tasks,no caso de edição de projeto, e também incluir as tasks de projetos marcadas no modal, como padrão */
   useEffect(() => {
     if (id !== undefined) {
@@ -119,13 +122,13 @@ const FormProjetos = () => {
       date.getHours() <= endHourAux.getHours() &&
       date.getMinutes() < endHourAux.getMinutes()
     ) {
-      setStartHourAux(date);
-      setStartHour(filterAndReturnHour(date));
-      return true;
+      setIsToShowStartHourWarning(false);
     } else {
-      alert("Hora inicial não pode ser maior que a final");
-      return false;
+      setIsToShowStartHourWarning(true);
     }
+
+    setStartHourAux(date);
+    setStartHour(filterAndReturnHour(date));
   };
 
   const onChangeStartDate = (date: Date) => {
@@ -138,7 +141,7 @@ const FormProjetos = () => {
       setStartDateAux(date);
       return true;
     } else {
-      alert("Data final nao pode ser menor que data inicial");
+      alert("Data final não pode ser menor que data inicial");
       return false;
     }
   };
@@ -163,13 +166,12 @@ const FormProjetos = () => {
       date.getHours() >= startHourAux.getHours() &&
       date.getMinutes() > startHourAux.getMinutes()
     ) {
-      setEndHourAux(date);
-      setEndHour(filterAndReturnHour(date));
-      return true;
+      setIsToShowEndHourWarning(false);
     } else {
-      alert("Hora final não pode ser menor que a inicial");
-      return false;
+      setIsToShowEndHourWarning(true);
     }
+    setEndHourAux(date);
+    setEndHour(filterAndReturnHour(date));
   };
 
   const filterAndReturnHour = (hour: Date) => {
@@ -214,31 +216,44 @@ const FormProjetos = () => {
       tasksIds: idsTasks,
     };
 
-    try {
-      if (isToEdit === false) {
-        const responseToOperation = await createProject(
-          projectToRegisterOrEdit
-        );
+    if (!isToShowEndHourWarning && !isToShowStartHourWarning) {
+      console.log(!isToShowEndHourWarning, !isToShowStartHourWarning);
+      try {
+        if (isToEdit === false) {
+          const responseToOperation = await createProject(
+            projectToRegisterOrEdit
+          );
 
-        console.log(responseToOperation);
-        if (responseToOperation.status === 201) {
-          alert("Projeto criado com sucesso !");
+          console.log(responseToOperation);
+          if (responseToOperation.status === 201) {
+            alert("Projeto criado com sucesso !");
+          }
+        } else if (id !== undefined) {
+          const responseToOperation = await editProject(
+            projectToRegisterOrEdit,
+            Number(id)
+          );
+          console.log(responseToOperation);
         }
-      } else if (id !== undefined) {
-        const responseToOperation = await editProject(
-          projectToRegisterOrEdit,
-          Number(id)
+        setTriggerToSearchProjectsAgainAfterRegister(
+          !triggerToSearchProjectsAgainAfterRegister
         );
-        console.log(responseToOperation);
+        goToProjects();
+      } catch (erro) {
+        console.log(erro);
+        alert("Houve um erro");
       }
-      setTriggerToSearchProjectsAgainAfterRegister(
-        !triggerToSearchProjectsAgainAfterRegister
-      );
-      goToProjects();
-    } catch (erro) {
-      console.log(erro);
-      alert("Houve um erro");
+    } else {
+      alert("É preciso verificar os campos do formulário !");
     }
+  };
+
+  const returnWarningStyles = () => {
+    return {
+      color: "red",
+      fontSize: "14px",
+      marginTop: "4px",
+    };
   };
   return !isToGoToProjects ? (
     <main className={`${commonStyles.main_content}`}>
@@ -377,6 +392,12 @@ const FormProjetos = () => {
                         timeIntervals={1}
                         dateFormat="HH:mm"
                       />
+                      {isToShowStartHourWarning ? (
+                        <span style={returnWarningStyles()}>
+                          Hora inicial não pode ser maior que a final. Verifique
+                          os valores antes de submeter o formulário.
+                        </span>
+                      ) : null}
                     </FormGroup>
 
                     <FormGroup
@@ -432,6 +453,12 @@ const FormProjetos = () => {
                         timeIntervals={1}
                         dateFormat="HH:mm"
                       />
+                      {isToShowEndHourWarning ? (
+                        <span style={returnWarningStyles()}>
+                          Hora final não pode ser menor que a inicial. Verifique
+                          os campos antes de submter o formulário.
+                        </span>
+                      ) : null}
                     </FormGroup>
 
                     <div className={`${styles.buttons_area_register}`}>
