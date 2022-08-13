@@ -95,6 +95,7 @@ const FormProjetos = () => {
       setEndDateAux(new Date());
       setEndHourAux(new Date(new Date().setHours(23, 59)));
       setIsToEdit(false);
+      setProgressIndicator(null);
     }
   }, [isToRestartFormAgain, setIsToRestartFormAgain]);
 
