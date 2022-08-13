@@ -165,7 +165,7 @@ const ProjectsManagement = () => {
               <th>Descrição</th>
               <th>Progresso</th>
               <th>Tarefas</th>
-              <th>Editar</th>
+              <th>Editar / Detalhar</th>
               <th>Deletar</th>
             </tr>
           </thead>

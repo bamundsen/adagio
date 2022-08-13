@@ -6,6 +6,7 @@ import {
   Form,
   FormGroup,
   InputGroup,
+  ProgressBar,
   Row,
 } from "react-bootstrap";
 import "react-datepicker/dist/react-datepicker.css";
@@ -55,7 +56,9 @@ const FormProjetos = () => {
     new Date(new Date().setHours(23, 59))
   );
   const [isToEdit, setIsToEdit] = useState(false);
-
+  const [progressIndicator, setProgressIndicator] = useState<number | null>(
+    null
+  );
   const [isToShowStartHourWarning, setIsToShowStartHourWarning] =
     useState(false);
   const [isToShowEndHourWarning, setIsToShowEndHourWarning] = useState(false);
@@ -63,6 +66,7 @@ const FormProjetos = () => {
   useEffect(() => {
     if (id !== undefined) {
       getProject(Number(id)).then((response: any) => {
+        setProgressIndicator(response.progress);
         setTitle(response.title);
         setDescription(response.description);
         setStartDateAux(new Date(response.dateTimeStart));
@@ -259,6 +263,16 @@ const FormProjetos = () => {
     <main className={`${commonStyles.main_content}`}>
       <AdagioSideBar itemsNav={sideBarData} />
       <section style={{ flex: 1 }}>
+        {progressIndicator !== null ? (
+          <div
+            style={{ width: "95%", textAlign: "center", paddingTop: "15px" }}
+          >
+            <ProgressBar
+              now={progressIndicator}
+              label={`${progressIndicator}% do projeto foi concluído`}
+            />
+          </div>
+        ) : null}
         <h1 style={{ fontSize: "26px", marginLeft: "18px", marginTop: "10px" }}>
           {isToEdit ? "EDITE O PROJETO:" : "CADASTRE UM PROJETO:"}
         </h1>
