@@ -111,13 +111,13 @@ public class ProjectController {
 	@Transactional
 	public ResponseEntity<ProjectDto> cadastrar(@RequestBody @Valid CadastroProjetoForm projectForm, 
 			UriComponentsBuilder uriBuilder){
-		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		Project project = projectForm.converter( taskRepository,logado);
+		Project project = projectForm.converter( taskRepository,logged);
 
 		if(project.getId() == null) {
 			
-			projectService.vinculateTasksToProject(project.getTasks(),project);
+			projectService.vinculateTasksToProject(project.getTasks(),project,logged);
 			
 			projectRepository.save(project);
 			
@@ -135,16 +135,16 @@ public class ProjectController {
 	@PutMapping("/{id}")
 	@Transactional
 	public ResponseEntity<ProjectDto> atualizar(@PathVariable("id") Long id, @RequestBody @Valid CadastroProjetoForm projectForm){
-		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	
-		Optional<Project> optionalProject = projectRepository.findByIdAndUser(id,logado);
+		Optional<Project> optionalProject = projectRepository.findByIdAndUser(id,logged);
 		
 		if(optionalProject.isPresent()) {
-			projectService.deleteTasksByProjectOrDesvinculateAndUser(optionalProject.get(), logado, OperationType.EDIT);
+			projectService.deleteTasksByProjectOrDesvinculateAndUser(optionalProject.get(), logged, OperationType.EDIT);
 			
 			Project project = projectForm.atualizar(id, projectRepository,taskRepository);
 			
-			projectService.vinculateTasksToProject(project.getTasks(),project);
+			projectService.vinculateTasksToProject(project.getTasks(),project,logged);
 			
 			projectRepository.save(project);
 			

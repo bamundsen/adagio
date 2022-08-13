@@ -20,6 +20,9 @@ public class ProjectService {
 	
 	@Autowired
 	private ProjectRepository projectRepository;
+
+	@Autowired
+	private TaskService taskService;
 	
 	public long deleteTasksByProjectOrDesvinculateAndUser(Project project,User user,OperationType operation) {
 		long deletados = 0;
@@ -40,7 +43,7 @@ public class ProjectService {
 		return deletados;
 	}
 	
-	public void vinculateTasksToProject(List<Task> tasks, Project project) {
+	public void vinculateTasksToProject(List<Task> tasks, Project project,User logged) {
 		
 		for(Task task:tasks) {
 			if(task.getProject() == null) {
@@ -48,5 +51,7 @@ public class ProjectService {
 				taskRepository.save(task);
 			}
 		}
+		
+		project.setProgressStatus(taskService.setProjectFinishedStatusByTasks(taskRepository.findByProjectAndUser(project, logged)));
 	}
 }
