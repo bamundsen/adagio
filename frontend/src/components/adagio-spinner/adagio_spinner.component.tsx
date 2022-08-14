@@ -6,10 +6,12 @@ import { useEffect, useLayoutEffect, useState } from "react";
 interface AdagioSpinnerProps {
   loadingState?: SpinnerState;
   downloadRelatoryIndicator?: boolean;
+  optionalDefinedText?: string;
 }
 
 const AdagioSpinner = ({
   loadingState,
+  optionalDefinedText,
   downloadRelatoryIndicator,
 }: AdagioSpinnerProps) => {
   const [auxLoadingState, setAuxLoadingState] = useState(loadingState);
@@ -41,7 +43,8 @@ const AdagioSpinner = ({
     </div>
   ) : auxLoadingState === SpinnerState.There_is_no_content ? (
     <div className={commonStyles.there_is_content_in_the_data}>
-      Não há dados a serem exibidos
+      {"Não há dados a serem exibidos"}
+      {optionalDefinedText !== undefined ? optionalDefinedText : null}
     </div>
   ) : auxLoadingState === SpinnerState.Pending ? (
     <div className={commonStyles.spinner_container}>

@@ -66,7 +66,6 @@ export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
         exportCalendarType === ExportCalendarType.EXPORT_PROJECTS_OF_PAGE
       ) {
         getProjectsByPage().then((response: any) => {
-          console.log(response);
           setTriggerIsToRequestAndGenerateExcel(false);
           setIsToDownload(false);
         });
@@ -75,7 +74,6 @@ export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
         ExportCalendarType.EXPORT_TASKS_OF_PAGE_AND_PROJECT
       ) {
         getTasksByPageAndProject().then((response: any) => {
-          console.log(response);
           setTriggerIsToRequestAndGenerateExcel(false);
           setIsToDownload(false);
         });

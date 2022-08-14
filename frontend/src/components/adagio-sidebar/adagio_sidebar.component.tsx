@@ -36,29 +36,31 @@ const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
   };
 
   const returnCalendarExportTrigger = (message: string, link: string) => {
-    return (
-      <div
-        onClick={activeTriggerIsToRequestAndGenerateExcel}
-        className={`${styles.generate_relatory} ${styles.link_nav} `}
-        onMouseOver={(e: any) => {
-          e.target.style.color = "#fff";
-          e.target.style.padding = "0";
-        }}
-        onMouseOut={(e: any) => {
-          e.target.style.color = "#000";
-        }}
-        onKeyDown={tabEnterClickEffect}
-        tabIndex={1}
-        style={{ cursor: "pointer", display: "flex", flexDirection: "row" }}
-      >
-        <img
-          src={CalendarSideBar}
-          alt={"export calendar option"}
-          style={{ paddingRight: "12px", height: "32px" }}
-        />
-        {message}
-      </div>
-    );
+    if (exportCalendarType !== null) {
+      return (
+        <div
+          onClick={activeTriggerIsToRequestAndGenerateExcel}
+          className={`${styles.generate_relatory} ${styles.link_nav} `}
+          onMouseOver={(e: any) => {
+            e.target.style.color = "#fff";
+            e.target.style.padding = "0";
+          }}
+          onMouseOut={(e: any) => {
+            e.target.style.color = "#000";
+          }}
+          onKeyDown={tabEnterClickEffect}
+          tabIndex={1}
+          style={{ cursor: "pointer", display: "flex", flexDirection: "row" }}
+        >
+          <img
+            src={CalendarSideBar}
+            alt={"export calendar option"}
+            style={{ paddingRight: "12px", height: "32px" }}
+          />
+          {message}
+        </div>
+      );
+    }
   };
 
   const generateRelatoryTrigger = (item: any) => {
@@ -87,6 +89,7 @@ const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
         item.link
       );
     } else {
+      console.log("RETORNA NULL");
       return null;
     }
   };
@@ -163,7 +166,8 @@ const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
           <li
             key={index}
             className={`${
-              itemNav.category.toLowerCase() === "calendar_export"
+              itemNav.category.toLowerCase() === "calendar_export" &&
+              exportCalendarType !== null
                 ? styles.calendar_export_link
                 : null
             }`}

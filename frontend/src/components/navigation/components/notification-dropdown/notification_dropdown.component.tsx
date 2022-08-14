@@ -65,13 +65,13 @@ const NotificationDropdown = ({
         width: "230px",
         color: "#000",
         maxWidth: "250px",
-
+        borderRadius: "2%",
         height: " 280px",
         maxHeight: "300px",
         overflowY: "auto",
         overflowX: "auto",
         backgroundColor: "#fff",
-        boxShadow: "2px 2px 8px #ddd",
+        boxShadow: "2px 2px 8px #000",
         flexDirection: "column",
       }}
     >

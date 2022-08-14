@@ -88,7 +88,6 @@ const RelatoryModal = ({
   useEffect(() => {
     if (modalIsOpen) {
       auxInformationApi.getFreeDayTime(dateToSearch).then((response) => {
-        console.log(response);
         setTimeFreeMessage(response.freeDayTime);
       });
     }
@@ -135,7 +134,14 @@ const RelatoryModal = ({
   };
 
   const returnSpinner = () => {
-    return <AdagioSpinner loadingState={isLoaded} />;
+    return (
+      <AdagioSpinner
+        loadingState={isLoaded}
+        optionalDefinedText={
+          ". Talvez você tenha tarefas vinculadas a projetos."
+        }
+      />
+    );
   };
 
   const returnConfirmationModal = () => {
