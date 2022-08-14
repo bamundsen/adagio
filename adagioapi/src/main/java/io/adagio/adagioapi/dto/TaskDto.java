@@ -31,6 +31,8 @@ public class TaskDto {
 	
 	private String excetpionMessage;
 	
+	private boolean hasIssues;
+	
 	public TaskDto(Task task) {
 		
 		this.id = task.getId();
@@ -48,6 +50,8 @@ public class TaskDto {
 		
 		if(task.getNotifications() != null)
 			this.notifications = task.getNotifications();
+		
+		this.hasIssues = false;
 	}
 	public TaskDto(Task task, String exceptionMessage) {
 		
@@ -68,6 +72,7 @@ public class TaskDto {
 			this.notifications = task.getNotifications();
 			
 		this.excetpionMessage = exceptionMessage;
+		this.hasIssues = true;
 	}
 
 	public Long getId() {
@@ -111,6 +116,10 @@ public class TaskDto {
 	}
 	public String getExcetpionMessage() {
 		return excetpionMessage;
+	}
+	
+	public boolean isHasIssues() {
+		return hasIssues;
 	}
 
 }

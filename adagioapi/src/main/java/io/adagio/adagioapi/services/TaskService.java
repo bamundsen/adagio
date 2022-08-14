@@ -4,10 +4,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import io.adagio.adagioapi.dto.CadastroTarefaForm;
+import io.adagio.adagioapi.dto.TaskDto;
 import io.adagio.adagioapi.models.Category;
+import io.adagio.adagioapi.models.DefaultMessages;
 import io.adagio.adagioapi.models.Notification;
 import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.repositories.TaskRepository;
@@ -109,5 +113,22 @@ public class TaskService {
 
 		
 		return finishedStatus;
+	}
+	
+	public boolean taskWithinProject(Task task) {
+		if(task.getDateTimeStart().isBefore(task.getProject().getDateTimeStart()) ||
+				task.getDateTimeEnd().isAfter(task.getProject().getDateTimeEnd())) {
+			return false;
+		}
+		return true;
+	}
+	
+	public ResponseEntity<TaskDto> taskValidator(Task task){
+		if(!taskWithinProject(task)) 
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.header("TimeConflict", DefaultMessages.TASK_CONFLICT_PROJECT_TIME.getMessage())
+					.body(new TaskDto(task, DefaultMessages.TASK_CONFLICT_PROJECT_TIME.getMessage()));
+			
+		return null;
 	}
 }
