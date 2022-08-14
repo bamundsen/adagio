@@ -117,10 +117,13 @@ public class TaskService {
 	}
 	
 	public boolean taskWithinProject(Task task) {
-		if(task.getDateTimeStart().isBefore(task.getProject().getDateTimeStart()) ||
-				task.getDateTimeEnd().isAfter(task.getProject().getDateTimeEnd())) {
-			return false;
+		if(task.getProject() != null) {
+			if(task.getDateTimeStart().isBefore(task.getProject().getDateTimeStart()) ||
+					task.getDateTimeEnd().isAfter(task.getProject().getDateTimeEnd())) {
+				return false;
+			}
 		}
+
 		return true;
 	}
 	
