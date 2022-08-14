@@ -114,7 +114,7 @@ public class TaskController {
 		taskDtoValidator = taskService.taskValidator(task, logado, taskRepository);
 		if(taskDtoValidator.isHasIssues())
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.header("TimeConflict", DefaultMessages.TASK_CONFLICT_PROJECT_TIME.getMessage())
+					.header("TimeConflict", DefaultMessages.TASK_BAD_REQUEST.getMessage())
 					.body(taskDtoValidator);
 
 		taskRepository.save(task);
@@ -210,7 +210,7 @@ public class TaskController {
 			taskDtoValidator = taskService.taskValidator(taskValidator, logado, taskRepository);
 			if(taskDtoValidator.isHasIssues())
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-						.header("TimeConflict", DefaultMessages.TASK_CONFLICT_PROJECT_TIME.getMessage())
+						.header("TimeConflict", DefaultMessages.TASK_BAD_REQUEST.getMessage())
 						.body(taskDtoValidator);
 			
 			Task task = taskForm.update(id, taskRepository, projectRepository);
