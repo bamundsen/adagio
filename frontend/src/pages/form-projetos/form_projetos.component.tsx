@@ -24,6 +24,7 @@ import { Navigate, useLocation, useParams } from "react-router-dom";
 import ChooseTasksModal from "./components/choose_tasks_modal.component";
 import { Task } from "../../types/TaskType";
 import { RelatoryContext } from "../../contexts/relatory.context";
+import ConfirmationModal from "../../components/confirmation-modal/confirmation_modal.component";
 
 const FormProjetos = () => {
   const { user } = useContext(AuthContext);
@@ -59,14 +60,22 @@ const FormProjetos = () => {
   const [progressIndicator, setProgressIndicator] = useState<number | null>(
     null
   );
+
   const [isToShowStartHourWarning, setIsToShowStartHourWarning] =
     useState(false);
   const [isToShowEndHourWarning, setIsToShowEndHourWarning] = useState(false);
   const [isToShowStartDateWarning, setIsToShowStartDateWarning] =
     useState(false);
   const [isToShowEndDateWarning, setIsToShowEndDateWarning] = useState(false);
+  const [isToShowTitleWarning, setIsToShowTitleWarning] = useState(false);
+  const [isToShowDescriptionWarning, setIsToShowDescriptionWarning] =
+    useState(false);
+  const [modalRegisterWasSaveOpen, setModalRegisterWasSaveOpen] =
+    useState(false);
+  const [modalRegisterWasEditedOpen, setModalRegisterWasEditedOpen] =
+    useState(false);
+  const [isWarningToVerifyOpen, setIsWarningToVerifiyOpen] = useState(false);
 
-  /* Incluir ids de tasks,no caso de edição de projeto, e também incluir as tasks de projetos marcadas no modal, como padrão */
   useEffect(() => {
     if (id !== undefined) {
       getProject(Number(id)).then((response: any) => {
@@ -87,7 +96,6 @@ const FormProjetos = () => {
             return task.id;
           }),
         ]);
-        // console.log(response.tasks);
 
         setIsToEdit(true);
       });
@@ -100,6 +108,8 @@ const FormProjetos = () => {
       setEndHourAux(new Date(new Date().setHours(23, 59)));
       setIsToEdit(false);
       setProgressIndicator(null);
+      setAuxSelectedTasks([]);
+      setIdsTasks([]);
     }
   }, [isToRestartFormAgain, setIsToRestartFormAgain]);
 
@@ -231,6 +241,62 @@ const FormProjetos = () => {
     );
   };
 
+  const returnModalWarning = () => {
+    return (
+      <ConfirmationModal
+        colorFlagNegativeButton="primary"
+        explanationMessage="Alguns campos estão com valores incorretos. É preciso revisar os campos."
+        setModalIsOpen={setIsWarningToVerifiyOpen}
+        isModalOpen={isWarningToVerifyOpen}
+        isBasicConfirmation={true}
+        titleConfirmationMessage="Não é possível submeter o formulário."
+      />
+    );
+  };
+
+  const returnModalRegisterWasSave = () => {
+    return (
+      <ConfirmationModal
+        colorFlagNegativeButton="primary"
+        titleConfirmationMessage="O projeto foi salvo"
+        setModalIsOpen={setModalRegisterWasSaveOpen}
+        isModalOpen={modalRegisterWasSaveOpen}
+        isBasicConfirmation={true}
+        explanationMessage="Você pode gerenciá-lo na área de projetos."
+      />
+    );
+  };
+
+  const returnModalRegisterWasEdited = () => {
+    return (
+      <ConfirmationModal
+        colorFlagNegativeButton="primary"
+        explanationMessage="Você pode gerenciá-lo na área de projetos."
+        setModalIsOpen={setModalRegisterWasEditedOpen}
+        isModalOpen={modalRegisterWasEditedOpen}
+        isBasicConfirmation={true}
+        titleConfirmationMessage="O projeto foi editado"
+      />
+    );
+  };
+
+  const onChangeDescription = (e: any) => {
+    if (e.target.value.trim() === "") {
+      setIsToShowDescriptionWarning(true);
+    } else {
+      setIsToShowDescriptionWarning(false);
+    }
+    setDescription(e.target.value);
+  };
+
+  const onChangeTitle = (e: any) => {
+    if (e.target.value.trim() === "") {
+      setIsToShowTitleWarning(true);
+    } else {
+      setIsToShowTitleWarning(false);
+    }
+    setTitle(e.target.value);
+  };
   const onSubmit = async (ev: any) => {
     ev.preventDefault();
 
@@ -246,7 +312,9 @@ const FormProjetos = () => {
       !isToShowEndHourWarning &&
       !isToShowStartHourWarning &&
       !isToShowEndDateWarning &&
-      !isToShowStartDateWarning
+      !isToShowStartDateWarning &&
+      !isToShowDescriptionWarning &&
+      !isToShowTitleWarning
     ) {
       console.log(!isToShowEndHourWarning, !isToShowStartHourWarning);
       try {
@@ -257,25 +325,27 @@ const FormProjetos = () => {
 
           console.log(responseToOperation);
           if (responseToOperation.status === 201) {
-            alert("Projeto criado com sucesso !");
+            setModalRegisterWasSaveOpen(true);
           }
         } else if (id !== undefined) {
           const responseToOperation = await editProject(
             projectToRegisterOrEdit,
             Number(id)
           );
+          if (responseToOperation.status === 200) {
+            setModalRegisterWasEditedOpen(true);
+          }
           console.log(responseToOperation);
         }
         setTriggerToSearchProjectsAgainAfterRegister(
           !triggerToSearchProjectsAgainAfterRegister
         );
-        goToProjects();
       } catch (erro) {
         console.log(erro);
-        alert("Houve um erro");
+        setIsWarningToVerifiyOpen(true);
       }
     } else {
-      alert("É preciso verificar os campos do formulário !");
+      setIsWarningToVerifiyOpen(true);
     }
   };
 
@@ -340,13 +410,19 @@ const FormProjetos = () => {
                         <Form.Control
                           type="text"
                           value={titulo}
-                          onChange={(ev: any) => {
-                            setTitle(ev.target.value);
-                          }}
+                          onChange={onChangeTitle}
                           name="title"
                           placeholder="Defina um titulo para o projeto"
                         />
                       </InputGroup>
+                      {isToShowTitleWarning ? (
+                        <span
+                          style={returnWarningStyles()}
+                          title={"Campo título não pode estar vazio."}
+                        >
+                          Campo título não pode estar vazio.
+                        </span>
+                      ) : null}
                     </Form.Group>
 
                     <Form.Group
@@ -365,12 +441,18 @@ const FormProjetos = () => {
                           type="text"
                           style={{ height: "150px", maxHeight: "218px" }}
                           value={description}
-                          onChange={(ev: any) => {
-                            setDescription(ev.target.value);
-                          }}
+                          onChange={onChangeDescription}
                           name="descripiton"
                         />
                       </InputGroup>
+                      {isToShowDescriptionWarning ? (
+                        <span
+                          style={returnWarningStyles()}
+                          title={"Campo descrição não pode estar vazio."}
+                        >
+                          Campo descrição não pode estar vazio.
+                        </span>
+                      ) : null}
                     </Form.Group>
 
                     <Form.Group
@@ -558,7 +640,7 @@ const FormProjetos = () => {
                         }}
                         type="submit"
                       >
-                        {isToEdit ? "Editar" : "Cadastrar"}
+                        {isToEdit ? "Salvar" : "Cadastrar"}
                       </Button>
                     </div>
                   </div>
@@ -569,6 +651,9 @@ const FormProjetos = () => {
         </Container>
       </section>
       {returnTasksModal()}
+      {returnModalWarning()}
+      {returnModalRegisterWasSave()}
+      {returnModalRegisterWasEdited()}
     </main>
   ) : (
     <Navigate to="/adagio/projetos" />

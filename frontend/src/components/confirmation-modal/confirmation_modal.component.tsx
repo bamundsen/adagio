@@ -13,6 +13,7 @@ interface ConfirmationModalProps {
   idToOperation?: number;
   confirmDownload?: React.Dispatch<React.SetStateAction<boolean>>;
   isModalOpen: boolean;
+  isBasicConfirmation?: boolean;
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   titleConfirmationMessage: string;
   explanationMessage: string;
@@ -22,6 +23,7 @@ interface ConfirmationModalProps {
 const ConfirmationModal = ({
   functionToPositiveConfirmationExecuteById,
   idToOperation,
+  isBasicConfirmation,
   confirmDownload,
   isModalOpen,
   colorFlagNegativeButton,
@@ -38,7 +40,9 @@ const ConfirmationModal = ({
       <Modal.Body>{explanationMessage}</Modal.Body>
       <Modal.Footer>
         <div className={commonStyles.confirmation_modal_buttons_container}>
-          <NegativeButtonModal setModalIsOpen={setModalIsOpen} text={"Não"} />
+          {!isBasicConfirmation && (
+            <NegativeButtonModal setModalIsOpen={setModalIsOpen} text={"Não"} />
+          )}
           <Button
             tabIndex={1}
             style={{ marginLeft: "25px" }}
@@ -55,7 +59,7 @@ const ConfirmationModal = ({
             }}
             variant={colorFlagNegativeButton}
           >
-            Sim
+            {isBasicConfirmation ? "OK" : "Sim"}
           </Button>
         </div>
       </Modal.Footer>

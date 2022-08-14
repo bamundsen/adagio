@@ -10,7 +10,7 @@ export type TaskContextType = {
     startDateTime: string,
     dateFinalToSearch: string
   ) => any;
-
+  getTask: (idTask: number) => any;
   getColorThatIsToBeShowed: (
     startDateTime: string,
     dateFinalToSearch: string
@@ -60,6 +60,11 @@ export const TaskProvider = ({ children }: { children: JSX.Element }) => {
     return response;
   };
 
+  const getTask = async (idTask: number) => {
+    const task = await taskApi.getTask(idTask);
+    return task;
+  };
+
   const editTask = async (task: Task, id: number) => {
     const responseToEdit = await taskApi.editTask(task, id);
     return responseToEdit;
@@ -95,6 +100,7 @@ export const TaskProvider = ({ children }: { children: JSX.Element }) => {
 
   const value: TaskContextType = {
     createTask,
+    getTask,
     editTask,
     getTasksWithNoProjectByTitle,
     triggerToSearchTasksAgainAfterDelete,

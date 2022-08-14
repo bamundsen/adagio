@@ -14,6 +14,16 @@ export const TaskApi = () => ({
       console.log(erro);
     }
   },
+  getTask: async (idTask: number) => {
+    try {
+      const response = await api.get(`/users/tasks/${idTask}`);
+
+      return response.data;
+    } catch (erro) {
+      console.log(erro);
+    }
+  },
+
   listByStartDateTimeFilter: async (
     startDateTime: string,
     dateFinalToSearch: string
