@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
+import AdagioSpinner from "../components/adagio-spinner/adagio_spinner.component";
 import ConfirmationModal from "../components/confirmation-modal/confirmation_modal.component";
 import { RelatoryApi } from "../hooks/relatoryApi";
 import { ExportCalendarType } from "../types/ExportCalendarType";
@@ -13,6 +14,7 @@ export type RelatoryContextType = {
   changeTriggerIsToRequestAndGenerateExcel: () => void;
   triggerToUpdateButtonAndValue: boolean;
   returnConfirmationModal: () => any;
+  returnSpinnerIndicatorToWait: () => void;
   setModalConfirmationDownloadIsOpen: React.Dispatch<
     React.SetStateAction<boolean>
   >;
@@ -35,11 +37,11 @@ export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
   const [modalConfirmationDownloadIsOpen, setModalConfirmationDownloadIsOpen] =
     useState(false);
   const [isToDownload, setIsToDownload] = useState(false);
+  const [isToShowSpinnerIndicatorToWait, setIsToShowSpinnerIndicatorToWait] =
+    useState(false);
   const relatoryApi = RelatoryApi();
 
   useEffect(() => {
-    console.log(exportCalendarType);
-    console.log(valueReferenceToSearch);
     if (triggerIsToRequestAndGenerateExcel && isToDownload) {
       if (exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_MONTH) {
         getByMonth().then((response: any) => {
@@ -80,12 +82,20 @@ export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
       }
     }
     setIsToDownload(false);
+    setIsToShowSpinnerIndicatorToWait(false);
   }, [
     valueReferenceToSearch,
     exportCalendarType,
     triggerIsToRequestAndGenerateExcel,
     isToDownload,
   ]);
+
+  useEffect(() => {
+    if (isToDownload) {
+      console.log("IRÁ EXIBIR SPINNER");
+      setIsToShowSpinnerIndicatorToWait(true);
+    }
+  }, [isToDownload]);
 
   const getByMonth = async () => {
     let month: number = Number(valueReferenceToSearch[0]);
@@ -154,9 +164,16 @@ export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
     );
   };
 
+  const returnSpinnerIndicatorToWait = () => {
+    if (isToShowSpinnerIndicatorToWait) {
+      return <AdagioSpinner downloadRelatoryIndicator={true} />;
+    }
+  };
+
   const value: RelatoryContextType = {
     changeTriggerToUpdateButtonAndValue,
     triggerToUpdateButtonAndValue,
+    returnSpinnerIndicatorToWait,
     setModalConfirmationDownloadIsOpen,
     returnConfirmationModal,
     setIsToDownload,
