@@ -109,22 +109,14 @@ public class TaskController {
 		
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Task task = taskForm.converter(logado, projectRepository);
+		TaskDto taskDtoValidator;
 		
-		if(!taskService.validTaskTimeEnd(task))
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.header("TimeConflict", DefaultMessages.TASK_BAD_TIME.getMessage())
-					.body(new TaskDto(task, DefaultMessages.TASK_BAD_TIME.getMessage()));
-		
-		if(!taskService.validTaskTime(task, logado.getId(), taskRepository))
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.header("DateTimeConflict",DefaultMessages.TASK_CONFLICT_TIME.getMessage())
-					.body(new TaskDto(task, DefaultMessages.TASK_CONFLICT_TIME.getMessage()));
-		
-		if(task.getProject() != null && !taskService.taskWithinProject(task))
+		taskDtoValidator = taskService.taskValidator(task, logado, taskRepository);
+		if(taskDtoValidator.isHasIssues())
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.header("TimeConflict", DefaultMessages.TASK_CONFLICT_PROJECT_TIME.getMessage())
-					.body(new TaskDto(task, DefaultMessages.TASK_CONFLICT_PROJECT_TIME.getMessage()));
-		
+					.body(taskDtoValidator);
+
 		taskRepository.save(task);
 		
 		if(task.getProject() != null) {
@@ -213,21 +205,13 @@ public class TaskController {
 		
 		if(optionalTask.isPresent()) {
 			Task taskValidator = taskForm.converter(logado, projectRepository);
+			TaskDto taskDtoValidator;
 			
-			if(!taskService.validTaskTimeEnd(taskValidator))
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-						.header("TimeConflict", DefaultMessages.TASK_BAD_TIME.getMessage())
-						.body(new TaskDto(taskValidator, DefaultMessages.TASK_BAD_TIME.getMessage()));
-
-			if(!taskService.validTaskTime(taskValidator, logado.getId(), taskRepository, id))
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-						.header("DateTimeConflict",DefaultMessages.TASK_CONFLICT_TIME.getMessage())
-						.body(new TaskDto(optionalTask.get(), DefaultMessages.TASK_CONFLICT_TIME.getMessage()));
-			
-			if(taskValidator.getProject() != null &&  !taskService.taskWithinProject(taskValidator))
+			taskDtoValidator = taskService.taskValidator(taskValidator, logado, taskRepository);
+			if(taskDtoValidator.isHasIssues())
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 						.header("TimeConflict", DefaultMessages.TASK_CONFLICT_PROJECT_TIME.getMessage())
-						.body(new TaskDto(taskValidator, DefaultMessages.TASK_CONFLICT_PROJECT_TIME.getMessage()));
+						.body(taskDtoValidator);
 			
 			Task task = taskForm.update(id, taskRepository, projectRepository);
 			

@@ -8,18 +8,15 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.adagio.adagioapi.config.security.RestAuthenticationEntryPoint;
 import io.adagio.adagioapi.dto.FreeDayTimeDTO;
 import io.adagio.adagioapi.dto.QuantityOfTasksAuxDto;
 import io.adagio.adagioapi.dto.TodayTaskToBeAlertedDto;
-import io.adagio.adagioapi.dto.StartAndEndDateDto;
 import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.services.AuxInformationService;
 

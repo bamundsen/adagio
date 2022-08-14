@@ -14,6 +14,7 @@ import io.adagio.adagioapi.models.Category;
 import io.adagio.adagioapi.models.DefaultMessages;
 import io.adagio.adagioapi.models.Notification;
 import io.adagio.adagioapi.models.Task;
+import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.repositories.TaskRepository;
 
 @Service
@@ -123,12 +124,31 @@ public class TaskService {
 		return true;
 	}
 	
-	public ResponseEntity<TaskDto> taskValidator(Task task){
+	public TaskDto taskValidator(Task task, User user, TaskRepository taskRepository){
+		
+		if(!validTaskTimeEnd(task))
+			return new TaskDto(task, DefaultMessages.TASK_BAD_TIME.getMessage());
+		
+		if(!validTaskTime(task, user.getId(), taskRepository))
+			return new TaskDto(task, DefaultMessages.TASK_CONFLICT_TIME.getMessage());
+		
 		if(!taskWithinProject(task)) 
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.header("TimeConflict", DefaultMessages.TASK_CONFLICT_PROJECT_TIME.getMessage())
-					.body(new TaskDto(task, DefaultMessages.TASK_CONFLICT_PROJECT_TIME.getMessage()));
+			return new TaskDto(task, DefaultMessages.TASK_CONFLICT_PROJECT_TIME.getMessage());
 			
-		return null;
+		return new TaskDto(task);
+	}
+	
+public TaskDto taskValidator(Task task, User user, TaskRepository taskRepository, Long taskId){
+		
+		if(!validTaskTimeEnd(task))
+			return new TaskDto(task, DefaultMessages.TASK_BAD_TIME.getMessage());
+		
+		if(!validTaskTime(task, user.getId(), taskRepository, taskId))
+			return new TaskDto(task, DefaultMessages.TASK_CONFLICT_TIME.getMessage());
+		
+		if(!taskWithinProject(task)) 
+			return new TaskDto(task, DefaultMessages.TASK_CONFLICT_PROJECT_TIME.getMessage());
+			
+		return new TaskDto(task);
 	}
 }
