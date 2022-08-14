@@ -120,6 +120,11 @@ public class TaskController {
 					.header("DateTimeConflict",DefaultMessages.TASK_CONFLICT_TIME.getMessage())
 					.body(new TaskDto(task, DefaultMessages.TASK_CONFLICT_TIME.getMessage()));
 		
+		if(task.getProject() != null && !taskService.taskWithinProject(task))
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.header("TimeConflict", DefaultMessages.TASK_CONFLICT_PROJECT_TIME.getMessage())
+					.body(new TaskDto(task, DefaultMessages.TASK_CONFLICT_PROJECT_TIME.getMessage()));
+		
 		taskRepository.save(task);
 		
 		if(task.getProject() != null) {
@@ -218,6 +223,11 @@ public class TaskController {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 						.header("DateTimeConflict",DefaultMessages.TASK_CONFLICT_TIME.getMessage())
 						.body(new TaskDto(optionalTask.get(), DefaultMessages.TASK_CONFLICT_TIME.getMessage()));
+			
+			if(taskValidator.getProject() != null &&  !taskService.taskWithinProject(taskValidator))
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+						.header("TimeConflict", DefaultMessages.TASK_CONFLICT_PROJECT_TIME.getMessage())
+						.body(new TaskDto(taskValidator, DefaultMessages.TASK_CONFLICT_PROJECT_TIME.getMessage()));
 			
 			Task task = taskForm.update(id, taskRepository, projectRepository);
 			

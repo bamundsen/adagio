@@ -131,11 +131,18 @@ public class CadastroTarefaForm {
 		}
 		
 		Optional<Project> project = projectRepository.findById(projectId);
+<<<<<<< Updated upstream
 
 		if(project.isEmpty()) {
 			return new Task(this, user, null);
 		}
 			
+=======
+	
+		if(project.isEmpty()) {
+			return new Task(this, user, null);
+		}
+>>>>>>> Stashed changes
 		return new Task(this, user, project.get());
 	}
 	
@@ -144,16 +151,24 @@ public class CadastroTarefaForm {
 		
 		if(projectId != null) {
 			Optional<Project> project = projectRepository.findById(projectId);
+<<<<<<< Updated upstream
 
+=======
+			
+>>>>>>> Stashed changes
 			if(project.isPresent())
 				task.setProject(project.get());
 			
 		}
 	
 		task.setDateTimeEnd(dateTimeEnd);
+<<<<<<< Updated upstream
 
 		task.setDateTimeEnd(new TaskService().taskDateBuilder(this));
 
+=======
+		task.setDateTimeEnd(new TaskService().taskDateBuilder(this));
+>>>>>>> Stashed changes
 		task.setDateTimeStart(dateTimeStart);
 		task.setTitle(title);
 		task.setDescription(description);
