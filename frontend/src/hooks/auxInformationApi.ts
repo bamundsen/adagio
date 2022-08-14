@@ -23,4 +23,16 @@ export const AuxInformationApi = () => ({
       console.log(error);
     }
   },
+  getFreeDayTime: async (localDateTime: string) => {
+    try {
+      const response = await api.post(
+        `/users/aux-information/get-free-day-time`,
+        { localDateTime }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  },
 });

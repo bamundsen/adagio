@@ -1,16 +1,16 @@
 package io.adagio.adagioapi.controllers;
 
-<<<<<<< Updated upstream
+
 import java.util.List;
-=======
+
 import javax.validation.Valid;
->>>>>>> Stashed changes
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,11 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.adagio.adagioapi.config.security.RestAuthenticationEntryPoint;
 import io.adagio.adagioapi.dto.FreeDayTimeDTO;
 import io.adagio.adagioapi.dto.QuantityOfTasksAuxDto;
-<<<<<<< Updated upstream
 import io.adagio.adagioapi.dto.TodayTaskToBeAlertedDto;
-=======
 import io.adagio.adagioapi.dto.StartAndEndDateDto;
->>>>>>> Stashed changes
 import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.services.AuxInformationService;
 
@@ -41,19 +38,21 @@ public class AuxInformationController {
 		return auxInformationService.getQuantityOfTasksFromToday(logged);
 	}
 	
-<<<<<<< Updated upstream
+
 	@GetMapping("/get-today-tasks-to-be-alerted")
 	public ResponseEntity<List<TodayTaskToBeAlertedDto>> getTodayTasksToBeAlerted(){
 		
 		User loggd = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		return auxInformationService.getTodayTasksToBeAlerted(loggd);
-=======
-	@GetMapping("/get-free-day-time")
+
+	}
+	
+	@PostMapping("/get-free-day-time")
 	public ResponseEntity<FreeDayTimeDTO> getFreeDayTime(@RequestBody @Valid FreeDayTimeDTO freeDayTimeDto){
 		User logged  = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return auxInformationService.getFreeDayTime(logged, freeDayTimeDto.getLocalDateTime().toLocalDate());
->>>>>>> Stashed changes
+
 	}
 }
 

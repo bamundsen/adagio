@@ -39,10 +39,10 @@ public class AuxInformationService {
 		return ResponseEntity.ok().body(quantityOfTasksAuxDto);
 	}
 	
-<<<<<<< Updated upstream
+
 	public ResponseEntity<List<TodayTaskToBeAlertedDto>> getTodayTasksToBeAlerted(User logged){
 		List<Task> tasks = taskRepository.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeEndLessThanEqual(logged, 
-							getTodayWithHour(0,0,0), getTodayWithHour(23,59,0));
+							getTodayWithHour(0,0,0), getTodayWithHour(23,59,59));
 		
 		List<TodayTaskToBeAlertedDto> todayTasks = Task.convertToTodayTasks(tasks);
 		
@@ -54,7 +54,8 @@ public class AuxInformationService {
 		return LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), LocalDateTime.now().getDayOfMonth(),
 				hour,minute,second);
 		
-=======
+	}
+	
 	public ResponseEntity<FreeDayTimeDTO> getFreeDayTime(User logged, LocalDate localDate){
 		
 		List<Task> tasks = taskRepository.findByDate_Time_EndAndUser_IdNative(localDate, logged.getId());
@@ -77,6 +78,6 @@ public class AuxInformationService {
 				Integer.toString(hoursLeft), 	
 				Integer.toString(minutesLeft), 
 				Integer.toString(secondsLeft)));
->>>>>>> Stashed changes
+
 	}
 }

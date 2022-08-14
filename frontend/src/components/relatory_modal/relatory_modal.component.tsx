@@ -15,6 +15,7 @@ import { CalendarContext } from "../../contexts/calendar.context";
 import { SpinnerState } from "../../utils/spinner_type";
 import { RelatoryContext } from "../../contexts/relatory.context";
 import { ExportCalendarType } from "../../types/ExportCalendarType";
+import { AuxInformationApi } from "../../hooks/auxInformationApi";
 
 interface RelatoryModalProps {
   modalIsOpen: boolean;
@@ -56,6 +57,8 @@ const RelatoryModal = ({
   const [triggerToSearchTasksAgain, setTriggerToSearchTasksAgain] =
     useState(false);
   const [requestWasDone, setRequestWasDone] = useState(false);
+  const [timeFreeMessage, setTimeFreeMessage] = useState("");
+  const auxInformationApi = AuxInformationApi();
 
   useEffect(() => {
     if (modalIsOpen) {
@@ -79,6 +82,15 @@ const RelatoryModal = ({
           ]);
         }
       );
+    }
+  }, [modalIsOpen, triggerToSearchTasksAgain]);
+
+  useEffect(() => {
+    if (modalIsOpen) {
+      auxInformationApi.getFreeDayTime(dateToSearch).then((response) => {
+        console.log(response);
+        setTimeFreeMessage(response.freeDayTime);
+      });
     }
   }, [modalIsOpen, triggerToSearchTasksAgain]);
 
@@ -162,7 +174,7 @@ const RelatoryModal = ({
           </span>
 
           <span className={`${style.title_modal_relatory_available_time}`}>
-            Tempo disponível: 3 horas e 40 minutos
+            {timeFreeMessage}
           </span>
         </h2>
 
