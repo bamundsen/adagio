@@ -92,7 +92,6 @@ export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
 
   useEffect(() => {
     if (isToDownload) {
-      console.log("IRÁ EXIBIR SPINNER");
       setIsToShowSpinnerIndicatorToWait(true);
     }
   }, [isToDownload]);

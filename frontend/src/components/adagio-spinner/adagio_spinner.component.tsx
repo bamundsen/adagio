@@ -18,10 +18,6 @@ const AdagioSpinner = ({
     setAuxLoadingState(loadingState);
   }, [loadingState]);
 
-  useEffect(() => {
-    console.log("SPINNER DE DOWNLOAD", downloadRelatoryIndicator);
-  }, [downloadRelatoryIndicator]);
-
   return downloadRelatoryIndicator ? (
     <div
       style={{
@@ -37,7 +33,6 @@ const AdagioSpinner = ({
         alignItems: "center",
       }}
     >
-      EI OU !!!!!!!!!!!!
       <Spinner
         animation="border"
         role="status"
