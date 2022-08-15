@@ -89,7 +89,6 @@ const AdagioSideBar = ({ itemsNav }: AdagioSideBarProps) => {
         item.link
       );
     } else {
-      console.log("RETORNA NULL");
       return null;
     }
   };

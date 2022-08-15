@@ -76,6 +76,10 @@ const FormProjetos = () => {
     useState(false);
   const [isWarningToVerifyOpen, setIsWarningToVerifiyOpen] = useState(false);
 
+  const [errorMessageWarningModal, setErrorMessageWarningModal] = useState(
+    "Alguns campos estão com valores incorretos. É preciso revisar os campos."
+  );
+
   useEffect(() => {
     if (id !== undefined) {
       getProject(Number(id)).then((response: any) => {
@@ -245,7 +249,7 @@ const FormProjetos = () => {
     return (
       <ConfirmationModal
         colorFlagNegativeButton="primary"
-        explanationMessage="Alguns campos estão com valores incorretos. É preciso revisar os campos."
+        explanationMessage={errorMessageWarningModal}
         setModalIsOpen={setIsWarningToVerifiyOpen}
         isModalOpen={isWarningToVerifyOpen}
         isBasicConfirmation={true}
@@ -307,7 +311,7 @@ const FormProjetos = () => {
       dateTimeEnd: `${endDate}T${endHour}`,
       tasksIds: idsTasks,
     };
-
+    console.log(projectToRegisterOrEdit);
     if (
       !isToShowEndHourWarning &&
       !isToShowStartHourWarning &&
@@ -322,9 +326,22 @@ const FormProjetos = () => {
           const responseToOperation = await createProject(
             projectToRegisterOrEdit
           );
-
           console.log(responseToOperation);
-          if (responseToOperation.status === 201) {
+          if (
+            responseToOperation?.response?.data &&
+            responseToOperation.response.data.thereIsError.trim() !== "" &&
+            responseToOperation &&
+            responseToOperation.status !== 201
+          ) {
+            console.log("ENTRA");
+            setErrorMessageWarningModal(
+              responseToOperation.response.data.thereIsError
+            );
+            setIsWarningToVerifiyOpen(true);
+          } else if (
+            responseToOperation &&
+            responseToOperation.status === 201
+          ) {
             setModalRegisterWasSaveOpen(true);
           }
         } else if (id !== undefined) {
@@ -340,8 +357,8 @@ const FormProjetos = () => {
         setTriggerToSearchProjectsAgainAfterRegister(
           !triggerToSearchProjectsAgainAfterRegister
         );
-      } catch (erro) {
-        console.log(erro);
+      } catch (error: any) {
+        console.log("TESTE", error);
         setIsWarningToVerifiyOpen(true);
       }
     } else {

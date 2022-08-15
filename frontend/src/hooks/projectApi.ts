@@ -31,8 +31,9 @@ export const ProjectApi = () => ({
       const response = await api.post("/users/projects", project);
 
       return response;
-    } catch (erro) {
-      console.log(erro);
+    } catch (error) {
+      console.log(error);
+      return error;
     }
   },
 
@@ -41,8 +42,8 @@ export const ProjectApi = () => ({
       const response = await api.put(`users/projects/${id}`, project);
 
       return response;
-    } catch (erro) {
-      console.log(erro);
+    } catch (error) {
+      return error;
     }
   },
 
