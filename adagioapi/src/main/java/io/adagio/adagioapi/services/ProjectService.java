@@ -54,4 +54,27 @@ public class ProjectService {
 		
 		project.setProgressStatus(taskService.setProjectFinishedStatusByTasks(taskRepository.findByProjectAndUser(project, logged)));
 	}
+	
+
+	public boolean finalIsGreaterThanInitialDate(Project project) {
+		return project.getDateTimeEnd().isAfter(project.getDateTimeStart()) || project.getDateTimeEnd().isEqual(project.getDateTimeStart());
+	}
+	
+	private boolean taskDatesAreInvalid(Task task, Project project) {
+		return task.getDateTimeEnd().isAfter(project.getDateTimeEnd()) || task.getDateTimeEnd().isBefore(project.getDateTimeStart())
+				 || task.getDateTimeStart().isAfter(project.getDateTimeEnd()) || task.getDateTimeStart().isBefore(project.getDateTimeStart());
+	}
+	
+	public boolean tasksAreWithinTimeOfProject(Project project, List<Task> tasks) {
+		boolean valid = true;
+		
+		for(Task task : tasks) {
+			if(taskDatesAreInvalid(task,project)) {
+				valid = false;
+				break;
+			}
+		}
+		
+		return valid;
+	}
 }

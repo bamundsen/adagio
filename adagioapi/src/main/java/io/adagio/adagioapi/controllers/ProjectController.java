@@ -117,19 +117,37 @@ public class ProjectController {
 
 		if(project.getId() == null) {
 			
-			projectRepository.save(project);
+			if(projectService.tasksAreWithinTimeOfProject(project, project.getTasks()) && projectService.finalIsGreaterThanInitialDate(project)) {
+				projectRepository.save(project);
+				
+				projectService.vinculateTasksToProject(project.getTasks(),project,logged);
+				
+				URI uri = uriBuilder.path(base_da_url_do_servico+"/projects/{id}")
+						.buildAndExpand(project.getId()).toUri();
+				
+				
+				return ResponseEntity.created(uri).body(new ProjectDto(project));
+			} else {
+				
+				if( !projectService.finalIsGreaterThanInitialDate(project)) {
+					return ResponseEntity
+							.badRequest()
+							.body(new 
+							ProjectDto(project,
+							"Verifique as datas de projeto. Final deve ser maior que inicial ou os momentos devem ser iguais."));
+				} else {
+					return ResponseEntity
+							.badRequest()
+							.body(new 
+							ProjectDto(project,
+							"Verifique as datas das tarefas escolhidas. Elas devem estar dentro das datas final e inicial de projeto."));
+				}
 			
-			projectService.vinculateTasksToProject(project.getTasks(),project,logged);
-			
-			URI uri = uriBuilder.path(base_da_url_do_servico+"/projects/{id}")
-					.buildAndExpand(project.getId()).toUri();
-			
-			
-			return ResponseEntity.created(uri).body(new ProjectDto(project));
+			}
+
 		}
 
 		return ResponseEntity.badRequest().build();
-
 	}
 	
 	@PutMapping("/{id}")
@@ -140,15 +158,39 @@ public class ProjectController {
 		Optional<Project> optionalProject = projectRepository.findByIdAndUser(id,logged);
 		
 		if(optionalProject.isPresent()) {
-			projectService.deleteTasksByProjectOrDesvinculateAndUser(optionalProject.get(), logged, OperationType.EDIT);
 			
-			Project project = projectForm.atualizar(id, projectRepository,taskRepository);
+			Project projectDtoAux = projectForm.converter( taskRepository,logged);
 			
-			projectService.vinculateTasksToProject(project.getTasks(),project,logged);
+			if(projectService.tasksAreWithinTimeOfProject(optionalProject.get(), projectDtoAux.getTasks()) && projectService.finalIsGreaterThanInitialDate(optionalProject.get())) {
 			
-			projectRepository.save(project);
+				projectService.deleteTasksByProjectOrDesvinculateAndUser(optionalProject.get(), logged, OperationType.EDIT);
+				
+				Project project = projectForm.atualizar(id, projectRepository,taskRepository);
+				
+				projectService.vinculateTasksToProject(project.getTasks(),project,logged);
+				
+				projectRepository.save(project);
+				
+				return ResponseEntity.ok(new ProjectDto(project));
+				
+			}  else {
+				
+				if( !projectService.finalIsGreaterThanInitialDate(optionalProject.get())) {
+					return ResponseEntity
+							.badRequest()
+							.body(new 
+							ProjectDto(optionalProject.get(),
+							"Verifique as datas de projeto. Final deve ser maior que inicial ou os momentos devem ser iguais."));
+				} else {
+					return ResponseEntity
+							.badRequest()
+							.body(new 
+							ProjectDto(optionalProject.get(),
+							"Verifique as datas das tarefas escolhidas. Elas devem estar dentro das datas final e inicial de projeto."));
+				}
 			
-			return ResponseEntity.ok(new ProjectDto(project));
+			}
+		
 		}
 	
 		return ResponseEntity.notFound().build();

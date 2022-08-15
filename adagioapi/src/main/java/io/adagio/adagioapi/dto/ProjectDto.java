@@ -30,9 +30,29 @@ public class ProjectDto {
 	private Long idUser;
 	
 	private List<TaskDto> tasks = new ArrayList<TaskDto>();
+	 
+	private String thereIsError = "Os dados estão corretos.";
 	
 	public ProjectDto(Project project)
 	{
+		this.id = project.getId();
+		this.title = project.getTitle();
+		this.description = project.getDescription();
+		this.dateTimeEnd = project.getDateTimeEnd();
+		this.dateTimeStart = project.getDateTimeStart();
+		this.idUser = project.getUser().getId();
+		this.progress= project.getProgressStatus();
+		
+		for(Task task : project.getTasks()) {
+			TaskDto taskToAdd = new TaskDto(task);
+			tasks.add(taskToAdd);
+		}
+	}
+	
+	
+	public ProjectDto(Project project, String messageError)
+	{
+		this.thereIsError = messageError;
 		this.id = project.getId();
 		this.title = project.getTitle();
 		this.description = project.getDescription();
@@ -77,5 +97,13 @@ public class ProjectDto {
 	
 	public double getProgress() {
 		return this.progress;
+	}
+	
+	public String getThereIsError() {
+		return thereIsError;
+	}
+	
+	public void setThereIsError(String thereIsError) {
+		this.thereIsError=thereIsError;
 	}
 }
