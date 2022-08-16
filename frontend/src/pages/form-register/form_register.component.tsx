@@ -24,6 +24,8 @@ const FormRegister: FC = () => {
   const [password, setPassword] = useState("");
   const [confirmedPassword, setConfirmedPassword] = useState("");
 
+  const [isToShowCpfWarning, setIsToShowCpfWarning] = useState(false);
+
   const cleanFields = () => {
     setName("");
     setUsername("");
@@ -32,6 +34,51 @@ const FormRegister: FC = () => {
     setPhone("");
     setPassword("");
     setConfirmedPassword("");
+  };
+
+  function cpfIsValid(inputCPF: string) {
+    let soma = 0;
+    let resto;
+
+    if (inputCPF === "00000000000") return false;
+    for (let i = 1; i <= 9; i++) {
+      soma = soma + parseInt(inputCPF.substring(i - 1, i)) * (11 - i);
+    }
+    resto = (soma * 10) % 11;
+
+    if (resto === 10 || resto === 11) {
+      resto = 0;
+    }
+    if (resto !== parseInt(inputCPF.substring(9, 10))) {
+      return false;
+    }
+
+    soma = 0;
+    for (let i = 1; i <= 10; i++) {
+      soma = soma + parseInt(inputCPF.substring(i - 1, i)) * (12 - i);
+    }
+    resto = (soma * 10) % 11;
+
+    if (resto === 10 || resto === 11) {
+      resto = 0;
+    }
+
+    if (resto !== parseInt(inputCPF.substring(10, 11))) {
+      return false;
+    }
+    return true;
+  }
+
+  const onChangeCpf = (ev: any) => {
+    if (
+      cpfIsValid(ev.target.value.trim()) &&
+      ev.target.value.trim().match(/^\d{3}\.?\d{3}\.?\d{3}\-?\d{2}$/)
+    ) {
+      setIsToShowCpfWarning(false);
+    } else {
+      setIsToShowCpfWarning(true);
+    }
+    setCpf(ev.target.value);
   };
 
   const onSubmit = async (ev: any) => {
@@ -54,6 +101,14 @@ const FormRegister: FC = () => {
       if (responseStatus === 201) alert("Usuário cadastrado com sucesso !");
       else alert("Houve um erro ! Verifique os valores dos campos.");
     }
+  };
+
+  const returnWarningStyles = () => {
+    return {
+      color: "red",
+      fontSize: "14px",
+      marginTop: "4px",
+    };
   };
 
   return (
@@ -125,13 +180,19 @@ const FormRegister: FC = () => {
                     <Form.Control
                       type="text"
                       value={cpf}
-                      onChange={(ev: any) => {
-                        setCpf(ev.target.value);
-                      }}
+                      onChange={onChangeCpf}
                       name="cpf"
                       placeholder="Seu CPF"
                     />
                   </InputGroup>
+                  {isToShowCpfWarning ? (
+                    <span
+                      style={returnWarningStyles()}
+                      title={"Campo CPF com valor inválido."}
+                    >
+                      Campo CPF com valor inválido.
+                    </span>
+                  ) : null}
                 </Form.Group>
               </div>
 
