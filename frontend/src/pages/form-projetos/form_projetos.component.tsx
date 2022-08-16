@@ -104,16 +104,7 @@ const FormProjetos = () => {
         setIsToEdit(true);
       });
     } else {
-      setTitle("");
-      setDescription("");
-      setStartDateAux(new Date());
-      setStartHourAux(new Date());
-      setEndDateAux(new Date());
-      setEndHourAux(new Date(new Date().setHours(23, 59)));
-      setIsToEdit(false);
-      setProgressIndicator(null);
-      setAuxSelectedTasks([]);
-      setIdsTasks([]);
+      resetOrCleanFields();
     }
   }, [isToRestartFormAgain, setIsToRestartFormAgain]);
 
@@ -128,6 +119,18 @@ const FormProjetos = () => {
     setExportCalendarType(null);
   }, []);
 
+  const resetOrCleanFields = () => {
+    setTitle("");
+    setDescription("");
+    setStartDateAux(new Date());
+    setStartHourAux(new Date());
+    setEndDateAux(new Date());
+    setEndHourAux(new Date(new Date().setHours(23, 59)));
+    setIsToEdit(false);
+    setProgressIndicator(null);
+    setAuxSelectedTasks([]);
+    setIdsTasks([]);
+  };
   const setIdsTasksWithAcumulatedSelected = (selectedIdsTasks: number[]) => {
     setIdsTasks(selectedIdsTasks);
   };
@@ -343,6 +346,7 @@ const FormProjetos = () => {
             responseToOperation.status === 201
           ) {
             setModalRegisterWasSaveOpen(true);
+            resetOrCleanFields();
           }
         } else if (id !== undefined) {
           const responseToOperation = await editProject(
@@ -351,6 +355,7 @@ const FormProjetos = () => {
           );
           if (responseToOperation.status === 200) {
             setModalRegisterWasEditedOpen(true);
+            resetOrCleanFields();
           }
           console.log(responseToOperation);
         }
