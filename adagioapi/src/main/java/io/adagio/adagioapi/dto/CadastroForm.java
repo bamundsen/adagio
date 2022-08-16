@@ -5,30 +5,42 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import io.adagio.adagioapi.models.User;
+import io.adagio.adagioapi.validator.CPF;
+import io.adagio.adagioapi.validator.Password;
+import io.adagio.adagioapi.validator.Phone;
+import io.adagio.adagioapi.validator.UniqueCpf;
+import io.adagio.adagioapi.validator.UniqueEmail;
+import io.adagio.adagioapi.validator.UniqueLogin;
 
 public class CadastroForm {
 
-	@NotNull @NotEmpty
+	@NotNull @NotEmpty @Size(min=8, max=30) @UniqueLogin
 	private String login;
 	
-	@Email @NotNull
+	@Email @NotNull @UniqueEmail
 	private String email;
 	
-	@NotNull @Size(min=8)
+	@NotNull @Size(min=8, max=30) @Password
 	private String password;
 	
-	@NotNull
+	@NotNull @NotEmpty @Phone
 	private String phone;
 	
-	@NotNull
+	@NotNull @NotEmpty
 	private String name;
 	
-	@NotNull
+	@NotNull @NotEmpty @CPF @UniqueCpf
 	private String cpf;
+	
+	/*
+	private boolean notUniqueError = false;
+	private String loginNotUniqueError,
+		emailNotUniqueError,
+		cpfNotUniqueError; */
+	
 
 	public String getLogin() {
 		return login;

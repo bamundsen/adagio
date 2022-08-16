@@ -1,6 +1,8 @@
 package io.adagio.adagioapi.services;
 
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import io.adagio.adagioapi.config.security.TokenService;
+import io.adagio.adagioapi.dto.CadastroForm;
 import io.adagio.adagioapi.dto.LoginForm;
 import io.adagio.adagioapi.dto.LoginResponse;
 import io.adagio.adagioapi.dto.Token;
@@ -126,7 +129,6 @@ public class UserService  {
 				token.getDuration()).toString());
 	}
 	
-
 	public ResponseEntity<?> logout() {
 		HttpHeaders responseHeaders = new HttpHeaders();
 		
@@ -137,6 +139,7 @@ public class UserService  {
 		
 		return ResponseEntity.ok().headers(responseHeaders).build();
 	}
+
 }
 
 

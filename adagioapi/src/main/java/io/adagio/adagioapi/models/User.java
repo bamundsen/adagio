@@ -1,18 +1,18 @@
 package io.adagio.adagioapi.models;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,19 +27,25 @@ public class User implements UserDetails {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	@Size(min=8, max=30)
 	@Column(unique=true)
 	private String login;
 	
+	@Size(min=8, max=30)
 	@Column(unique=true)
+	@Email
 	private String email;
 	
+	@NotNull
 	private String name;
 	
+	@NotNull
 	private String password;
 	
 	@Column(unique=true)
 	private String cpf;
 	
+	@NotNull
 	private String phone;
 
 	@OneToMany(mappedBy = "user")
