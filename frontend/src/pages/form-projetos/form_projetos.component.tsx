@@ -314,7 +314,7 @@ const FormProjetos = () => {
       dateTimeEnd: `${endDate}T${endHour}`,
       tasksIds: idsTasks,
     };
-    console.log(projectToRegisterOrEdit);
+
     if (
       !isToShowEndHourWarning &&
       !isToShowStartHourWarning &&
@@ -336,7 +336,6 @@ const FormProjetos = () => {
             responseToOperation &&
             responseToOperation.status !== 201
           ) {
-            console.log("ENTRA");
             setErrorMessageWarningModal(
               responseToOperation.response.data.thereIsError
             );
@@ -346,16 +345,26 @@ const FormProjetos = () => {
             responseToOperation.status === 201
           ) {
             setModalRegisterWasSaveOpen(true);
-            resetOrCleanFields();
+            setIsToRestartFormAgain(!isToRestartFormAgain);
           }
         } else if (id !== undefined) {
           const responseToOperation = await editProject(
             projectToRegisterOrEdit,
             Number(id)
           );
-          if (responseToOperation.status === 200) {
+          if (
+            responseToOperation?.response?.data &&
+            responseToOperation.response.data.thereIsError.trim() !== "" &&
+            responseToOperation &&
+            responseToOperation.status !== 201
+          ) {
+            setErrorMessageWarningModal(
+              responseToOperation.response.data.thereIsError
+            );
+            setIsWarningToVerifiyOpen(true);
+          } else if (responseToOperation.status === 200) {
             setModalRegisterWasEditedOpen(true);
-            resetOrCleanFields();
+            setIsToRestartFormAgain(!isToRestartFormAgain);
           }
           console.log(responseToOperation);
         }
@@ -363,7 +372,6 @@ const FormProjetos = () => {
           !triggerToSearchProjectsAgainAfterRegister
         );
       } catch (error: any) {
-        console.log("TESTE", error);
         setIsWarningToVerifiyOpen(true);
       }
     } else {
