@@ -80,12 +80,14 @@ export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
       ) {
         getTasksByPageAndProject().then((response: any) => {
           setTriggerIsToRequestAndGenerateExcel(false);
+
           setIsToDownload(false);
         });
       }
+    } else {
+      setIsToShowSpinnerIndicatorToWait(false);
+      setIsToDownload(false);
     }
-    setIsToDownload(false);
-    setIsToShowSpinnerIndicatorToWait(false);
   }, [
     valueReferenceToSearch,
     exportCalendarType,

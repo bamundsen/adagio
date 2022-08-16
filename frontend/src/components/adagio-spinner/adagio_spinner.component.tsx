@@ -23,7 +23,7 @@ const AdagioSpinner = ({
   return downloadRelatoryIndicator ? (
     <div
       style={{
-        backgroundColor: "rgba(255,255,255,0.4)",
+        backgroundColor: "rgba(255,255,255,0.7)",
         position: "fixed",
         zIndex: 10000,
         top: 0,
