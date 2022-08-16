@@ -60,7 +60,7 @@ public class ProjectController {
 	
 
 	@GetMapping
-	public Page<ProjectDto> listar(@PageableDefault(sort="dateTimeEnd",page=0,size=10,
+	public Page<ProjectDto> list(@PageableDefault(sort="dateTimeEnd",page=0,size=10,
 			direction=Direction.ASC) Pageable pagination){
 			User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
@@ -95,7 +95,7 @@ public class ProjectController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<ProjectDto> detalhar(@PathVariable("id") Long id){
+	public ResponseEntity<ProjectDto> detail(@PathVariable("id") Long id){
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 				
 		Optional<Project> project = projectRepository.findByIdAndUser(id,logado);
@@ -109,7 +109,7 @@ public class ProjectController {
 	 
 	@PostMapping
 	@Transactional
-	public ResponseEntity<ProjectDto> cadastrar(@RequestBody @Valid CadastroProjetoForm projectForm, 
+	public ResponseEntity<ProjectDto> register(@RequestBody @Valid CadastroProjetoForm projectForm, 
 			UriComponentsBuilder uriBuilder){
 		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
@@ -152,7 +152,7 @@ public class ProjectController {
 	
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<ProjectDto> atualizar(@PathVariable("id") Long id, @RequestBody @Valid CadastroProjetoForm projectForm){
+	public ResponseEntity<ProjectDto> update(@PathVariable("id") Long id, @RequestBody @Valid CadastroProjetoForm projectForm){
 		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	
 		Optional<Project> optionalProject = projectRepository.findByIdAndUser(id,logged);
@@ -161,7 +161,7 @@ public class ProjectController {
 			
 			Project projectDtoAux = projectForm.converter( taskRepository,logged);
 			
-			if(projectService.tasksAreWithinTimeOfProject(optionalProject.get(), projectDtoAux.getTasks()) && projectService.finalIsGreaterThanInitialDate(optionalProject.get())) {
+			if(projectService.tasksAreWithinTimeOfProject( projectDtoAux, projectDtoAux.getTasks()) && projectService.finalIsGreaterThanInitialDate( projectDtoAux)) {
 			
 				projectService.deleteTasksByProjectOrDesvinculateAndUser(optionalProject.get(), logged, OperationType.EDIT);
 				
@@ -198,7 +198,7 @@ public class ProjectController {
 	
 	@DeleteMapping("/{id}")
 	@Transactional
-	public ResponseEntity<?> deletar(@PathVariable("id") Long id){
+	public ResponseEntity<?> delete(@PathVariable("id") Long id){
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		Optional<Project> project = projectRepository.findByIdAndUser(id,logado);

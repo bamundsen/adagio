@@ -77,7 +77,7 @@ const FormProjetos = () => {
   const [isWarningToVerifyOpen, setIsWarningToVerifiyOpen] = useState(false);
 
   const [errorMessageWarningModal, setErrorMessageWarningModal] = useState(
-    "Alguns campos estão com valores incorretos. É preciso revisar os campos."
+    "Alguns campos estavam com valores incorretos. É preciso revisar os campos."
   );
 
   useEffect(() => {
@@ -161,7 +161,6 @@ const FormProjetos = () => {
   };
 
   const onChangeStartDate = (date: Date) => {
-    console.log(date, endDateAux);
     if (
       (date.getDate() <= endDateAux.getDate() &&
         date.getMonth() <= endDateAux.getMonth() &&
@@ -323,13 +322,12 @@ const FormProjetos = () => {
       !isToShowDescriptionWarning &&
       !isToShowTitleWarning
     ) {
-      console.log(!isToShowEndHourWarning, !isToShowStartHourWarning);
       try {
         if (isToEdit === false) {
           const responseToOperation = await createProject(
             projectToRegisterOrEdit
           );
-          console.log(responseToOperation);
+
           if (
             responseToOperation?.response?.data &&
             responseToOperation.response.data.thereIsError.trim() !== "" &&
@@ -366,16 +364,21 @@ const FormProjetos = () => {
             setModalRegisterWasEditedOpen(true);
             setIsToRestartFormAgain(!isToRestartFormAgain);
           }
-          console.log(responseToOperation);
         }
         setTriggerToSearchProjectsAgainAfterRegister(
           !triggerToSearchProjectsAgainAfterRegister
         );
       } catch (error: any) {
         setIsWarningToVerifiyOpen(true);
+        if (isToEdit) {
+          setIsToRestartFormAgain(!isToRestartFormAgain);
+        }
       }
     } else {
       setIsWarningToVerifiyOpen(true);
+      if (isToEdit) {
+        setIsToRestartFormAgain(!isToRestartFormAgain);
+      }
     }
   };
 

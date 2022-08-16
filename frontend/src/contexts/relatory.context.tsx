@@ -65,10 +65,15 @@ export const RelatoryProvider = ({ children }: { children: JSX.Element }) => {
       } else if (
         exportCalendarType === ExportCalendarType.EXPORT_PROJECTS_OF_PAGE
       ) {
-        getProjectsByPage().then((response: any) => {
-          setTriggerIsToRequestAndGenerateExcel(false);
-          setIsToDownload(false);
-        });
+        getProjectsByPage()
+          .then((response: any) => {
+            response[1].click();
+            setTimeout(() => window.URL.revokeObjectURL(response[2]), 0);
+          })
+          .then(() => {
+            setTriggerIsToRequestAndGenerateExcel(false);
+            setIsToDownload(false);
+          });
       } else if (
         exportCalendarType ===
         ExportCalendarType.EXPORT_TASKS_OF_PAGE_AND_PROJECT

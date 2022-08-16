@@ -81,10 +81,10 @@ export const RelatoryApi = () => ({
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("download", `projects_by_page.xlsx`);
-      link.click();
+      // link.click();
 
-      setTimeout(() => window.URL.revokeObjectURL(url), 0);
-      return response.data;
+      // setTimeout(() => window.URL.revokeObjectURL(url), 0);
+      return [response.data, link, url];
     } catch (error) {
       console.log(error);
     }
