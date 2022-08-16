@@ -52,7 +52,9 @@ public class RelatoryService {
 		}
 		
 		relatory.setQuantityOfElements(tasksDto.size());
-		relatory.setTotalHours(returnTotalHours(tasksDto));
+		relatory.setTotalHours(returnTotalHoursOrMinutes(tasksDto,TimeUnit.HOURS));
+		relatory.setTotalMinutes(returnTotalHoursOrMinutes(tasksDto,TimeUnit.MINUTES));
+		relatory.setTotalSeconds(returnTotalHoursOrMinutes(tasksDto,TimeUnit.SECONDS));
 		relatory.setTasks(tasksDto);
 		
 		return relatory;
@@ -68,8 +70,9 @@ public class RelatoryService {
 		List<TaskDto> tasksDto = Task.converter(tasks);
 		
 		relatory.setQuantityOfElements(tasksDto.size());
-		relatory.setTotalHours(returnTotalHours(tasksDto));
-		
+		relatory.setTotalHours(returnTotalHoursOrMinutes(tasksDto, TimeUnit.HOURS));
+		relatory.setTotalMinutes(returnTotalHoursOrMinutes(tasksDto, TimeUnit.MINUTES));
+		relatory.setTotalSeconds(returnTotalHoursOrMinutes(tasksDto, TimeUnit.SECONDS));
 		relatory.setTasks(tasksDto);
 		return relatory;
 		
@@ -87,7 +90,9 @@ public class RelatoryService {
 				List<TaskDto> tasksDto = Task.converter(tasks.getContent());
 				
 				relatory.setQuantityOfElements(tasksDto.size());
-				relatory.setTotalHours(returnTotalHours(tasksDto));
+				relatory.setTotalHours(returnTotalHoursOrMinutes(tasksDto,TimeUnit.HOURS));
+				relatory.setTotalMinutes(returnTotalHoursOrMinutes(tasksDto,TimeUnit.MINUTES));
+				relatory.setTotalSeconds(returnTotalHoursOrMinutes(tasksDto,TimeUnit.SECONDS));
 				relatory.setProjectName(project.get().getTitle());
 				relatory.setPage(pagination.getPageNumber()+1);
 				relatory.setTasks(tasksDto);
@@ -104,46 +109,68 @@ public class RelatoryService {
 		List<ProjectDto> projectsDto = Project.converter(projects.getContent());
 		
 		relatory.setQuantityOfElements(projectsDto.size());
-		relatory.setTotalHours(returnTotalHoursProjects(projectsDto));
+		relatory.setTotalHours(returnTotalHoursOrMinutesOfProjects(projectsDto,TimeUnit.HOURS));
+		relatory.setTotalMinutes(returnTotalHoursOrMinutesOfProjects(projectsDto,TimeUnit.MINUTES));
+		relatory.setTotalSeconds(returnTotalHoursOrMinutesOfProjects(projectsDto,TimeUnit.SECONDS));
 		relatory.setPage(pagination.getPageNumber()+1);
 		relatory.setProjects(projectsDto);
 		
 		return relatory;
 	}
 	
-	public Long returnTotalHours(List<TaskDto> tasks) {
-		Long totalHours =(long) 0;
-		
+	private Long returnTotalHoursOrMinutes(List<TaskDto> tasks,TimeUnit timeUnit) {
+		Long totalSeconds =(long) 0;
+		Long valueToReturn = (long) 0;
+		 
 		for(TaskDto t:tasks) {
 			if(t.getDateTimeEnd().isAfter(t.getDateTimeStart())) {
 				LocalDateTime tempDateTime = LocalDateTime.from(t.getDateTimeStart());
 							
-				totalHours += tempDateTime.until(t.getDateTimeEnd(), ChronoUnit.HOURS);
-				
-				System.out.println(tempDateTime.until(t.getDateTimeEnd(), ChronoUnit.DAYS));
+				totalSeconds += tempDateTime.until(t.getDateTimeEnd(), ChronoUnit.SECONDS);
+			
 	
 			}
 		}
 		
-		return totalHours;
+		if(timeUnit == TimeUnit.HOURS) {
+			valueToReturn = totalSeconds / 3600;
+		} else if(timeUnit == TimeUnit.MINUTES) {
+			valueToReturn = (totalSeconds - ((totalSeconds / 3600) * 3600 )) / 60;
+		} else if(timeUnit == TimeUnit.SECONDS) {
+			valueToReturn = totalSeconds % 60;
+		}
+		
+		return valueToReturn;
 	}
 	
-	public Long returnTotalHoursProjects(List<ProjectDto> projects) {
-		Long totalHours =(long) 0;
+	private Long returnTotalHoursOrMinutesOfProjects(List<ProjectDto> projects,TimeUnit timeUnit) {
+		Long totalSeconds =(long) 0;
+		Long valueToReturn = (long) 0;
 		
 		for(ProjectDto p:projects) {
 			if(p.getDateTimeEnd().isAfter(p.getDateTimeStart())) {
 				LocalDateTime tempDateTime = LocalDateTime.from(p.getDateTimeStart());
 							
-				totalHours += tempDateTime.until(p.getDateTimeEnd(), ChronoUnit.HOURS);
+				totalSeconds += tempDateTime.until(p.getDateTimeEnd(), ChronoUnit.SECONDS);
 				
 			}
 		}
 		
-		return totalHours;
+		if(timeUnit == TimeUnit.HOURS) {
+			valueToReturn = totalSeconds / 3600;
+		} else if(timeUnit == TimeUnit.MINUTES) {
+			valueToReturn = (totalSeconds - ((totalSeconds / 3600 ) * 3600)) / 60;
+		} else if(timeUnit == TimeUnit.SECONDS) {
+			valueToReturn = totalSeconds % 60;
+		}
+		
+		return valueToReturn;
+		
 	}
 	
-	
+	enum TimeUnit {
+		MINUTES, HOURS,SECONDS
+	}
 	/*
 	public String returnDurationMessage(List<TaskDto> tasks) {
 		String message = "";

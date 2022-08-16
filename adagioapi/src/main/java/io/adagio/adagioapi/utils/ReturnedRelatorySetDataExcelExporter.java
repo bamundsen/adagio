@@ -74,7 +74,7 @@ public class ReturnedRelatorySetDataExcelExporter {
 	      Cell cellTotalHours = metaInformationRowHours.createCell(0);
 	      cellTotalHours.setCellValue("Total de horas: ");
 	      Cell cellTotalHoursInformation = metaInformationRowHours.createCell(1);
-	      cellTotalHoursInformation.setCellValue(relatory.getTotalHours());
+	      cellTotalHoursInformation.setCellValue(relatory.getMessageDuration());
 	        
 	      if(paginated == PaginatedSetOrNot.PAGINATED) {
 	    	  Row metaInformationProjectTitle = sheet.createRow(acumulatedRows++);
@@ -165,7 +165,7 @@ public class ReturnedRelatorySetDataExcelExporter {
 		      Cell cellTotalHours = metaInformationRowHours.createCell(0);
 		      cellTotalHours.setCellValue("Total de horas: ");
 		      Cell cellTotalHoursInformation = metaInformationRowHours.createCell(1);
-		      cellTotalHoursInformation.setCellValue(relatory.getTotalHours());
+		      cellTotalHoursInformation.setCellValue(relatory.getMessageDuration());
 		      
 		      if(paginated == PaginatedSetOrNot.PAGINATED) {
 		    	  Row pageRowInformation = sheet.createRow(acumulatedRows++);
