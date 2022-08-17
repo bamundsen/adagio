@@ -34,7 +34,15 @@ public class AuxInformationService {
 		
 		List<Task> tasks = taskRepository.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeEndLessThanEqual(logged, todayBegin,todayEnd);
 		
-		quantityOfTasksAuxDto.setQuantityOfTasks(tasks.size());
+		int howManyAreNotFinished = 0;
+		
+		for(Task task : tasks) {
+			if(!task.isFinishedStatus()) {
+				howManyAreNotFinished++;
+			}
+		}
+		
+		quantityOfTasksAuxDto.setQuantityOfTasks(howManyAreNotFinished);
 		
 		return ResponseEntity.ok().body(quantityOfTasksAuxDto);
 	}
