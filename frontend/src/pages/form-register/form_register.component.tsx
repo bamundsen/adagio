@@ -34,17 +34,18 @@ const FormRegister: FC = () => {
   const [isToShowUniqueLoginWarning, setIsToShowUniqueLoginWarning] =
     useState(false);
 
-  const [warningMessageCPF, setWarningMessageCpf] = useState(
+  const [warningMessageCPF, setWarningMessageCPF] = useState(
     "Campo CPF com valor inválido. Esse campo deve conter apenas números."
   );
   const [warningMessagePassword, setWarningMessagePassword] = useState(
-    "Senha deve conter 8 caracteres ,incluindo pelo menos 1 letra maiúscula, 1 numérico e 1 especial."
+    "Senha deve conter de 8 a 30 caracteres ,incluindo pelo menos 1 letra maiúscula, 1 letra minúscula, 1 numérico e 1 especial."
   );
   const [warningMessageConfirmPassword, setWarningMessageConfirmPassword] =
     useState(" Confirmação de senha deve corresponder à senha");
   const [warningMessagePhone, setWarningMessagePhone] = useState(
-    "Número de celular: 10 ou 11 números."
+    "Número de celular: somente 10 ou 11 números, incluindo DDD"
   );
+
   const [warningMessageEmail, setWarningMessageEmail] =
     useState("Email inválido.");
   const [warningMessageUniqueLogin, setWarningMessageUniqueLogin] =
@@ -108,6 +109,7 @@ const FormRegister: FC = () => {
   const onChangeCellphone = (ev: any) => {
     const regCellphone = new RegExp(/^[0-9]{10,11}$/);
     const value = ev.target.value.trim();
+
     if (value.match(regCellphone)) {
       setIsToShowCellphoneWarning(false);
     } else {
@@ -177,10 +179,20 @@ const FormRegister: FC = () => {
         cpf,
         password
       );
-      console.log(responseStatus);
-      if (responseStatus?.status === 201)
+      console.log(responseStatus?.response?.data);
+      if (responseStatus?.status === 201) {
         alert("Usuário cadastrado com sucesso !");
-      else alert("Houve um erro ! Verifique os valores dos campos.");
+      } else {
+        let loginAcumulator = "";
+        for (let i = 0; i < responseStatus?.response?.data.length; i++) {
+          if (responseStatus?.response?.data[i].campo === "login") {
+            setIsToShowUniqueLoginWarning(true);
+            setWarningMessageUniqueLogin(
+              responseStatus?.response?.data[i].mensagem
+            );
+          }
+        }
+      }
     }
   };
 
@@ -335,7 +347,7 @@ const FormRegister: FC = () => {
                       value={phone}
                       onChange={onChangeCellphone}
                       type="tel"
-                      placeholder="DDXXXXXXXX ou DDXXXXXXXXX"
+                      placeholder="10 ou 11 números, incluindo DDD."
                     />
                   </InputGroup>
                   {isToShowCellphoneWarning ? (
