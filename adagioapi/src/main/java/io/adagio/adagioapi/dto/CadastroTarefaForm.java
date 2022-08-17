@@ -20,7 +20,6 @@ import io.adagio.adagioapi.models.User;
 import io.adagio.adagioapi.repositories.ProjectRepository;
 import io.adagio.adagioapi.repositories.TaskRepository;
 import io.adagio.adagioapi.services.TaskService;
-import io.adagio.adagioapi.validator.TaskEndTime;
 
 public class CadastroTarefaForm {
 

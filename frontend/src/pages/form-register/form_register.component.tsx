@@ -25,6 +25,9 @@ const FormRegister: FC = () => {
   const [confirmedPassword, setConfirmedPassword] = useState("");
 
   const [isToShowCpfWarning, setIsToShowCpfWarning] = useState(false);
+  const [isToShowPasswordWarning, setIsToShowPasswordWarning] = useState(false);
+  const [isToShowConfirmPasswordWarning, setIsToShowConfirmPasswordWarning] =
+    useState(false);
 
   const cleanFields = () => {
     setName("");
@@ -69,16 +72,50 @@ const FormRegister: FC = () => {
     return true;
   }
 
+  const passwordIsValid = (passwordValue: string) => {
+    const regPassword = new RegExp(
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?([^\w\s]|[_])).{8,30}$/
+    );
+
+    if (passwordValue.match(regPassword)) {
+      return true;
+    }
+
+    return false;
+  };
+
   const onChangeCpf = (ev: any) => {
+    const regCpf = new RegExp("^\\d{3}\\.?\\d{3}\\.?\\d{3}-?\\d{2}$");
+
     if (
       cpfIsValid(ev.target.value.trim()) &&
-      ev.target.value.trim().match(/^\d{3}\.?\d{3}\.?\d{3}\-?\d{2}$/)
+      ev.target.value.trim().match(regCpf)
     ) {
       setIsToShowCpfWarning(false);
     } else {
       setIsToShowCpfWarning(true);
     }
-    setCpf(ev.target.value);
+    setCpf(ev.target.value.trim());
+  };
+
+  const onChangeConfirmPassword = (ev: any) => {
+    if (ev.target.value.trim() === password) {
+      setIsToShowConfirmPasswordWarning(false);
+    } else {
+      setIsToShowConfirmPasswordWarning(true);
+    }
+
+    setConfirmedPassword(ev.target.value.trim());
+  };
+
+  const onChangePassword = (ev: any) => {
+    const value = ev.target.value.trim();
+    if (passwordIsValid(value)) {
+      setIsToShowPasswordWarning(false);
+    } else {
+      setIsToShowPasswordWarning(true);
+    }
+    setPassword(value);
   };
 
   const onSubmit = async (ev: any) => {
@@ -188,9 +225,12 @@ const FormRegister: FC = () => {
                   {isToShowCpfWarning ? (
                     <span
                       style={returnWarningStyles()}
-                      title={"Campo CPF com valor inválido."}
+                      title={
+                        "Campo CPF com valor inválido. Esse campo deve conter apenas números."
+                      }
                     >
-                      Campo CPF com valor inválido.
+                      Campo CPF com valor inválido. Esse campo deve conter
+                      apenas números.
                     </span>
                   ) : null}
                 </Form.Group>
@@ -269,13 +309,22 @@ const FormRegister: FC = () => {
                     <Form.Control
                       name="password"
                       value={password}
-                      onChange={(ev: any) => {
-                        setPassword(ev.target.value);
-                      }}
+                      onChange={onChangePassword}
                       type="password"
                       placeholder="Crie uma senha para acessar o sistema"
                     />
                   </InputGroup>
+                  {isToShowPasswordWarning ? (
+                    <span
+                      style={returnWarningStyles()}
+                      title={
+                        "Senha deve conter 8 caracteres ,incluindo letra maiúscula,minúscula, numérico e especial."
+                      }
+                    >
+                      Senha deve conter 8 caracteres ,incluindo pelo menos 1
+                      letra maiúscula, 1 numérico e 1 especial.
+                    </span>
+                  ) : null}
                 </Form.Group>
 
                 <Form.Group
@@ -290,13 +339,19 @@ const FormRegister: FC = () => {
                     <Form.Control
                       name="confirm_password"
                       value={confirmedPassword}
-                      onChange={(ev: any) => {
-                        setConfirmedPassword(ev.target.value);
-                      }}
+                      onChange={onChangeConfirmPassword}
                       type="password"
                       placeholder="Confirme a senha informada"
                     />
                   </InputGroup>
+                  {isToShowConfirmPasswordWarning ? (
+                    <span
+                      style={returnWarningStyles()}
+                      title={"Confirmação de senha deve corresponder à senha."}
+                    >
+                      Confirmação de senha deve corresponder à senha
+                    </span>
+                  ) : null}
                 </Form.Group>
               </div>
 
