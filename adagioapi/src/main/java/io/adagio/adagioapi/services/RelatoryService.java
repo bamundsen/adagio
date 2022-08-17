@@ -37,7 +37,7 @@ public class RelatoryService {
 		ReturnedRelatoryTaskSetData relatory = new ReturnedRelatoryTaskSetData();
 		List<TaskDto> tasksDto = new ArrayList<TaskDto>();
 		
-		List<Task> tasks = taskRepository.findByUserAndProjectIsNull(logged);
+		List<Task> tasks = taskRepository.findByUser(logged);
 		
 		for(Task task : tasks) {
 			
