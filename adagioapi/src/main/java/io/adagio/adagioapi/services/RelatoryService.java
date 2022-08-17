@@ -63,7 +63,7 @@ public class RelatoryService {
 	public ReturnedRelatoryTaskSetData getByDay(User logged, LocalDateTime startDate, LocalDateTime endDate, RelatoryBy relatoryBy) {
 		ReturnedRelatoryTaskSetData relatory = new ReturnedRelatoryTaskSetData();
 		
-		List<Task> tasks = taskRepository.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanAndProjectIsNull(logged,
+		List<Task> tasks = taskRepository.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanEqual(logged,
 				startDate,
 				endDate);
 		
