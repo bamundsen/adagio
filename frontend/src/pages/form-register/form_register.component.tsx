@@ -31,8 +31,7 @@ const FormRegister: FC = () => {
   const [isToShowCellphoneWarning, setIsToShowCellphoneWarning] =
     useState(false);
   const [isToShowEmailWarning, setIsToShowEmailWarning] = useState(false);
-  const [isToShowUniqueLoginWarning, setIsToShowUniqueLoginWarning] =
-    useState(false);
+  const [isToShowLoginWarning, setIsToShowLoginWarning] = useState(false);
 
   const [warningMessageCPF, setWarningMessageCPF] = useState(
     "Campo CPF com valor inválido. Esse campo deve conter apenas números."
@@ -48,8 +47,7 @@ const FormRegister: FC = () => {
 
   const [warningMessageEmail, setWarningMessageEmail] =
     useState("Email inválido.");
-  const [warningMessageUniqueLogin, setWarningMessageUniqueLogin] =
-    useState("");
+  const [warningMessageLogin, setWarningMessageLogin] = useState("");
 
   const cleanFields = () => {
     setName("");
@@ -114,6 +112,9 @@ const FormRegister: FC = () => {
       setIsToShowCellphoneWarning(false);
     } else {
       setIsToShowCellphoneWarning(true);
+      setWarningMessagePhone(
+        "Número de celular: somente 10 ou 11 números, incluindo DDD"
+      );
     }
 
     setPhone(value);
@@ -126,20 +127,40 @@ const FormRegister: FC = () => {
       setIsToShowEmailWarning(false);
     } else {
       setIsToShowEmailWarning(true);
+      setWarningMessageEmail("Email inválido.");
     }
 
     setEmail(value);
   };
 
   const onChangeCpf = (ev: any) => {
+    const regReplaceChar = new RegExp("-", "g");
+    const regReplaceChar2 = new RegExp(".", "g");
+
     const regCpf = new RegExp("^\\d{3}\\.?\\d{3}\\.?\\d{3}-?\\d{2}$");
-    const value = ev.target.value.trim();
+
+    const value = ev.target.value
+      .trim()
+      .split(".")
+      .join("")
+      .split("-")
+      .join("");
+
+    console.log(value);
     if (cpfIsValid(value) && value.match(regCpf)) {
       setIsToShowCpfWarning(false);
     } else {
       setIsToShowCpfWarning(true);
+      setWarningMessageCPF(
+        "Campo CPF com valor inválido. Esse campo deve conter apenas números."
+      );
     }
-    setCpf(value);
+
+    if (cpfIsValid(value) && value.match(regCpf)) {
+      setCpf(value);
+    } else {
+      setCpf(ev.target.value.trim());
+    }
   };
 
   const onChangeConfirmPassword = (ev: any) => {
@@ -159,8 +180,24 @@ const FormRegister: FC = () => {
       setIsToShowPasswordWarning(false);
     } else {
       setIsToShowPasswordWarning(true);
+      setWarningMessagePassword(
+        "Senha deve conter de 8 a 30 caracteres ,incluindo pelo menos 1 letra maiúscula, 1 letra minúscula, 1 numérico e 1 especial."
+      );
     }
     setPassword(value);
+  };
+
+  const onChangeLogin = (ev: any) => {
+    const value = ev.target.value.trim();
+
+    if (value.length < 8) {
+      setIsToShowLoginWarning(true);
+      setWarningMessageLogin("Login deve conter de 8 a 30 caracteres.");
+    } else {
+      setIsToShowLoginWarning(false);
+    }
+
+    setUsername(value);
   };
 
   const onSubmit = async (ev: any) => {
@@ -179,18 +216,54 @@ const FormRegister: FC = () => {
         cpf,
         password
       );
-      console.log(responseStatus?.response?.data);
+
       if (responseStatus?.status === 201) {
         alert("Usuário cadastrado com sucesso !");
       } else {
-        let loginAcumulator = "";
+        let loginWarningAcumulator = "";
+        let cpfWarningAcumulator = "";
+        let passwordWarningAcumulator = "";
+        let emailWarningAcumulator = "";
+        let phoneWarningAcumulator = "";
+
         for (let i = 0; i < responseStatus?.response?.data.length; i++) {
-          if (responseStatus?.response?.data[i].campo === "login") {
-            setIsToShowUniqueLoginWarning(true);
-            setWarningMessageUniqueLogin(
-              responseStatus?.response?.data[i].mensagem
-            );
+          const errorFromBackend = responseStatus?.response?.data[i];
+          if (errorFromBackend.campo === "login") {
+            loginWarningAcumulator += ` ${responseStatus?.response?.data[i].mensagem}`;
+          } else if (errorFromBackend.campo === "cpf") {
+            cpfWarningAcumulator += ` ${responseStatus?.response?.data[i].mensagem}`;
+          } else if (errorFromBackend.campo === "password") {
+            passwordWarningAcumulator += ` ${responseStatus?.response?.data[i].mensagem}`;
+          } else if (errorFromBackend.campo === "email") {
+            emailWarningAcumulator += ` ${responseStatus?.response?.data[i].mensagem}`;
+          } else if (errorFromBackend.campo === "phone") {
+            phoneWarningAcumulator += ` ${responseStatus?.response?.data[i].mensagem}`;
           }
+        }
+
+        if (loginWarningAcumulator.trim() !== "") {
+          setIsToShowLoginWarning(true);
+          setWarningMessageLogin(loginWarningAcumulator);
+        }
+
+        if (cpfWarningAcumulator.trim() !== "") {
+          setIsToShowCpfWarning(true);
+          setWarningMessageCPF(cpfWarningAcumulator);
+        }
+
+        if (passwordWarningAcumulator.trim() !== "") {
+          setIsToShowPasswordWarning(true);
+          setWarningMessagePassword(passwordWarningAcumulator);
+        }
+
+        if (emailWarningAcumulator.trim() !== "") {
+          setIsToShowEmailWarning(true);
+          setWarningMessageEmail(emailWarningAcumulator);
+        }
+
+        if (phoneWarningAcumulator.trim() !== "") {
+          setIsToShowCellphoneWarning(true);
+          setWarningMessagePhone(phoneWarningAcumulator);
         }
       }
     }
@@ -247,24 +320,22 @@ const FormRegister: FC = () => {
                     width: `${windowDimensions.width > 580 ? "48%" : "100%"}`,
                   }}
                 >
-                  Nome de usuário:
+                  Nome de usuário (login):
                   <InputGroup className={"mt-2"}>
                     <Form.Control
                       type="text"
                       value={username}
-                      onChange={(ev: any) => {
-                        setUsername(ev.target.value);
-                      }}
+                      onChange={onChangeLogin}
                       name="username"
                       placeholder="Escolha um nome de usuário"
                     />
                   </InputGroup>
-                  {isToShowUniqueLoginWarning ? (
+                  {isToShowLoginWarning ? (
                     <span
                       style={returnWarningStyles()}
-                      title={`${warningMessageUniqueLogin}`}
+                      title={`${warningMessageLogin}`}
                     >
-                      {warningMessageUniqueLogin}
+                      {warningMessageLogin}
                     </span>
                   ) : null}
                 </Form.Group>
