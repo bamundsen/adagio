@@ -6,10 +6,6 @@ export const UserApi = () => ({
     try {
       const response = await api.post("/auth/refresh");
 
-      // api.defaults.headers.common[
-      //   "Authorization"
-      // ] = `Bearer ${response.data.accessToken}`;
-
       return response;
     } catch (erro) {
       return erro;
@@ -41,8 +37,8 @@ export const UserApi = () => ({
     try {
       const response = await api.post("/auth/register", user);
       return response;
-    } catch (erro) {
-      console.log(erro);
+    } catch (error) {
+      return error;
     }
   },
 

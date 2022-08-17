@@ -28,6 +28,27 @@ const FormRegister: FC = () => {
   const [isToShowPasswordWarning, setIsToShowPasswordWarning] = useState(false);
   const [isToShowConfirmPasswordWarning, setIsToShowConfirmPasswordWarning] =
     useState(false);
+  const [isToShowCellphoneWarning, setIsToShowCellphoneWarning] =
+    useState(false);
+  const [isToShowEmailWarning, setIsToShowEmailWarning] = useState(false);
+  const [isToShowUniqueLoginWarning, setIsToShowUniqueLoginWarning] =
+    useState(false);
+
+  const [warningMessageCPF, setWarningMessageCpf] = useState(
+    "Campo CPF com valor inválido. Esse campo deve conter apenas números."
+  );
+  const [warningMessagePassword, setWarningMessagePassword] = useState(
+    "Senha deve conter 8 caracteres ,incluindo pelo menos 1 letra maiúscula, 1 numérico e 1 especial."
+  );
+  const [warningMessageConfirmPassword, setWarningMessageConfirmPassword] =
+    useState(" Confirmação de senha deve corresponder à senha");
+  const [warningMessagePhone, setWarningMessagePhone] = useState(
+    "Número de celular: 10 ou 11 números."
+  );
+  const [warningMessageEmail, setWarningMessageEmail] =
+    useState("Email inválido.");
+  const [warningMessageUniqueLogin, setWarningMessageUniqueLogin] =
+    useState("");
 
   const cleanFields = () => {
     setName("");
@@ -84,28 +105,50 @@ const FormRegister: FC = () => {
     return false;
   };
 
+  const onChangeCellphone = (ev: any) => {
+    const regCellphone = new RegExp(/^[0-9]{10,11}$/);
+    const value = ev.target.value.trim();
+    if (value.match(regCellphone)) {
+      setIsToShowCellphoneWarning(false);
+    } else {
+      setIsToShowCellphoneWarning(true);
+    }
+
+    setPhone(value);
+  };
+
+  const onChangeEmail = (ev: any) => {
+    const regEmail = new RegExp(/\S+@\S+\.\S+/);
+    const value = ev.target.value.trim();
+    if (value.match(regEmail)) {
+      setIsToShowEmailWarning(false);
+    } else {
+      setIsToShowEmailWarning(true);
+    }
+
+    setEmail(value);
+  };
+
   const onChangeCpf = (ev: any) => {
     const regCpf = new RegExp("^\\d{3}\\.?\\d{3}\\.?\\d{3}-?\\d{2}$");
-
-    if (
-      cpfIsValid(ev.target.value.trim()) &&
-      ev.target.value.trim().match(regCpf)
-    ) {
+    const value = ev.target.value.trim();
+    if (cpfIsValid(value) && value.match(regCpf)) {
       setIsToShowCpfWarning(false);
     } else {
       setIsToShowCpfWarning(true);
     }
-    setCpf(ev.target.value.trim());
+    setCpf(value);
   };
 
   const onChangeConfirmPassword = (ev: any) => {
-    if (ev.target.value.trim() === password) {
+    const value = ev.target.value.trim();
+    if (value === password) {
       setIsToShowConfirmPasswordWarning(false);
     } else {
       setIsToShowConfirmPasswordWarning(true);
     }
 
-    setConfirmedPassword(ev.target.value.trim());
+    setConfirmedPassword(value);
   };
 
   const onChangePassword = (ev: any) => {
@@ -123,7 +166,7 @@ const FormRegister: FC = () => {
     console.log(name, username, cpf, email, phone, password, confirmedPassword);
 
     if (password !== confirmedPassword) {
-      alert("Os valoress de senha e confirmação de senha estão diferentes !");
+      alert("Os valores de senha e confirmação de senha estão diferentes !");
     } else {
       const login = username;
       const responseStatus = await register(
@@ -134,8 +177,9 @@ const FormRegister: FC = () => {
         cpf,
         password
       );
-
-      if (responseStatus === 201) alert("Usuário cadastrado com sucesso !");
+      console.log(responseStatus);
+      if (responseStatus?.status === 201)
+        alert("Usuário cadastrado com sucesso !");
       else alert("Houve um erro ! Verifique os valores dos campos.");
     }
   };
@@ -203,6 +247,14 @@ const FormRegister: FC = () => {
                       placeholder="Escolha um nome de usuário"
                     />
                   </InputGroup>
+                  {isToShowUniqueLoginWarning ? (
+                    <span
+                      style={returnWarningStyles()}
+                      title={`${warningMessageUniqueLogin}`}
+                    >
+                      {warningMessageUniqueLogin}
+                    </span>
+                  ) : null}
                 </Form.Group>
 
                 <Form.Group
@@ -225,12 +277,9 @@ const FormRegister: FC = () => {
                   {isToShowCpfWarning ? (
                     <span
                       style={returnWarningStyles()}
-                      title={
-                        "Campo CPF com valor inválido. Esse campo deve conter apenas números."
-                      }
+                      title={`${warningMessageCPF}`}
                     >
-                      Campo CPF com valor inválido. Esse campo deve conter
-                      apenas números.
+                      {warningMessageCPF}
                     </span>
                   ) : null}
                 </Form.Group>
@@ -257,13 +306,19 @@ const FormRegister: FC = () => {
                     <Form.Control
                       type="email"
                       value={email}
-                      onChange={(ev: any) => {
-                        setEmail(ev.target.value);
-                      }}
+                      onChange={onChangeEmail}
                       name="email"
                       placeholder="Um email que seja seu e que você possa acessar"
                     />
                   </InputGroup>
+                  {isToShowEmailWarning ? (
+                    <span
+                      style={returnWarningStyles()}
+                      title={`${warningMessageEmail}`}
+                    >
+                      {warningMessageEmail}
+                    </span>
+                  ) : null}
                 </Form.Group>
 
                 <Form.Group
@@ -278,13 +333,19 @@ const FormRegister: FC = () => {
                     <Form.Control
                       name="phone_number"
                       value={phone}
-                      onChange={(ev: any) => {
-                        setPhone(ev.target.value);
-                      }}
+                      onChange={onChangeCellphone}
                       type="tel"
-                      placeholder="Número de telefone fixo ou celular"
+                      placeholder="DDXXXXXXXX ou DDXXXXXXXXX"
                     />
                   </InputGroup>
+                  {isToShowCellphoneWarning ? (
+                    <span
+                      style={returnWarningStyles()}
+                      title={`${warningMessagePhone}`}
+                    >
+                      {warningMessagePhone}
+                    </span>
+                  ) : null}
                 </Form.Group>
               </div>
 
@@ -317,12 +378,9 @@ const FormRegister: FC = () => {
                   {isToShowPasswordWarning ? (
                     <span
                       style={returnWarningStyles()}
-                      title={
-                        "Senha deve conter 8 caracteres ,incluindo letra maiúscula,minúscula, numérico e especial."
-                      }
+                      title={`${warningMessagePassword}`}
                     >
-                      Senha deve conter 8 caracteres ,incluindo pelo menos 1
-                      letra maiúscula, 1 numérico e 1 especial.
+                      {warningMessagePassword}
                     </span>
                   ) : null}
                 </Form.Group>
@@ -347,9 +405,9 @@ const FormRegister: FC = () => {
                   {isToShowConfirmPasswordWarning ? (
                     <span
                       style={returnWarningStyles()}
-                      title={"Confirmação de senha deve corresponder à senha."}
+                      title={`${warningMessageConfirmPassword}`}
                     >
-                      Confirmação de senha deve corresponder à senha
+                      {warningMessageConfirmPassword}
                     </span>
                   ) : null}
                 </Form.Group>

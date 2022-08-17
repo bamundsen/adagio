@@ -19,7 +19,7 @@ export type AuthContextType = {
     password: string,
     phone: string,
     cpf: string
-  ) => Promise<undefined | number>;
+  ) => Promise<any>;
   signout: () => void;
 };
 
@@ -97,9 +97,9 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     password: string
   ) => {
     const user: User = { login, name, phone, email, cpf, password };
-    const response = await apiUser.register(user);
+    const response: any = await apiUser.register(user);
 
-    return response?.status;
+    return response;
   };
 
   const signout = async () => {
