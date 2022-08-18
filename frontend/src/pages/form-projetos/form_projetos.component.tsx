@@ -343,7 +343,8 @@ const FormProjetos = () => {
             responseToOperation.status === 201
           ) {
             setModalRegisterWasSaveOpen(true);
-            setIsToRestartFormAgain(!isToRestartFormAgain);
+            setIdsTasks([]);
+            setAuxSelectedTasks([]);
           }
         } else if (id !== undefined) {
           const responseToOperation = await editProject(
@@ -354,7 +355,7 @@ const FormProjetos = () => {
             responseToOperation?.response?.data &&
             responseToOperation.response.data.thereIsError.trim() !== "" &&
             responseToOperation &&
-            responseToOperation.status !== 201
+            responseToOperation.status !== 200
           ) {
             setErrorMessageWarningModal(
               responseToOperation.response.data.thereIsError

@@ -310,10 +310,27 @@ const FormTarefas = () => {
           if (responseToOperation?.status === 200) {
             setModalRegisterWasEditedOpen(true);
           } else {
-            setMenssagerErro(
-              responseToOperation?.response?.data?.excetpionMessage
-            );
-            setIsWarningToVerifiyOpen(true);
+            if (
+              responseToOperation?.response?.data?.excetpionMessage !==
+              undefined
+            ) {
+              setMenssagerErro(
+                responseToOperation?.response?.data?.excetpionMessage
+              );
+              setIsWarningToVerifiyOpen(true);
+            } else {
+              for (
+                let i = 0;
+                i < responseToOperation?.response?.data?.length;
+                i++
+              ) {
+                const error = responseToOperation?.response?.data[i];
+                console.log(error);
+                if (error.campo === "title") {
+                  setIsToShowTitleWarning(true);
+                }
+              }
+            }
           }
         }
       } catch (erro) {

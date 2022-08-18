@@ -36,6 +36,14 @@ public class TaskService {
 		
 		return true;
 	}
+	
+	// FUNÇÃO A SER MELHORADA
+	private boolean thereAreConflitctBetweenTasksHours(Task taskToCompare, Task taskElement) {
+		return (taskToCompare.getDateTimeStart().isEqual(taskElement.getDateTimeStart())) ||
+				(taskToCompare.getDateTimeEnd().isEqual(taskElement.getDateTimeEnd())) ||
+				(taskToCompare.getDateTimeStart().isBefore(taskElement.getDateTimeStart()) );
+	}
+	
 	public boolean validTaskTime (Task task, Long userId, TaskRepository taskRepository, Long taskId) {
 		System.out.println("pios é :"+task.getDateTimeStart().isAfter(task.getDateTimeEnd()));
 		if (task.getDateTimeStart().isAfter(task.getDateTimeEnd()))
@@ -43,6 +51,7 @@ public class TaskService {
 		
 		List<Task> tasksBack = taskRepository.findByDate_Time_EndAndUser_IdNative(task.getDateTimeEnd().toLocalDate(), userId);
 
+		
 		for (Task t : tasksBack) {
 			if ((task.getDateTimeStart().isBefore(t.getDateTimeEnd()) 
 					|| task.getDateTimeEnd().isBefore(t.getDateTimeStart()))
@@ -51,6 +60,17 @@ public class TaskService {
 				return false;
 			}	
 		}
+		
+		
+		// SEGUIR A LINHA DESSE FORM, UTILIZANDO A FUNÇÃO
+		
+		/*
+		for (Task t : tasksBack) {
+			if (thereAreConflitctBetweenTasksHours(task,t) && t.getId() != taskId) {
+				System.out.println(taskId != t.getId());
+				return false;
+			}	
+		}*/
 		
 		return true;
 	}
