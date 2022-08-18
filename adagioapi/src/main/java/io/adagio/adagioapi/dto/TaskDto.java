@@ -29,6 +29,8 @@ public class TaskDto {
 	
 	private List<Notification> notifications;
 	
+	private String nameProject;
+	
 	private String excetpionMessage;
 	
 	private boolean hasIssues;
@@ -43,8 +45,11 @@ public class TaskDto {
 		this.idUser = task.getUser().getId();
 		this.finishedStatus = task.isFinishedStatus();
 		
-		if(task.getProject() != null)
+		if(task.getProject() != null) {
 			this.idProject = task.getProject().getId();
+			this.nameProject = task.getProject().getTitle();
+		}
+			
 		
 		this.priority = task.getPriority();
 		
@@ -117,9 +122,16 @@ public class TaskDto {
 	public String getExcetpionMessage() {
 		return excetpionMessage;
 	}
+
 	
 	public boolean isHasIssues() {
 		return hasIssues;
+	}
+	public String getNameProject() {
+		return nameProject;
+	}
+	public void setNameProject(String nameProject) {
+		this.nameProject = nameProject;
 	}
 
 }

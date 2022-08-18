@@ -129,6 +129,10 @@ const RelatoryModal = ({
     }
   };
 
+  const goToEdit = (task: Task) => {
+    navigate(`/adagio/editar_tarefa/${task.id}`);
+  };
+
   const goToCreateTask = () => {
     navigate(`/adagio/cadastrar_tarefa`);
   };
@@ -216,7 +220,7 @@ const RelatoryModal = ({
                     onKeyDown={tabEnterClickEffect}
                     title="Esse botão redirecionará você para a tela de edição dessa tarefa"
                     onClick={() => {
-                      alert("Essa feature ainda será implementada !");
+                      goToEdit(task);
                     }}
                     style={{
                       cursor: "pointer",

@@ -31,6 +31,7 @@ const ApplicationRoutes = () => {
             element={<TasksManagement />}
           />
           <Route path="editar_projeto/:id" element={<FormProjetos />} />
+          <Route path="editar_tarefa/:id" element={<FormTarefas />} />
           <Route path="criar_projeto" element={<FormProjetos />} />
           <Route path="cadastrar_tarefa" element={<FormTarefas />} />
           <Route path="*" element={<NotFound />} />
