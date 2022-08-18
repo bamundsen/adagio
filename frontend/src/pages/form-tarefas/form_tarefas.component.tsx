@@ -27,16 +27,24 @@ import ConfirmationModal from "../../components/confirmation-modal/confirmation_
 const FormTarefas = () => {
   const windowDimensions = useWindowDimensions();
   const { setExportCalendarType } = useContext(RelatoryContext);
-  const { createTask, getTask , editTask} = useContext(TaskContext);
-  const { isToRestartFormAgain, setIsToRestartFormAgain} = useContext(ProjectContext);
+  const { createTask, getTask, editTask } = useContext(TaskContext);
+  const { isToRestartFormAgain, setIsToRestartFormAgain } =
+    useContext(ProjectContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { id } = useParams();
-  const [auxSelectedProject, setAuxSelectedProject] = useState<number|null>(Number);
-  const [idProject, setIdProject] = useState<number| null>(Number);
+  const [auxSelectedProject, setAuxSelectedProject] = useState<number | null>(
+    Number
+  );
+  const [idProject, setIdProject] = useState<number | null>(Number);
   const [titulo, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("LOW");
-  const [arrayPriority, setArrayPriority] = useState([["LOW","Baixa"], ["REGULAR","Media"],[ "HIGH","Alto"], ["CRITICAL","Critico"]])
+  const [arrayPriority, setArrayPriority] = useState([
+    ["LOW", "Baixa"],
+    ["REGULAR", "Media"],
+    ["HIGH", "Alto"],
+    ["CRITICAL", "Critico"],
+  ]);
   const [DateT, setDateT] = useState("");
   const [DateTAux, setDateTAux] = useState(new Date());
   const [startHour, setStartHour] = useState("");
@@ -72,13 +80,13 @@ const FormTarefas = () => {
     useState(false);
   const [isWarningToVerifyOpen, setIsWarningToVerifiyOpen] = useState(false);
 
-  const [menssagerErro, setMenssagerErro] = useState("Alguns campos estão com valores incorretos. É preciso revisar os campos");
-   
+  const [menssagerErro, setMenssagerErro] = useState(
+    "Alguns campos estão com valores incorretos. É preciso revisar os campos"
+  );
 
-  useEffect(()=>{
-    console.log(menssagerErro)
-  },[menssagerErro]);
-
+  useEffect(() => {
+    console.log(menssagerErro);
+  }, [menssagerErro]);
 
   useEffect(() => {
     if (id !== undefined) {
@@ -88,7 +96,7 @@ const FormTarefas = () => {
         setDateTAux(new Date(response.dateTimeStart));
         setAuxStartHour(new Date(response.dateTimeStart));
         setAuxEndHour(new Date(response.dateTimeEnd));
-        setPriority(response.priority)
+        setPriority(response.priority);
         setFinishedOrNot(response.finishedStatus);
         setIdProject(response.idProject);
         setIsToEdit(true);
@@ -108,9 +116,6 @@ const FormTarefas = () => {
       setPriority("LOW");
     }
   }, [isToRestartFormAgain, setIsToRestartFormAgain]);
-
-
-
 
   const filterAndReturnDate = (date: Date) => {
     return `${String(date.getFullYear()).padStart(2, "0")}-${String(
@@ -181,18 +186,17 @@ const FormTarefas = () => {
     }
   };
 
-  const onClearState = (ev: any) =>{
+  const onClearState = (ev: any) => {
     setTitle("");
     setDescription("");
     setDateTAux(new Date());
     setAuxStartHour(new Date());
     setAuxEndHour(new Date(new Date().setHours(23, 59)));
     setFinishedOrNot(false);
-    setPriority("LOW")
-  }
+    setPriority("LOW");
+  };
 
   const returnModalWarning = () => {
-    
     return (
       <ConfirmationModal
         colorFlagNegativeButton="primary"
@@ -270,46 +274,56 @@ const FormTarefas = () => {
     ) {
       try {
         if (isToEdit === false) {
-          const responseToOperation = await createTask(
-            taskToRegisterOrEdit
-          );           
+          const responseToOperation = await createTask(taskToRegisterOrEdit);
           console.log(responseToOperation);
           if (responseToOperation?.status === 201) {
             setModalRegisterWasSaveOpen(true);
-          }else{
-            if(responseToOperation?.response?.data?.excetpionMessage !== undefined){
-              setMenssagerErro(responseToOperation?.response?.data?.excetpionMessage);
+          } else {
+            if (
+              responseToOperation?.response?.data?.excetpionMessage !==
+              undefined
+            ) {
+              setMenssagerErro(
+                responseToOperation?.response?.data?.excetpionMessage
+              );
               setIsWarningToVerifiyOpen(true);
-            }else{
-              for(let i = 0; i< responseToOperation?.response?.data?.length; i++){
+            } else {
+              for (
+                let i = 0;
+                i < responseToOperation?.response?.data?.length;
+                i++
+              ) {
                 const error = responseToOperation?.response?.data[i];
                 console.log(error);
-                if(error.campo === "title"){
+                if (error.campo === "title") {
                   setIsToShowTitleWarning(true);
                 }
-              } 
+              }
             }
           }
-        
         } else if (id !== undefined) {
           const responseToOperation = await editTask(
             taskToRegisterOrEdit,
             Number(id)
           );
+          console.log(responseToOperation);
           if (responseToOperation?.status === 200) {
             setModalRegisterWasEditedOpen(true);
-          }else{
-            setMenssagerErro(responseToOperation?.response?.data?.excetpionMessage);
+          } else {
+            setMenssagerErro(
+              responseToOperation?.response?.data?.excetpionMessage
+            );
             setIsWarningToVerifiyOpen(true);
           }
-          
         }
       } catch (erro) {
         console.log(erro);
         setIsWarningToVerifiyOpen(true);
       }
     } else {
-      setMenssagerErro("Alguns campos estão com valores incorretos. É preciso revisar os campos");
+      setMenssagerErro(
+        "Alguns campos estão com valores incorretos. É preciso revisar os campos"
+      );
       setIsWarningToVerifiyOpen(true);
     }
   };
@@ -352,7 +366,7 @@ const FormTarefas = () => {
         }}
       >
         <h1 style={{ fontSize: "26px", marginLeft: "18px", marginTop: "10px" }}>
-        {isToEdit ? "EDITAR TAREFA:" : "CADASTRE UMA TAREFA:"}
+          {isToEdit ? "EDITAR TAREFA:" : "CADASTRE UMA TAREFA:"}
         </h1>
         <Container className={"mt-5 center"}>
           <Row>
@@ -453,12 +467,17 @@ const FormTarefas = () => {
                           setPriority(ev.target.value);
                         }}
                       >
-                        {
-                          arrayPriority.map((priority:any[])=>{
-                            return <option key={priority[0]} defaultChecked={priority[0]===priority}  value={priority[0]}>{priority[1]}</option>
-                          })
-                        }
-                        
+                        {arrayPriority.map((priority: any[]) => {
+                          return (
+                            <option
+                              key={priority[0]}
+                              defaultChecked={priority[0] === priority}
+                              value={priority[0]}
+                            >
+                              {priority[1]}
+                            </option>
+                          );
+                        })}
                       </select>
                     </Form.Group>
                   </div>
@@ -504,7 +523,7 @@ const FormTarefas = () => {
                         timeIntervals={1}
                         dateFormat="HH:mm"
                       />
-                       {isToShowStartHourWarning ? (
+                      {isToShowStartHourWarning ? (
                         <span
                           style={returnWarningStyles()}
                           title={

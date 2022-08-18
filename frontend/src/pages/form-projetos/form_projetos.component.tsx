@@ -376,6 +376,9 @@ const FormProjetos = () => {
       }
     } else {
       setIsWarningToVerifiyOpen(true);
+      setErrorMessageWarningModal(
+        "Alguns campos estavam com valores incorretos. É preciso revisar os campos."
+      );
       if (isToEdit) {
         setIsToRestartFormAgain(!isToRestartFormAgain);
       }

@@ -37,7 +37,7 @@ public class TaskService {
 		return true;
 	}
 	public boolean validTaskTime (Task task, Long userId, TaskRepository taskRepository, Long taskId) {
-
+		System.out.println("pios é :"+task.getDateTimeStart().isAfter(task.getDateTimeEnd()));
 		if (task.getDateTimeStart().isAfter(task.getDateTimeEnd()))
 			return false;
 		
@@ -47,7 +47,7 @@ public class TaskService {
 			if ((task.getDateTimeStart().isBefore(t.getDateTimeEnd()) 
 					|| task.getDateTimeEnd().isBefore(t.getDateTimeStart()))
 					&& taskId != t.getId()) {
-				
+				System.out.println(taskId != t.getId());
 				return false;
 			}	
 		}

@@ -208,7 +208,7 @@ public class TaskController {
 			Task taskValidator = taskForm.converter(logado, projectRepository);
 			TaskDto taskDtoValidator;
 
-			taskDtoValidator = taskService.taskValidator(taskValidator, logado, taskRepository);
+			taskDtoValidator = taskService.taskValidator(taskValidator, logado, taskRepository,id);
 			if (taskDtoValidator.isHasIssues())
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 						.header("TimeConflict", DefaultMessages.TASK_BAD_REQUEST.getMessage()).body(taskDtoValidator);
