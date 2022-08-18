@@ -7,6 +7,7 @@ import { Project } from "../../../types/ProjectType";
 import { SpinnerState } from "../../../utils/spinner_type";
 import commonStyles from "../../../utils/common_styles.module.scss";
 import style from "./chooseProjectModal.module.scss";
+import { extractFormattedDateTime } from "../../../utils/returnShowableDateAndHour";
 import RegionPaginationButtons from "../../../components/region-pagination-buttons/region_pagination_buttons.component";
 import NegativeButtonModal from "../../../components/negative-button-modal/negative_button_modal.component";
 
@@ -88,11 +89,6 @@ const ChooseProjectModal = ({
     setPage(page + 1);
   };
 
-  const extractDateTimeFromProject = (dateTime: string) => {
-    const dateTimeObject = new Date(dateTime);
-    console.log(dateTimeObject);
-    return `${dateTimeObject.getDate()}/${dateTimeObject.getMonth()}/${dateTimeObject.getFullYear()} ${dateTimeObject.getHours()}:${dateTimeObject.getMinutes()}`;
-  };
   const returnSpinner = () => {
     return <AdagioSpinner loadingState={isLoaded} />;
   };
@@ -105,14 +101,15 @@ const ChooseProjectModal = ({
         setModalIsOpen={setIsModalOpen}
       />
 
-      <Modal.Body className={`${commonStyles.body_modal}`}>
+      <Modal.Body
+        className={`${commonStyles.body_modal}`}
+        style={{ overflowX: "auto" }}
+      >
         <section>
           <Form.Control
             type="search"
             onInput={(e: any) => {
               setSearchStringAux(e.target.value);
-              console.log(e.code);
-              console.log("teste INPUT", searchStringAux);
 
               if (e.target.value.trim() === "") {
                 setSearchString(e.target.value);
@@ -163,10 +160,10 @@ const ChooseProjectModal = ({
                 </Form.Label>
               </Form.Group>
               {projectToShow.map((project: Project) => {
-                const dateTimeStartToShow = extractDateTimeFromProject(
+                const dateTimeStartToShow = extractFormattedDateTime(
                   project.dateTimeStart
                 );
-                const dateTimeEndToShow = extractDateTimeFromProject(
+                const dateTimeEndToShow = extractFormattedDateTime(
                   project.dateTimeEnd
                 );
                 return (
@@ -203,6 +200,7 @@ const ChooseProjectModal = ({
                           display: "flex",
                           marginTop: "8px",
                           marginLeft: "8px",
+                          minWidth: "380px",
                           alignItems: "center",
                         }}
                       >

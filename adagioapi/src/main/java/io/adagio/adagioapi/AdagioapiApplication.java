@@ -9,9 +9,17 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+/* SWAGGER: http://localhost:8079/swagger-ui.html */
 @SpringBootApplication
 @EnableSpringDataWebSupport
 @EnableCaching
+@EnableSwagger2
 public class AdagioapiApplication {
 
 	@Bean
@@ -31,6 +39,7 @@ public class AdagioapiApplication {
 	    return bean;
 	}
 	
+	   
 	public static void main(String[] args) {
 		SpringApplication.run(AdagioapiApplication.class, args);
 	}

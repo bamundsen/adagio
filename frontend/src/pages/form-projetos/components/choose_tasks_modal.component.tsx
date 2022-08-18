@@ -11,6 +11,7 @@ import { Task } from "../../../types/TaskType";
 import styles from "./choose_tasks_modal.module.scss";
 import commonStyles from "../../../utils/common_styles.module.scss";
 import { SpinnerState } from "../../../utils/spinner_type";
+import { extractFormattedDateTime } from "../../../utils/returnShowableDateAndHour";
 import { BsFillArrowLeftSquareFill } from "react-icons/bs";
 
 interface ChooseTasksModalProps {
@@ -139,6 +140,9 @@ const ChooseTasksModal = ({
           <>
             <section>
               {tasksToShow.map((task: Task) => {
+                const dateTimeStartToShow = extractFormattedDateTime(
+                  task.dateTimeStart
+                );
                 return (
                   <div key={task.id + task.title}>
                     <Form.Group
@@ -180,6 +184,10 @@ const ChooseTasksModal = ({
                         }}
                       >
                         {task.title}
+                        <span style={{ color: "blue", paddingLeft: "8px" }}>
+                          {" "}
+                          {` (${dateTimeStartToShow})`}
+                        </span>
                       </Form.Label>
                     </Form.Group>
                   </div>
