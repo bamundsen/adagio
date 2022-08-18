@@ -9,5 +9,6 @@ export type Task = {
   idProject?: number;
   projectId?: number | null;
   priority: string;
+  nameProject?:String
   notifications: number[];
 };

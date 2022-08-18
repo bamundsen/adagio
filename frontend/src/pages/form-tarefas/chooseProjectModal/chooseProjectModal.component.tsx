@@ -13,23 +13,16 @@ import NegativeButtonModal from "../../../components/negative-button-modal/negat
 interface ChooseProjectModalProps{
     setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
     isOpen:boolean;
-    setIdsProjectWithAcumulatedSelected: (ids: number[]) => void;
-    isProjectSelected: (id: number) => boolean;
-    projectIdIfItIsToEdit: string | undefined;
-    auxSelectedProject: number[];
-    setAuxSelectedProject: React.Dispatch<React.SetStateAction<number[]>>;
+    projectIdIfItIsToEdit:number |null;
     equalizeAuxSelectedProjectToIdsProject: () => void;
     setIdPRojectToChoose: React.Dispatch<SetStateAction<number | null>>;
     setNameOfProjectToShow: React.Dispatch<SetStateAction<string | null>>;
 }
+
 const ChooseProjectModal = ({
     setIsModalOpen,
     isOpen,
-    setIdsProjectWithAcumulatedSelected,
-    isProjectSelected,
     projectIdIfItIsToEdit,
-    auxSelectedProject,
-    setAuxSelectedProject,
     equalizeAuxSelectedProjectToIdsProject,
     setNameOfProjectToShow,
     setIdPRojectToChoose,
@@ -45,6 +38,7 @@ const ChooseProjectModal = ({
     const [isFirst, setIsFirst] = useState(false);
     const [requestWasDone, setRequestWasDone] = useState(false);
     const [auxIdProjectChoose, setAuxIdProjectChoose] = useState<number|null>(Number);
+    const [AuxnameOfProjectToShow, setAuxNameOfProjectToShow] = useState<string | null>("");
 
     useEffect(() => {
       if (isOpen) {
@@ -64,7 +58,9 @@ const ChooseProjectModal = ({
           } else {
             setIsFirst(false);
           }
-  
+          if(projectIdIfItIsToEdit !== null){
+            setAuxIdProjectChoose(projectIdIfItIsToEdit);
+          }
           setRequestWasDone(true);
           if (response?.content) {
             setProjectToShow(response.content);
@@ -82,15 +78,6 @@ const ChooseProjectModal = ({
       }
     }, [projectToShow]);
   
-    const addOrRemoveSelectedOrUnselected = (id: number, marked: boolean) => {
-      if (!auxSelectedProject.includes(id) && marked) {
-        setAuxSelectedProject([...auxSelectedProject, id]);
-      } else if (auxSelectedProject.includes(id) && !marked) {
-        setAuxSelectedProject([
-          ...auxSelectedProject.filter((s: number) => s !== id),
-        ]);
-      }
-    };
 
     const decrementPage = () => {
       if (page > 0) {
@@ -185,11 +172,7 @@ const ChooseProjectModal = ({
                           id={`project-${project.id}`}
                           type="radio"
                           name="choose"
-                          defaultChecked={
-                            project.id !== undefined
-                              ? isProjectSelected(project.id)
-                              : false
-                          }
+                          checked={project.id === auxIdProjectChoose ? true:false}
                           style={{
                             width: "22px",
                             height: "18px",
@@ -197,7 +180,7 @@ const ChooseProjectModal = ({
                           onClick={(e: any) => {
                             if(project.id !== undefined)
                               setAuxIdProjectChoose(project.id);
-                              setNameOfProjectToShow(project.title);
+                              setAuxNameOfProjectToShow(project.title);
                           }}
                         />
                         <Form.Label
@@ -241,6 +224,7 @@ const ChooseProjectModal = ({
               onClick={() => {
                 setIsModalOpen(false);
                 setIdPRojectToChoose(auxIdProjectChoose);
+                setNameOfProjectToShow(AuxnameOfProjectToShow);
               }}
               variant="success"
             >

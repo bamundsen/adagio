@@ -11,7 +11,7 @@ export const TaskApi = () => ({
 
       return response;
     } catch (erro) {
-      console.log(erro);
+      return erro;
     }
   },
   getTask: async (idTask: number) => {
@@ -56,7 +56,7 @@ export const TaskApi = () => ({
 
       return response;
     } catch (erro) {
-      console.log(erro);
+      return erro;
     }
   },
 

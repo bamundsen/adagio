@@ -2,7 +2,7 @@ import AdagioSideBar from "../../components/adagio-sidebar/adagio_sidebar.compon
 import sideBarData from "../../utils/sideBarData";
 import commonStyles from "../../utils/common_styles.module.scss";
 import styles from "./tasks_management.module.scss";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { Task } from "../../types/TaskType";
 import { ProjectContext } from "../../contexts/project.context";
@@ -17,6 +17,7 @@ import { RelatoryContext } from "../../contexts/relatory.context";
 import { ExportCalendarType } from "../../types/ExportCalendarType";
 
 const TasksManagement = () => {
+  const navigate = useNavigate();
   const { getTasksByProject } = useContext(ProjectContext);
   const { deleteTask, triggerToSearchTasksAgainAfterDelete } =
     useContext(TaskContext);
@@ -93,6 +94,10 @@ const TasksManagement = () => {
     setPage(page + 1);
   };
 
+  const goToEdit = (task: Task) => {
+    navigate(`/adagio/editar_tarefa/${task.id}`);
+  };
+
   const deleteTaskById = (id: number | undefined) => {
     if (id) {
       deleteTask(id).then((response: any) => {
@@ -143,7 +148,7 @@ const TasksManagement = () => {
                     <td>
                       <BsFillPenFill
                         onClick={() => {
-                          // goToEdit(project);
+                          goToEdit(task);
                         }}
                         style={{ cursor: "pointer", color: "#227711" }}
                       />
