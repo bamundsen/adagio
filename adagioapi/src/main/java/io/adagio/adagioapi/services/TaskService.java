@@ -26,8 +26,7 @@ public class TaskService {
 		List<Task> tasksBack = taskRepository.findByDate_Time_EndAndUser_IdNative(task.getDateTimeEnd().toLocalDate(), userId);
 		
 		for (Task t : tasksBack) {
-			if (task.getDateTimeStart().isBefore(t.getDateTimeEnd()) 
-					|| task.getDateTimeEnd().isBefore(t.getDateTimeStart())) {
+			if (task.getDateTimeStart().isBefore(t.getDateTimeEnd()) && task.getDateTimeEnd().isAfter(t.getDateTimeStart())) {
 				
 				return false;
 			}
@@ -53,8 +52,7 @@ public class TaskService {
 
 		
 		for (Task t : tasksBack) {
-			if ((task.getDateTimeStart().isBefore(t.getDateTimeEnd()) 
-					|| task.getDateTimeEnd().isBefore(t.getDateTimeStart()))
+			if ((task.getDateTimeStart().isBefore(t.getDateTimeEnd()) && task.getDateTimeEnd().isAfter(t.getDateTimeStart()))
 					&& taskId != t.getId()) {
 				System.out.println(taskId != t.getId());
 				return false;
