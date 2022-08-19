@@ -10,7 +10,7 @@
 
 Criação de uma aplicação de gerenciamento de tempo, com recursos como calendário, CRUD de projetos e tarefas e geração de relatório exportado para planilha
 
-## Execução do projeto
+## Execução do projeto:
 
 ### `git clone desse repositório`
 
