@@ -6,7 +6,9 @@
 - Ambiente Node.js 16.13.0 ( para instalações de dependências do front-end e execução de servidor de desenvolvimento do front-end)
 - Java 11 ( back-end, com Spring Boot 2.6.2 )
 
-## Motivação: Criação de uma aplicação de gerenciamento de tempo, com recursos como calendário, CRUD de projetos e tarefas e geração de relatório exportado para planilha
+## Motivação:
+
+Criação de uma aplicação de gerenciamento de tempo, com recursos como calendário, CRUD de projetos e tarefas e geração de relatório exportado para planilha
 
 ## Execução do projeto
 
