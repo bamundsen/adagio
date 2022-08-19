@@ -69,6 +69,8 @@ const RelatoryModal = ({
             ...response.data.map((task: Task) => {
               const title = task.title;
               const dateTimeStart = new Date(task.dateTimeStart);
+              const dateTimeEnd = new Date(task.dateTimeEnd);
+
               const id = task.id;
               const hourAndMinute = `${String(
                 dateTimeStart.getHours()
@@ -76,8 +78,14 @@ const RelatoryModal = ({
                 2,
                 "0"
               )}`;
+              const finalHourAndMinute = `${String(
+                dateTimeEnd.getHours()
+              ).padStart(2, "0")}:${String(dateTimeEnd.getMinutes()).padStart(
+                2,
+                "0"
+              )}`;
 
-              return { id, title, hourAndMinute };
+              return { id, title, hourAndMinute, finalHourAndMinute };
             }),
           ]);
         }
@@ -213,7 +221,10 @@ const RelatoryModal = ({
               return (
                 <li key={task.title + task.hourAndMinute + i}>
                   <span>
-                    {task.title} ({task.hourAndMinute})
+                    {task.title}{" "}
+                    <span
+                      style={{ marginLeft: "4px", color: "blue" }}
+                    >{`(${task.hourAndMinute} - ${task.finalHourAndMinute})`}</span>{" "}
                   </span>
                   <BsFillPenFill
                     tabIndex={1}

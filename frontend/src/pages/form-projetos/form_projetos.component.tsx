@@ -104,7 +104,7 @@ const FormProjetos = () => {
         setIsToEdit(true);
       });
     } else {
-      resetOrCleanFields();
+      resetOrCleanFields(false);
     }
   }, [isToRestartFormAgain, setIsToRestartFormAgain]);
 
@@ -119,17 +119,19 @@ const FormProjetos = () => {
     setExportCalendarType(null);
   }, []);
 
-  const resetOrCleanFields = () => {
+  const resetOrCleanFields = (isToEditFlag: boolean) => {
     setTitle("");
     setDescription("");
     setStartDateAux(new Date());
     setStartHourAux(new Date());
     setEndDateAux(new Date());
     setEndHourAux(new Date(new Date().setHours(23, 59)));
-    setIsToEdit(false);
-    setProgressIndicator(null);
-    setAuxSelectedTasks([]);
-    setIdsTasks([]);
+    if (!isToEditFlag) {
+      setIsToEdit(false);
+      setProgressIndicator(null);
+      setAuxSelectedTasks([]);
+      setIdsTasks([]);
+    }
   };
   const setIdsTasksWithAcumulatedSelected = (selectedIdsTasks: number[]) => {
     setIdsTasks(selectedIdsTasks);
@@ -654,18 +656,23 @@ const FormProjetos = () => {
                     </FormGroup>
 
                     <div className={`${styles.buttons_area_register}`}>
-                      <Button
-                        style={{
-                          backgroundColor: "#d3d3d3",
-                          borderRadius: "5px",
-                          border: "1px solid",
-                          borderColor: "#d3d3d3",
-                          width: "150px",
-                        }}
-                        type="button"
-                      >
-                        Cancelar
-                      </Button>
+                      {!isToEdit ? (
+                        <Button
+                          onClick={() => {
+                            resetOrCleanFields(isToEdit ? true : false);
+                          }}
+                          style={{
+                            backgroundColor: "#f02",
+                            borderRadius: "5px",
+                            border: "1px solid",
+                            borderColor: "#d3d3d3",
+                            width: "150px",
+                          }}
+                          type="button"
+                        >
+                          Limpar campos
+                        </Button>
+                      ) : null}
 
                       <Button
                         style={{
