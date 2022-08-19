@@ -43,23 +43,27 @@ const TasksManagement = () => {
   useEffect(() => {
     if (idProject !== undefined) {
       console.log(size, page);
-      getTasksByProject(Number(idProject), size, page).then((response: any) => {
-        if (response.last) {
-          setIsLast(true);
-        } else {
-          setIsLast(false);
-        }
+      getTasksByProject(Number(idProject), size, page)
+        .then((response: any) => {
+          if (response.last) {
+            setIsLast(true);
+          } else {
+            setIsLast(false);
+          }
 
-        if (response.first) {
-          setIsFirst(true);
-        } else {
-          setIsFirst(false);
-        }
-        setTotalPages(response.totalPages);
-        setRequestWasDone(true);
-        setTasks(response.content);
-        console.log(response);
-      });
+          if (response.first) {
+            setIsFirst(true);
+          } else {
+            setIsFirst(false);
+          }
+          setTotalPages(response.totalPages);
+          setRequestWasDone(true);
+          setTasks(response.content);
+          console.log(response);
+        })
+        .catch((e: any) => {
+          setIsLoaded(SpinnerState.There_is_no_content);
+        });
     }
   }, [page, size, isFirst, isLast, triggerToSearchTasksAgainAfterDelete]);
 
@@ -172,13 +176,14 @@ const TasksManagement = () => {
         </Table>
 
         {returnSpinner()}
-
-        <RegionPaginationButtons
-          isFirst={isFirst}
-          isLast={isLast}
-          decrementFunction={decrementPage}
-          incrementFunction={incrementPage}
-        />
+        {isLoaded !== SpinnerState.There_is_no_content && (
+          <RegionPaginationButtons
+            isFirst={isFirst}
+            isLast={isLast}
+            decrementFunction={decrementPage}
+            incrementFunction={incrementPage}
+          />
+        )}
       </section>
       {returnConfirmationModal()}
     </main>

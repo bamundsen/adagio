@@ -22,7 +22,7 @@ export const ProjectApi = () => ({
 
       return response.data;
     } catch (erro) {
-      console.log(erro);
+      throw erro;
     }
   },
 
@@ -67,7 +67,7 @@ export const ProjectApi = () => ({
 
       return response.data;
     } catch (erro) {
-      console.log(erro);
+      throw erro;
     }
   },
 

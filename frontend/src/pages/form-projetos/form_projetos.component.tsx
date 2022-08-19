@@ -20,13 +20,19 @@ import { isDataView } from "util/types";
 import { AuthContext } from "../../contexts/auth.context";
 import { Project } from "../../types/ProjectType";
 import { ProjectContext } from "../../contexts/project.context";
-import { Navigate, useLocation, useParams } from "react-router-dom";
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import ChooseTasksModal from "./components/choose_tasks_modal.component";
 import { Task } from "../../types/TaskType";
 import { RelatoryContext } from "../../contexts/relatory.context";
 import ConfirmationModal from "../../components/confirmation-modal/confirmation_modal.component";
 
 const FormProjetos = () => {
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const {
     createProject,
@@ -82,27 +88,32 @@ const FormProjetos = () => {
 
   useEffect(() => {
     if (id !== undefined) {
-      getProject(Number(id)).then((response: any) => {
-        setProgressIndicator(response.progress);
-        setTitle(response.title);
-        setDescription(response.description);
-        setStartDateAux(new Date(response.dateTimeStart));
-        setStartHourAux(new Date(response.dateTimeStart));
-        setEndDateAux(new Date(response.dateTimeEnd));
-        setEndHourAux(new Date(response.dateTimeEnd));
-        setIdsTasks([
-          ...response.tasks.map((task: Task) => {
-            return task.id;
-          }),
-        ]);
-        setAuxSelectedTasks([
-          ...response.tasks.map((task: Task) => {
-            return task.id;
-          }),
-        ]);
+      getProject(Number(id))
+        .then((response: any) => {
+          setProgressIndicator(response.progress);
+          setTitle(response.title);
+          setDescription(response.description);
+          setStartDateAux(new Date(response.dateTimeStart));
+          setStartHourAux(new Date(response.dateTimeStart));
+          setEndDateAux(new Date(response.dateTimeEnd));
+          setEndHourAux(new Date(response.dateTimeEnd));
+          setIdsTasks([
+            ...response.tasks.map((task: Task) => {
+              return task.id;
+            }),
+          ]);
+          setAuxSelectedTasks([
+            ...response.tasks.map((task: Task) => {
+              return task.id;
+            }),
+          ]);
 
-        setIsToEdit(true);
-      });
+          setIsToEdit(true);
+        })
+        .catch((e: any) => {
+          console.log("erro emitido");
+          navigate("/adagio/criar_projeto");
+        });
     } else {
       resetOrCleanFields(false);
     }
