@@ -62,7 +62,7 @@ export const ProjectApi = () => ({
       const response = await api.get(
         `users/projects/${id}/tasks?size=${
           size === undefined ? 7 : size
-        }&page=${page === undefined ? 0 : page}`
+        }&page=${page === undefined ? 0 : page}/`
       );
 
       return response.data;
@@ -76,7 +76,7 @@ export const ProjectApi = () => ({
       const response = await api.post(
         `users/projects/list-by-title?page=${
           page === undefined ? 0 : page
-        }&size=${size === undefined ? 7 : size}`,
+        }&size=${size === undefined ? 7 : size}/`,
         { title }
       );
 

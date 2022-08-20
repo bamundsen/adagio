@@ -4,7 +4,7 @@ export const RelatoryApi = () => ({
   getByMonth: async (month: number, year: number) => {
     try {
       const response = await api.post(
-        `/users/relatory/get-by-month`,
+        `/users/relatory/get-by-month/`,
         {
           month,
           year,
@@ -29,7 +29,7 @@ export const RelatoryApi = () => ({
   getByYear: async (year: number) => {
     try {
       const response = await api.post(
-        `/users/relatory/get-by-year`,
+        `/users/relatory/get-by-year/`,
         {
           year,
         },
@@ -53,7 +53,7 @@ export const RelatoryApi = () => ({
   getByDay: async (startDateTime: string, endDateTime: string) => {
     try {
       const response = await api.post(
-        `/users/relatory/get-by-day`,
+        `/users/relatory/get-by-day/`,
         { startDate: startDateTime, endDate: endDateTime },
         {
           responseType: "blob",
@@ -74,7 +74,7 @@ export const RelatoryApi = () => ({
   getProjectsByPage: async (size: number, page: number) => {
     try {
       const response = await api.get(
-        `/users/relatory/get-projects-by-page?page=${page}&size=${size}`,
+        `/users/relatory/get-projects-by-page?page=${page}&size=${size}/`,
         { responseType: "blob" }
       );
       const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -97,7 +97,7 @@ export const RelatoryApi = () => ({
   ) => {
     try {
       const response = await api.post(
-        `/users/relatory/get-tasks-by-page-and-project?page=${page}&size=${size}`,
+        `/users/relatory/get-tasks-by-page-and-project?page=${page}&size=${size}/`,
         { idProject },
         { responseType: "blob" }
       );

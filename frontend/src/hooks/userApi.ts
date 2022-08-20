@@ -4,7 +4,7 @@ import { api } from "./base_api";
 export const UserApi = () => ({
   validateToken: async () => {
     try {
-      const response = await api.post("/auth/refresh");
+      const response = await api.post("/auth/refresh/");
 
       return response;
     } catch (erro) {
@@ -14,7 +14,7 @@ export const UserApi = () => ({
 
   signin: async (login: string, password: string) => {
     try {
-      const response = await api.post("/auth/login", {
+      const response = await api.post("/auth/login/", {
         login,
         password,
       });
@@ -27,7 +27,7 @@ export const UserApi = () => ({
 
   logout: async () => {
     try {
-      const response = await api.post("/auth/logout");
+      const response = await api.post("/auth/logout/");
       console.log(response);
     } catch (erro) {
       console.log(erro);
@@ -35,7 +35,7 @@ export const UserApi = () => ({
   },
   register: async (user: User) => {
     try {
-      const response = await api.post("/auth/register", user);
+      const response = await api.post("/auth/register/", user);
       return response;
     } catch (error) {
       return error;
