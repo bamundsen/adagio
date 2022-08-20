@@ -7,7 +7,7 @@ export const ProjectApi = () => ({
       const response = await api.get(
         `/users/projects?size=${size === undefined ? 6 : size}&page=${
           page === undefined ? 0 : page
-        }/`
+        }`
       );
 
       return response.data;
@@ -18,7 +18,7 @@ export const ProjectApi = () => ({
 
   getProject: async (idProject: number) => {
     try {
-      const response = await api.get(`/users/projects/${idProject}/`);
+      const response = await api.get(`/users/projects/${idProject}`);
 
       return response.data;
     } catch (erro) {
@@ -28,7 +28,7 @@ export const ProjectApi = () => ({
 
   createProject: async (project: Project) => {
     try {
-      const response = await api.post("/users/projects/", project);
+      const response = await api.post("/users/projects", project);
 
       return response;
     } catch (error) {
@@ -39,7 +39,7 @@ export const ProjectApi = () => ({
 
   editProject: async (project: Project, id: number) => {
     try {
-      const response = await api.put(`users/projects/${id}/`, project);
+      const response = await api.put(`users/projects/${id}`, project);
 
       return response;
     } catch (error) {
@@ -62,7 +62,7 @@ export const ProjectApi = () => ({
       const response = await api.get(
         `users/projects/${id}/tasks?size=${
           size === undefined ? 7 : size
-        }&page=${page === undefined ? 0 : page}/`
+        }&page=${page === undefined ? 0 : page}`
       );
 
       return response.data;
@@ -76,7 +76,7 @@ export const ProjectApi = () => ({
       const response = await api.post(
         `users/projects/list-by-title?page=${
           page === undefined ? 0 : page
-        }&size=${size === undefined ? 7 : size}/`,
+        }&size=${size === undefined ? 7 : size}`,
         { title }
       );
 

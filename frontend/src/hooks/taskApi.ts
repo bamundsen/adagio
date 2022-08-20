@@ -5,7 +5,7 @@ import { api } from "./base_api";
 export const TaskApi = () => ({
   createTask: async (task: Task) => {
     try {
-      const response = await api.post("/users/tasks/", task);
+      const response = await api.post("/users/tasks", task);
 
       console.log(response);
 
@@ -16,7 +16,7 @@ export const TaskApi = () => ({
   },
   getTask: async (idTask: number) => {
     try {
-      const response = await api.get(`/users/tasks/${idTask}/`);
+      const response = await api.get(`/users/tasks/${idTask}`);
 
       return response.data;
     } catch (erro) {
@@ -30,7 +30,7 @@ export const TaskApi = () => ({
   ) => {
     try {
       const response = await api.post(
-        "/users/tasks/list-by-start-datetime-filter/",
+        "/users/tasks/list-by-start-datetime-filter",
         { dateTimeStart: startDateTime, dateTimeEnd: dateFinalToSearch }
       );
 
@@ -42,7 +42,7 @@ export const TaskApi = () => ({
 
   deleteById: async (id: number) => {
     try {
-      const response = await api.delete(`/users/tasks/${id}/`);
+      const response = await api.delete(`/users/tasks/${id}`);
 
       return response;
     } catch (erro) {
@@ -52,7 +52,7 @@ export const TaskApi = () => ({
 
   editTask: async (task: Task, id: number) => {
     try {
-      const response = await api.put(`users/tasks/${id}/`, task);
+      const response = await api.put(`users/tasks/${id}`, task);
 
       return response;
     } catch (erro) {
@@ -68,7 +68,7 @@ export const TaskApi = () => ({
   ) => {
     try {
       const response = await api.post(
-        `/users/tasks/list-by-no-project?page=${page}&size=${size}/`,
+        `/users/tasks/list-by-no-project?page=${page}&size=${size}`,
         {
           title,
           projectId:
@@ -90,7 +90,7 @@ export const TaskApi = () => ({
   ) => {
     try {
       const response = await api.post(
-        "/users/tasks/get-color-that-is-to-be-showed/",
+        "/users/tasks/get-color-that-is-to-be-showed",
         { dateTimeStart: startDateTime, dateTimeEnd: dateFinalToSearch }
       );
 
