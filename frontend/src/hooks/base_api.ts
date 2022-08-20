@@ -22,7 +22,7 @@ api.interceptors.response.use(
 
     if (
       error.response.status === 401 &&
-      originalRequest.url === "http://localhost:8079/api/v1/auth/refresh"
+      originalRequest.url === "http://localhost:8079/api/v1/auth/refresh/"
     ) {
       return Promise.reject(error);
     }
@@ -32,7 +32,7 @@ api.interceptors.response.use(
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
-      const response = await api.post("/auth/refresh");
+      const response = await api.post("/auth/refresh/");
 
       if (response.status === 200) {
         return axios(originalRequest);

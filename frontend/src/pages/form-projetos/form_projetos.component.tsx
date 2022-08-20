@@ -45,7 +45,7 @@ const FormProjetos = () => {
   } = useContext(ProjectContext);
   const { setExportCalendarType } = useContext(RelatoryContext);
   const windowDimensions = useWindowDimensions();
-  const { id } = useParams();
+  const parameters = useParams();
   const [tasksModalIsOpen, setTasksModalIsOpen] = useState(false);
   const [isToGoToProjects, setIsToGoToProjects] = useState(false);
   const [titulo, setTitle] = useState("");
@@ -87,8 +87,8 @@ const FormProjetos = () => {
   );
 
   useEffect(() => {
-    if (id !== undefined) {
-      getProject(Number(id))
+    if (parameters.id !== undefined) {
+      getProject(Number(parameters.id))
         .then((response: any) => {
           setProgressIndicator(response.progress);
           setTitle(response.title);
@@ -117,7 +117,7 @@ const FormProjetos = () => {
     } else {
       resetOrCleanFields(false);
     }
-  }, [isToRestartFormAgain, setIsToRestartFormAgain]);
+  }, [parameters, isToRestartFormAgain, setIsToRestartFormAgain]);
 
   useEffect(() => {
     setStartDate(filterAndReturnDate(startDateAux));
@@ -252,7 +252,7 @@ const FormProjetos = () => {
         equalizeAuxSelectedTasksToIdsTasks={equalizeAuxSelectedTasksToIdsTasks}
         setAuxSelectedTasks={setAuxSelectedTasks}
         setIdsTasksWithAcumulatedSelected={setIdsTasksWithAcumulatedSelected}
-        projectIdIfItIsToEdit={id}
+        projectIdIfItIsToEdit={parameters.id}
         isTaskSelected={isTaskSelected}
         isModalOpen={tasksModalIsOpen}
         setModalIsOpen={setTasksModalIsOpen}
@@ -359,10 +359,10 @@ const FormProjetos = () => {
             setIdsTasks([]);
             setAuxSelectedTasks([]);
           }
-        } else if (id !== undefined) {
+        } else if (parameters.id !== undefined) {
           const responseToOperation = await editProject(
             projectToRegisterOrEdit,
-            Number(id)
+            Number(parameters.id)
           );
           if (
             responseToOperation?.response?.data &&

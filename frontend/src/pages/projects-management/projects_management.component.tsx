@@ -176,7 +176,7 @@ const ProjectsManagement = () => {
                   <tr key={project?.id + project?.title}>
                     <td>{project.title}</td>
                     <td>{project.description}</td>
-                    <td>{project?.progress}</td>
+                    <td>{project?.progress} %</td>
                     <td>
                       <Link to={`/adagio/projetos/${project.id}/tarefas`}>
                         Gerenciar tarefas
