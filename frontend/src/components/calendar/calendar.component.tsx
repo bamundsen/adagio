@@ -87,7 +87,12 @@ const Calendar = ({
     } else {
       setExportCalendarType(ExportCalendarType.EXPORT_TASKS_OF_YEAR);
     }
-  }, [isToShowOneMonth, triggerToUpdateButtonAndValue, currentMonth]);
+  }, [
+    isToShowOneMonth,
+    triggerToUpdateButtonAndValue,
+    currentMonth,
+    currentYear,
+  ]);
 
   useEffect(() => {
     if (exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_MONTH) {
@@ -95,7 +100,7 @@ const Calendar = ({
     } else if (exportCalendarType === ExportCalendarType.EXPORT_TASKS_OF_YEAR) {
       setValueReferenceToSearch(currentYear);
     }
-  }, [exportCalendarType, currentMonth]);
+  }, [exportCalendarType, currentMonth, currentYear]);
 
   const toggleIsToShowOneMonth = () => {
     setIsToShowOneMonth(!isToShowOneMonth);

@@ -48,11 +48,7 @@ const Navigation = () => {
         setThisDayHasMoreThanZeroTask(true);
       }
     });
-  }, [displayDropdown]);
-
-  useEffect(() => {
-    console.log(`EITA: ${thisDayHasMoreThanZeroTask}`);
-  }, [thisDayHasMoreThanZeroTask]);
+  }, [displayDropdownNotification]);
 
   useEffect(() => {
     const checkIfClickOutside = (e: any) => {

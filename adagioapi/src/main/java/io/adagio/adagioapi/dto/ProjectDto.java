@@ -29,7 +29,7 @@ public class ProjectDto {
 	
 	private Long idUser;
 	
-	private List<TaskDto> tasks = new ArrayList<TaskDto>();
+	private List<Long> tasksIds = new ArrayList<Long>();
 	 
 	private String thereIsError = "Os dados estão corretos.";
 	
@@ -45,7 +45,7 @@ public class ProjectDto {
 		
 		for(Task task : project.getTasks()) {
 			TaskDto taskToAdd = new TaskDto(task);
-			tasks.add(taskToAdd);
+			tasksIds.add(taskToAdd.getId());
 		}
 	}
 	
@@ -63,7 +63,7 @@ public class ProjectDto {
 		
 		for(Task task : project.getTasks()) {
 			TaskDto taskToAdd = new TaskDto(task);
-			tasks.add(taskToAdd);
+			tasksIds.add(taskToAdd.getId());
 		}
 	}
 	
@@ -75,8 +75,8 @@ public class ProjectDto {
 		return this.idUser;
 	}
 	
-	public List<TaskDto> getTasks(){
-		return this.tasks;
+	public List<Long> getTasksIds(){
+		return this.tasksIds;
 	}
 	
 	public LocalDateTime getDateTimeEnd() {

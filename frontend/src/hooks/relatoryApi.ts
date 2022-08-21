@@ -1,5 +1,20 @@
 import { api } from "./base_api";
 
+const generatedIn = () => {
+  const now = new Date();
+  return `${String(now.getDate()).padStart(2, "0")}/${String(
+    now.getMonth() + 1
+  ).padStart(2, "0")}/${String(now.getFullYear()).padStart(2, "0")} ${String(
+    now.getHours()
+  ).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(
+    now.getSeconds()
+  ).padStart(2, "0")}`;
+};
+
+const returnFileName = (name: string) => {
+  return `${name}_generated_in_${generatedIn()}.xlsx`;
+};
+
 export const RelatoryApi = () => ({
   getByMonth: async (month: number, year: number) => {
     try {
@@ -17,7 +32,7 @@ export const RelatoryApi = () => ({
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `tasks_by_month.xlsx`);
+      link.setAttribute("download", returnFileName("tasks_by_month"));
       link.click();
 
       setTimeout(() => window.URL.revokeObjectURL(url), 0);
@@ -41,7 +56,7 @@ export const RelatoryApi = () => ({
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "tasks_by_year.xlsx");
+      link.setAttribute("download", returnFileName(`tasks_by_year(${year})`));
       link.click();
 
       setTimeout(() => window.URL.revokeObjectURL(url), 0);
@@ -62,7 +77,7 @@ export const RelatoryApi = () => ({
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `tasks_by_day.xlsx`);
+      link.setAttribute("download", returnFileName("tasks_by_day"));
       link.click();
 
       setTimeout(() => window.URL.revokeObjectURL(url), 0);
@@ -80,7 +95,7 @@ export const RelatoryApi = () => ({
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `projects_by_page.xlsx`);
+      link.setAttribute("download", returnFileName("projects_by_page"));
       // link.click();
 
       // setTimeout(() => window.URL.revokeObjectURL(url), 0);
@@ -104,7 +119,10 @@ export const RelatoryApi = () => ({
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `tasks_by_page_and_project.xlsx`);
+      link.setAttribute(
+        "download",
+        returnFileName("tasks_by_page_and_project")
+      );
       link.click();
 
       setTimeout(() => window.URL.revokeObjectURL(url), 0);

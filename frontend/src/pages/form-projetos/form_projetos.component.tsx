@@ -98,20 +98,19 @@ const FormProjetos = () => {
           setEndDateAux(new Date(response.dateTimeEnd));
           setEndHourAux(new Date(response.dateTimeEnd));
           setIdsTasks([
-            ...response.tasks.map((task: Task) => {
-              return task.id;
+            ...response.tasksIds.map((task: Task) => {
+              return task;
             }),
           ]);
           setAuxSelectedTasks([
-            ...response.tasks.map((task: Task) => {
-              return task.id;
+            ...response.tasksIds.map((task: Task) => {
+              return task;
             }),
           ]);
 
           setIsToEdit(true);
         })
         .catch((e: any) => {
-          console.log("erro emitido");
           navigate("/adagio/criar_projeto");
         });
     } else {
@@ -676,6 +675,7 @@ const FormProjetos = () => {
                             backgroundColor: "#f02",
                             borderRadius: "5px",
                             border: "1px solid",
+                            marginRight: "15px",
                             borderColor: "#d3d3d3",
                             width: "150px",
                           }}

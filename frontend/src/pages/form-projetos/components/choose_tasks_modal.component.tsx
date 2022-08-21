@@ -120,8 +120,6 @@ const ChooseTasksModal = ({
             type="search"
             onInput={(e: any) => {
               setSearchStringAux(e.target.value);
-              console.log(e.code);
-              console.log("teste INPUT", searchStringAux);
 
               if (e.target.value.trim() === "") {
                 setSearchString(e.target.value);

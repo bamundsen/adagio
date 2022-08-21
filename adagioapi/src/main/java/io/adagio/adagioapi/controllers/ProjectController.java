@@ -34,6 +34,7 @@ import io.adagio.adagioapi.dto.OperationType;
 import io.adagio.adagioapi.dto.ProjectDto;
 import io.adagio.adagioapi.dto.TaskDto;
 import io.adagio.adagioapi.dto.TitleOrAndIdProjectQueryDTO;
+import io.adagio.adagioapi.models.DefaultMessages;
 import io.adagio.adagioapi.models.Project;
 import io.adagio.adagioapi.models.Task;
 import io.adagio.adagioapi.models.User;
@@ -79,7 +80,7 @@ public class ProjectController {
 	}
 	
 	@GetMapping("/{id}/tasks")
-	public ResponseEntity<Page<TaskDto>> getTasksByProject(@PageableDefault(sort="title", page=0, size=10,
+	public ResponseEntity<Page<TaskDto>> getTasksByProject(@PageableDefault(sort="dateTimeEnd", page=0, size=10,
 			direction=Direction.ASC) Pageable pagination, @PathVariable("id") Long id){
 		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
@@ -134,13 +135,13 @@ public class ProjectController {
 							.badRequest()
 							.body(new 
 							ProjectDto(project,
-							"Verifique as datas de projeto. Final deve ser maior que inicial ou os momentos devem ser iguais."));
+							DefaultMessages.PROJECT_WRONG_DATE_TIMES.getMessage()));
 				} else {
 					return ResponseEntity
 							.badRequest()
 							.body(new 
 							ProjectDto(project,
-							"Verifique as datas das tarefas escolhidas. Elas devem estar dentro das datas final e inicial de projeto."));
+							DefaultMessages.WRONG_TASKS_VINCULATED_TO_PROJECT.getMessage()));
 				}
 			
 			}

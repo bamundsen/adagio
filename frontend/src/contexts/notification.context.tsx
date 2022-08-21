@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Modal, Toast } from "react-bootstrap";
 import { BsInfo, BsInfoSquare } from "react-icons/bs";
+import { tabEnterClickEffect } from "../utils/acessibilityAux";
 import { returnThisDateWithHour } from "../utils/returnThisDateWithHour.utils";
 import { TaskContext } from "./task.context";
 
@@ -43,15 +44,12 @@ export const NotificationProvider = ({
       ).then((response: any) => {
         setTasksFromToday(response.data);
         setHourAndMinuteOfNow(defineHourAndMinuteOfNow());
-
-        console.log("VENHO");
       });
     }, 40000);
   }, []);
 
   useEffect(() => {
     if (hourAndMinuteOfNow === hourAndMinuteToCompare) {
-      console.log("TO SHOW");
       setIsToShowAlert(true);
       setMessage(`Tarefa ${titleTask} (${hourAndMinuteOfNow}) iniciada !`);
     }
@@ -102,6 +100,7 @@ export const NotificationProvider = ({
           <span
             style={{ fontSize: "18px", marginRight: "8px", cursor: "pointer" }}
             tabIndex={1}
+            onKeyDown={tabEnterClickEffect}
             title={"Close"}
             onClick={() => {
               setIsToShowAlert(false);

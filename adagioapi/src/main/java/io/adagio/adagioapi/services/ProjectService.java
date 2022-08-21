@@ -57,7 +57,7 @@ public class ProjectService {
 	
 
 	public boolean finalIsGreaterThanInitialDate(Project project) {
-		return project.getDateTimeEnd().isAfter(project.getDateTimeStart()) || project.getDateTimeEnd().isEqual(project.getDateTimeStart());
+		return project.getDateTimeEnd().isAfter(project.getDateTimeStart());
 	}
 	
 	private boolean taskDatesAreInvalid(Task task, Project project) {

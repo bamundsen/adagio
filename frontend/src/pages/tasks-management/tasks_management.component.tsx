@@ -137,7 +137,7 @@ const TasksManagement = () => {
               <th>Título</th>
               <th>Descrição</th>
               <th>Está acabada</th>
-              <th>Editar</th>
+              <th>Editar / Detalhar</th>
               <th>Deletar</th>
             </tr>
           </thead>

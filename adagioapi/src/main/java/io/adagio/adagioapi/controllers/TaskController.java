@@ -175,7 +175,7 @@ public class TaskController {
 
 	@PostMapping("/list-by-project-filter")
 	public ResponseEntity<Page<TaskDto>> listByProjectId(
-			@PageableDefault(sort = "dateTimeEnd", page = 0, size = 10, direction = Direction.DESC) Pageable pageable,
+			@PageableDefault(sort = "dateTimeEnd", page = 0, size = 10, direction = Direction.ASC) Pageable pageable,
 			@RequestBody @Valid TitleOrAndIdProjectQueryDTO taskQueryDto) {
 		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

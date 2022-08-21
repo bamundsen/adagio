@@ -40,7 +40,7 @@ public class ReturnedRelatorySetDataExcelExporter {
 
 	  public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 	  
-	  private ArrayList<String> taskHeaders = new ArrayList<String>(Arrays.asList( "Título", "Descrição", "Prioridade", "Data inicial", "Data final" ));
+	  private ArrayList<String> taskHeaders = new ArrayList<String>(Arrays.asList( "Título", "Descrição", "Prioridade","Está acabada", "Data inicial", "Data final" ));
 	  private ArrayList<String> projectHeaders = new ArrayList<String>(Arrays.asList("Título", "Descrição", "Progresso","Quantidade de tarefas","Data inicial", "Data final")) ;
 	  
 	  static String SHEET_TASKS = "Tasks";
@@ -117,11 +117,12 @@ public class ReturnedRelatorySetDataExcelExporter {
 	        row.createCell(0).setCellValue(task.getTitle());
 	        row.createCell(1).setCellValue(task.getDescription());
 	        row.createCell(2).setCellValue(task.getPriority().toString());
-	        row.createCell(3).setCellValue(extractFormattedDateTime(task.getDateTimeStart()));
-	        row.createCell(4).setCellValue(extractFormattedDateTime(task.getDateTimeEnd()));
+	        row.createCell(3).setCellValue(isFinished(task.getFinishedStatus()));
+	        row.createCell(4).setCellValue(extractFormattedDateTime(task.getDateTimeStart()));
+	        row.createCell(5).setCellValue(extractFormattedDateTime(task.getDateTimeEnd()));
 	        
 	        if(paginated == PaginatedSetOrNot.NOT_PAGINATED) {
-		    	  row.createCell(5).setCellValue(extractProjectName(task.getIdProject(), task.getIdUser()));
+		    	  row.createCell(6).setCellValue(extractProjectName(task.getIdProject(), task.getIdUser()));
 		      }
 	      }
 	      
@@ -130,9 +131,10 @@ public class ReturnedRelatorySetDataExcelExporter {
 	      sheet.autoSizeColumn(2);
 	      sheet.autoSizeColumn(3);
 	      sheet.autoSizeColumn(4);
+	      sheet.autoSizeColumn(5);
 	      
 	      if(paginated == PaginatedSetOrNot.NOT_PAGINATED) {
-	    	  sheet.autoSizeColumn(5);
+	    	  sheet.autoSizeColumn(6);
 	      }
 	      
 	      workbook.write(out);
@@ -142,6 +144,13 @@ public class ReturnedRelatorySetDataExcelExporter {
 	    }
 	  }
 	  
+	  private String isFinished(boolean isFinished) {
+		  if(isFinished) {
+			  return "Sim";
+		  }
+		  
+		  return "Não";
+	  }
 	  public ByteArrayInputStream loadProjects(ReturnedRelatoryProjectSetData relatory,PaginatedSetOrNot paginated) {
 		    try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream();) {
 		      int acumulatedRows = 0;
@@ -196,7 +205,7 @@ public class ReturnedRelatorySetDataExcelExporter {
 		        row.createCell(0).setCellValue(project.getTitle());
 		        row.createCell(1).setCellValue(project.getDescription());
 		        row.createCell(2).setCellValue(project.getProgress()+" %");
-		        row.createCell(3).setCellValue(project.getTasks().size());
+		        row.createCell(3).setCellValue(project.getTasksIds().size());
 		        row.createCell(4).setCellValue(extractFormattedDateTime(project.getDateTimeStart()));
 		        row.createCell(5).setCellValue(extractFormattedDateTime(project.getDateTimeEnd()));
 		      }
