@@ -61,7 +61,8 @@ const FormTarefas = () => {
     new Date(new Date().setHours(23, 59))
   );
   const [finishedOrNot, setFinishedOrNot] = useState<boolean>(false);
-  const [notifications, setNotifications] = useState<number[]>([]);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [arrayNotifications, setArrayNotifications] = useState([["POPUP","Popup"], ["SOUND","Sonoro"],[ "EMAIL","Email"]]);
 
   const equalizeAuxSelectedProjectToIdsProject = () => {
     setAuxSelectedProject(idProject);
@@ -102,6 +103,7 @@ const FormTarefas = () => {
         setIsToEdit(true);
         setNameOfProjectToShow(response.nameProject);
         setIdPRojectToChoose(response.idProject);
+        setNotifications(response.notifications);
         console.log(isToEdit);
       });
     } else {
@@ -114,8 +116,9 @@ const FormTarefas = () => {
       setIsToEdit(false);
       setIdProject(null);
       setPriority("LOW");
+      setNotifications([]);
     }
-  }, [isToRestartFormAgain, setIsToRestartFormAgain]);
+  }, [isToRestartFormAgain, setIsToRestartFormAgain, id]);
 
   const filterAndReturnDate = (date: Date) => {
     return `${String(date.getFullYear()).padStart(2, "0")}-${String(
@@ -235,6 +238,9 @@ const FormTarefas = () => {
     );
   };
 
+  const verifyNotification = (category: string) =>{
+     return notifications.find((notification)=>notification.category === category)
+  }
   const onChangeDescription = (e: any) => {
     if (e.target.value.trim() === "") {
       setIsToShowDescriptionWarning(true);
@@ -253,9 +259,22 @@ const FormTarefas = () => {
     setTitle(e.target.value);
   };
 
+  useEffect(()=>{
+    console.log(notifications);
+  },[notifications])
+
+  const onChangeListNotification = (ev: any) =>{
+    console.log(ev.target.checked, ev.target.value);
+    if(ev.target.checked === true && !notifications.find((obj:any)=>obj.category === ev.target.value)){
+        setNotifications([...notifications, {category:ev.target.value}])
+    }else{
+      setNotifications([...notifications.filter((item:any)=>item.category !== ev.target.value)])
+    }
+  }
+
   const onSubmit = async (ev: any) => {
     ev.preventDefault();
-
+    console.log(notifications);
     const taskToRegisterOrEdit: Task = {
       title: titulo.trim(),
       description: description.trim(),
@@ -264,8 +283,11 @@ const FormTarefas = () => {
       priority: priority,
       projectId: idProjectToChoose,
       finishedStatus: finishedOrNot,
-      notifications: [],
+      notifications: [... notifications.map((notification)=>{
+        return {category: notification.category, dateTime: `${returnCurrentDate()}T${startHour}`}
+      })],
     };
+    console.log(taskToRegisterOrEdit);
     if (
       !isToShowEndHourWarning &&
       !isToShowStartHourWarning &&
@@ -392,6 +414,7 @@ const FormTarefas = () => {
                 <div
                   className={`${styles.set_tarefas_form}`}
                   style={{
+                    marginBottom:"50px",
                     flexDirection: `${
                       windowDimensions.width >= 768 ? "row" : "column"
                     }`,
@@ -497,6 +520,55 @@ const FormTarefas = () => {
                         })}
                       </select>
                     </Form.Group>
+                    <p></p>
+                    Escolha o tipo de notificação:
+                    <div
+                      style={{
+                        display:"flex",
+                        width: `${
+                          windowDimensions.width > 580 ? "95%" : "100%"
+                        }`,
+                        marginTop: "20px",
+                      }}
+                    >
+                     {arrayNotifications.map((notifications: any[]) => {
+                        return (
+                          <FormGroup
+                          key={notifications[0]}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            marginBottom: "0",
+                          }}
+                          className="mb-1"
+                          >
+                             <Form.Control
+                               id ={notifications[0]}
+                               type="checkbox"
+                               checked={notifications.length > 0 ? verifyNotification(notifications[0]) : false}
+                               value={notifications[0]}
+                               style={{
+                                width: "22px",
+                                height: "18px",
+                                marginLeft:"18px",
+                              }}
+                              onChange={onChangeListNotification}
+                            />
+                            <Form.Label
+                             htmlFor={notifications[0]}
+                             style={{
+                               display: "flex",
+                               marginTop: "8px",
+                               marginLeft: "8px",
+                               alignItems: "center",
+                             }}>
+                              {notifications[1]}
+                            </Form.Label>
+                          </FormGroup>
+                        )
+                      })
+                    }
+                    </div>
                   </div>
                   <div
                     style={{
