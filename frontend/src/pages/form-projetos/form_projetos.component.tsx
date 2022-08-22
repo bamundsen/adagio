@@ -155,6 +155,28 @@ const FormProjetos = () => {
     setAuxSelectedTasks([...idsTasks]);
   };
 
+  const yearIsLowerOrEqual = () => {
+    return (
+      endDateAux.getDate() <= startDateAux.getDate() &&
+      endDateAux.getFullYear() <= startDateAux.getFullYear()
+    );
+  };
+
+  const genericConditionsOfDateAreInvalid = () => {
+    return (
+      (endDateAux.getMonth() <= startDateAux.getMonth() &&
+        yearIsLowerOrEqual()) ||
+      endDateAux.getFullYear() < startDateAux.getFullYear()
+    );
+  };
+
+  const genericConditionsOfHourAreInvalid = () => {
+    return (
+      (endHourAux.getMinutes() < startDateAux.getMinutes() &&
+        endHourAux.getHours() < startDateAux.getHours()) ||
+      endHourAux.getHours() < startDateAux.getHours()
+    );
+  };
   const onChangeStartHour = (date: Date) => {
     if (
       (date.getHours() === endHourAux.getHours() &&
@@ -163,7 +185,7 @@ const FormProjetos = () => {
     ) {
       setIsToShowStartHourWarning(false);
       setIsToShowEndHourWarning(false);
-    } else {
+    } else if (genericConditionsOfDateAreInvalid()) {
       setIsToShowStartHourWarning(true);
       setIsToShowEndHourWarning(true);
     }
@@ -184,9 +206,30 @@ const FormProjetos = () => {
     ) {
       setIsToShowStartDateWarning(false);
       setIsToShowEndDateWarning(false);
+
+      if (
+        date.getDate() === endDateAux.getDate() &&
+        date.getMonth() === endDateAux.getMonth() &&
+        date.getFullYear() === endDateAux.getFullYear() &&
+        genericConditionsOfHourAreInvalid()
+      ) {
+        setIsToShowEndHourWarning(true);
+        setIsToShowStartHourWarning(true);
+      } else {
+        setIsToShowEndHourWarning(false);
+        setIsToShowStartHourWarning(false);
+      }
     } else {
       setIsToShowStartDateWarning(true);
       setIsToShowEndDateWarning(true);
+
+      if (genericConditionsOfHourAreInvalid()) {
+        setIsToShowEndHourWarning(true);
+        setIsToShowStartHourWarning(true);
+      } else {
+        setIsToShowEndHourWarning(false);
+        setIsToShowStartHourWarning(false);
+      }
     }
     setStartDate(filterAndReturnDate(date));
     setStartDateAux(date);
@@ -204,9 +247,30 @@ const FormProjetos = () => {
     ) {
       setIsToShowEndDateWarning(false);
       setIsToShowStartDateWarning(false);
+
+      if (
+        date.getDate() === startDateAux.getDate() &&
+        date.getMonth() === startDateAux.getMonth() &&
+        date.getFullYear() === startDateAux.getFullYear() &&
+        genericConditionsOfHourAreInvalid()
+      ) {
+        setIsToShowEndHourWarning(true);
+        setIsToShowStartHourWarning(true);
+      } else {
+        setIsToShowEndHourWarning(false);
+        setIsToShowStartHourWarning(false);
+      }
     } else {
       setIsToShowEndDateWarning(true);
       setIsToShowStartDateWarning(true);
+
+      if (genericConditionsOfHourAreInvalid()) {
+        setIsToShowEndHourWarning(true);
+        setIsToShowStartHourWarning(true);
+      } else {
+        setIsToShowEndHourWarning(false);
+        setIsToShowStartHourWarning(false);
+      }
     }
     setEndDate(filterAndReturnDate(date));
     setEndDateAux(date);
@@ -220,7 +284,7 @@ const FormProjetos = () => {
     ) {
       setIsToShowEndHourWarning(false);
       setIsToShowStartHourWarning(false);
-    } else {
+    } else if (genericConditionsOfDateAreInvalid()) {
       setIsToShowEndHourWarning(true);
       setIsToShowStartHourWarning(true);
     }
