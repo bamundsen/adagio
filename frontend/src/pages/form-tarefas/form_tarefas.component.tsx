@@ -71,7 +71,6 @@ const FormTarefas = () => {
   const [isToShowStartHourWarning, setIsToShowStartHourWarning] =
     useState(false);
   const [isToShowEndHourWarning, setIsToShowEndHourWarning] = useState(false);
-
   const [isToShowTitleWarning, setIsToShowTitleWarning] = useState(false);
   const [isToShowDescriptionWarning, setIsToShowDescriptionWarning] =
     useState(false);
@@ -197,6 +196,7 @@ const FormTarefas = () => {
     setAuxEndHour(new Date(new Date().setHours(23, 59)));
     setFinishedOrNot(false);
     setPriority("LOW");
+    setNotifications([]);
   };
 
   const returnModalWarning = () => {
@@ -405,7 +405,7 @@ const FormTarefas = () => {
         }}
       >
         <h1 style={{ fontSize: "26px", marginLeft: "18px", marginTop: "10px" }}>
-          {isToEdit ? "EDITAR TAREFA:" : "CADASTRE UMA TAREFA:"}
+        {isToEdit ? "EDITAR TAREFA:" : "CADASTRE UMA TAREFA:"}
         </h1>
         <Container className={"mt-5 center"}>
           <Row>
@@ -720,19 +720,24 @@ const FormTarefas = () => {
                       </Form.Group>
                     </Form.Group>
                     <div className={`${styles.buttons_area_register}`}>
-                      <Button
-                        style={{
-                          backgroundColor: "#d3d3d3",
-                          borderRadius: "5px",
-                          border: "1px solid",
-                          borderColor: "#d3d3d3",
-                          width: "150px",
-                        }}
-                        type="button"
-                        onClick={onClearState}
-                      >
-                        Limpar
-                      </Button>
+                    {!isToEdit ? (
+                        <Button
+                          onClick={() => {
+                            onClearState(isToEdit ? true : false);
+                          }}
+                          style={{
+                            backgroundColor: "#f02",
+                            borderRadius: "5px",
+                            border: "1px solid",
+                            marginRight: "15px",
+                            borderColor: "#d3d3d3",
+                            width: "150px",
+                          }}
+                          type="button"
+                        >
+                          Limpar campos
+                        </Button>
+                      ) : null}
 
                       <Button
                         style={{
