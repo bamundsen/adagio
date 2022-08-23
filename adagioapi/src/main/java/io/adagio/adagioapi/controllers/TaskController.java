@@ -207,9 +207,14 @@ public class TaskController {
 		if (optionalTask.isPresent()) {
 			Task taskValidator = taskForm.converter(logado, projectRepository);
 			TaskDto taskDtoValidator;
+<<<<<<< Updated upstream
 
 			taskDtoValidator = taskService.taskValidator(taskValidator, logado, taskRepository, id);
 
+=======
+			taskDtoValidator = taskService.taskValidator(taskValidator, logado, taskRepository, id);
+			
+>>>>>>> Stashed changes
 			if (taskDtoValidator.isHasIssues())
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 						.header("TimeConflict", DefaultMessages.TASK_BAD_REQUEST.getMessage()).body(taskDtoValidator);
