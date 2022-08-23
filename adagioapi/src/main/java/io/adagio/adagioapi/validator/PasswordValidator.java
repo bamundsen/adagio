@@ -8,9 +8,13 @@ import javax.validation.ConstraintValidatorContext;
 
 public class PasswordValidator implements ConstraintValidator<Password, String> {
 
+<<<<<<< Updated upstream
 	private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()-[{}]:;,^'?/*~+=<>_]).{8,30}$";
 	/*private static final String PASSWORD_PATTERN = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?([^\\w\\s]|[_])).{8,30}$";*/
 
+=======
+	private static final String PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*([^\\w\\s]|[_])).{8,30}$";
+>>>>>>> Stashed changes
 	private static final Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
 	
 	@Override
