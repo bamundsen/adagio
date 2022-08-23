@@ -11,6 +11,7 @@ import { extractFormattedDateTime } from "../../../utils/returnShowableDateAndHo
 import RegionPaginationButtons from "../../../components/region-pagination-buttons/region_pagination_buttons.component";
 import NegativeButtonModal from "../../../components/negative-button-modal/negative_button_modal.component";
 
+
 interface ChooseProjectModalProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isOpen: boolean;
@@ -70,6 +71,7 @@ const ChooseProjectModal = ({
       });
     }
   }, [isOpen, page, size, searchString]);
+
 
   useEffect(() => {
     if (projectToShow.length > 0) {
@@ -217,7 +219,6 @@ const ChooseProjectModal = ({
             </section>
           </>
         )}
-
         <RegionPaginationButtons
           isFirst={isFirst}
           isLast={isLast}

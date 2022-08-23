@@ -122,16 +122,16 @@ public class TaskDto {
 	public String getExcetpionMessage() {
 		return excetpionMessage;
 	}
-
-	
-	public boolean isHasIssues() {
-		return hasIssues;
-	}
 	public String getNameProject() {
 		return nameProject;
 	}
 	public void setNameProject(String nameProject) {
 		this.nameProject = nameProject;
+	}
+
+	
+	public boolean isHasIssues() {
+		return hasIssues;
 	}
 
 }
