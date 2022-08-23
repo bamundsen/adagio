@@ -2,16 +2,11 @@ package io.adagio.adagioapi.dto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.aspectj.lang.annotation.After;
-
-import io.adagio.adagioapi.models.Category;
 import io.adagio.adagioapi.models.Notification;
 import io.adagio.adagioapi.models.Priority;
 import io.adagio.adagioapi.models.Project;
