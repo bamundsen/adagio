@@ -67,7 +67,7 @@ public class RelatoryService {
 				startDate,
 				endDate);
 		
-		List<TaskDto> tasksDto = Task.converter(tasks);
+		List<TaskDto> tasksDto = Task.convertListToListTaskDto(tasks);
 		
 		relatory.setQuantityOfElements(tasksDto.size());
 		relatory.setTotalHours(returnTotalHoursOrMinutes(tasksDto, TimeUnit.HOURS));
@@ -87,7 +87,7 @@ public class RelatoryService {
 			if(project.isPresent()) {
 				Page<Task> tasks = taskRepository.findByProjectAndUser(project.get(), user,pagination);
 				
-				List<TaskDto> tasksDto = Task.converter(tasks.getContent());
+				List<TaskDto> tasksDto = Task.convertListToListTaskDto(tasks.getContent());
 				
 				relatory.setQuantityOfElements(tasksDto.size());
 				relatory.setTotalHours(returnTotalHoursOrMinutes(tasksDto,TimeUnit.HOURS));
@@ -106,7 +106,7 @@ public class RelatoryService {
 		
 		Page<Project> projects = projectRepository.findByUser(user, pagination);
 
-		List<ProjectDto> projectsDto = Project.converter(projects.getContent());
+		List<ProjectDto> projectsDto = Project.convertListToProjectsListDto(projects.getContent());
 		
 		relatory.setQuantityOfElements(projectsDto.size());
 		relatory.setTotalHours(returnTotalHoursOrMinutesOfProjects(projectsDto,TimeUnit.HOURS));
@@ -171,37 +171,5 @@ public class RelatoryService {
 	enum TimeUnit {
 		MINUTES, HOURS,SECONDS
 	}
-	/*
-	public String returnDurationMessage(List<TaskDto> tasks) {
-		String message = "";
-		
-		for(TaskDto t:tasks) {
-			if(t.getDateTimeEnd().isAfter(t.getDateTimeStart())) {
-				LocalDateTime tempDateTime = LocalDateTime.from(t.getDateTimeStart());
-				
-				Long years = tempDateTime.until(t.getDateTimeEnd(), ChronoUnit.YEARS);
-				tempDateTime = tempDateTime.plusYears(years);
-				
-				Long months = tempDateTime.until(t.getDateTimeEnd(), ChronoUnit.MONTHS);
-				tempDateTime = tempDateTime.plusMonths(months);
-				
-				Long days = tempDateTime.until(t.getDateTimeEnd(), ChronoUnit.DAYS);
-				tempDateTime = tempDateTime.plusDays(days);
-				
-				Long hours = tempDateTime.until(t.getDateTimeEnd(), ChronoUnit.HOURS);
-				tempDateTime = tempDateTime.plusHours(hours);
-				
-				Long minutes = tempDateTime.until(t.getDateTimeEnd(), ChronoUnit.MINUTES);
-				tempDateTime = tempDateTime.plusMinutes(minutes);
-				
-				Long seconds = tempDateTime.until(t.getDateTimeEnd(), ChronoUnit.SECONDS);
-				
-				message =  MessageFormat.format("{0} anos(s), {1} meses, {2} dias, {3} horas, {4} minutos, e {5} segundos" , years.toString(),
-						months.toString(), days.toString(), hours.toString(), minutes.toString(), seconds.toString());
-			}
-		}
-		
-		return 0;
-	}
-	*/
+	
 }

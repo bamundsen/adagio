@@ -65,22 +65,22 @@ public class TaskController {
 	public Page<TaskDto> list(
 			@PageableDefault(sort = "dateTimeEnd", page = 0, size = 10, direction = Direction.ASC) Pageable pagination) {
 
-		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		Page<Task> tasks = taskRepository.findByUser(logado, pagination);
-		return Task.converter(tasks);
+		Page<Task> tasks = taskRepository.findByUser(logged, pagination);
+		return Task.convert(tasks);
 	}
 
 	@PostMapping("/list-by-start-datetime-filter")
 	public ResponseEntity<List<TaskDto>> listByStartDateAndEndDate(
 			@RequestBody @Valid StartAndEndDateDto startDateDto) {
-		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		List<Task> tasks = taskRepository
-				.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanAndProjectIsNull(logado,
+				.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanAndProjectIsNull(logged,
 						startDateDto.getDateTimeStart(), startDateDto.getDateTimeEnd());
 
-		List<TaskDto> tasksDto = Task.converter(tasks);
+		List<TaskDto> tasksDto = Task.convertListToListTaskDto(tasks);
 
 		return ResponseEntity.ok().body(tasksDto);
 	}
@@ -88,10 +88,10 @@ public class TaskController {
 	@PostMapping("/get-color-that-is-to-be-showed")
 	public ResponseEntity<ColorThatIsToBeShowedBasedOnPriorityDto> getColor(
 			@RequestBody @Valid StartAndEndDateDto form) {
-		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		List<Task> tasks = taskRepository
-				.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanAndProjectIsNull(logado,
+				.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanAndProjectIsNull(logged,
 						form.getDateTimeStart(), form.getDateTimeEnd());
 
 		ColorOfPriority hexadecimalOfColor = ColorThatIsToBeShowedBasedOnPriorityDto.defineColorThatIsToBeShowed(tasks);
@@ -105,11 +105,11 @@ public class TaskController {
 	public ResponseEntity<TaskDto> save(@RequestBody @Valid CadastroTarefaForm taskForm,
 			UriComponentsBuilder uriBuilder) {
 
-		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Task task = taskForm.converter(logado, projectRepository);
+		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Task task = taskForm.converter(logged, projectRepository);
 		TaskDto taskDtoValidator;
 
-		taskDtoValidator = taskService.taskValidator(task, logado, taskRepository);
+		taskDtoValidator = taskService.taskValidator(task, logged, taskRepository);
 		if (taskDtoValidator.isHasIssues())
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.header("TimeConflict", DefaultMessages.TASK_BAD_REQUEST.getMessage()).body(taskDtoValidator);
@@ -117,9 +117,9 @@ public class TaskController {
 		taskRepository.save(task);
 
 		if (task.getProject() != null) {
-			Optional<Project> project = projectRepository.findByIdAndUser(task.getProject().getId(), logado);
+			Optional<Project> project = projectRepository.findByIdAndUser(task.getProject().getId(), logged);
 			project.get().setProgressStatus(taskService
-					.setProjectFinishedStatusByTasks(taskRepository.findByProjectAndUser(project.get(), logado)));
+					.setProjectFinishedStatusByTasks(taskRepository.findByProjectAndUser(project.get(), logged)));
 			projectRepository.save(project.get());
 		}
 
@@ -140,17 +140,17 @@ public class TaskController {
 	@Transactional
 	public ResponseEntity<TaskDto> delete(@PathVariable("id") Long id) {
 
-		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		Optional<Task> task = taskRepository.findByIdAndUser(id, logado);
+		Optional<Task> task = taskRepository.findByIdAndUser(id, logged);
 
 		if (task.isPresent()) {
 
-			taskRepository.deleteByIdAndUser(id, logado);
+			taskRepository.deleteByIdAndUser(id, logged);
 			if (task.get().getProject() != null) {
-				Optional<Project> project = projectRepository.findByIdAndUser(task.get().getProject().getId(), logado);
+				Optional<Project> project = projectRepository.findByIdAndUser(task.get().getProject().getId(), logged);
 				project.get().setProgressStatus(taskService
-						.setProjectFinishedStatusByTasks(taskRepository.findByProjectAndUser(project.get(), logado)));
+						.setProjectFinishedStatusByTasks(taskRepository.findByProjectAndUser(project.get(), logged)));
 				projectRepository.save(project.get());
 			}
 			return ResponseEntity.ok().build();
@@ -163,12 +163,12 @@ public class TaskController {
 	public ResponseEntity<Page<TaskDto>> listByTitle(
 			@PageableDefault(sort = "title", page = 0, size = 10, direction = Direction.DESC) Pageable pageable,
 			@RequestBody @Valid TitleOrAndIdProjectQueryDTO taskQueryDto) {
-		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		Page<Task> tasks = taskRepository.findByTitleAndUser_IdNative(taskQueryDto.getTitle(), logado.getId(),
+		Page<Task> tasks = taskRepository.findByTitleAndUser_IdNative(taskQueryDto.getTitle(), logged.getId(),
 				pageable);
 
-		Page<TaskDto> tasksDto = Task.converter(tasks);
+		Page<TaskDto> tasksDto = Task.convert(tasks);
 
 		return ResponseEntity.ok().body(tasksDto);
 	}
@@ -177,19 +177,19 @@ public class TaskController {
 	public ResponseEntity<Page<TaskDto>> listByProjectId(
 			@PageableDefault(sort = "dateTimeEnd", page = 0, size = 10, direction = Direction.ASC) Pageable pageable,
 			@RequestBody @Valid TitleOrAndIdProjectQueryDTO taskQueryDto) {
-		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User logged= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		Page<Task> tasks = taskRepository.findByProject_IdAndUser(taskQueryDto.getProjectId(), logado, pageable);
+		Page<Task> tasks = taskRepository.findByProject_IdAndUser(taskQueryDto.getProjectId(), logged, pageable);
 
-		Page<TaskDto> tasksDto = Task.converter(tasks);
+		Page<TaskDto> tasksDto = Task.convert(tasks);
 
 		return ResponseEntity.ok().body(tasksDto);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<TaskDto> detail(@PathVariable("id") Long id) {
-		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Optional<Task> task = taskRepository.findByIdAndUser(id, logado);
+		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Optional<Task> task = taskRepository.findByIdAndUser(id, logged);
 
 		TaskDto taskDto = new TaskDto(task.get());
 
@@ -200,15 +200,15 @@ public class TaskController {
 	@Transactional
 	public ResponseEntity<TaskDto> update(@PathVariable("id") Long id,
 			@RequestBody @Valid CadastroTarefaForm taskForm) {
-		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		Optional<Task> optionalTask = taskRepository.findByIdAndUser(id, logado);
+		Optional<Task> optionalTask = taskRepository.findByIdAndUser(id, logged);
 
 		if (optionalTask.isPresent()) {
-			Task taskValidator = taskForm.converter(logado, projectRepository);
+			Task taskValidator = taskForm.converter(logged, projectRepository);
 			TaskDto taskDtoValidator;
 
-			taskDtoValidator = taskService.taskValidator(taskValidator, logado, taskRepository, id);
+			taskDtoValidator = taskService.taskValidator(taskValidator, logged, taskRepository, id);
 
 			if (taskDtoValidator.isHasIssues())
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -217,9 +217,9 @@ public class TaskController {
 			Task task = taskForm.update(id, taskRepository, projectRepository);
 
 			if (task.getProject() != null) {
-				Optional<Project> project = projectRepository.findByIdAndUser(task.getProject().getId(), logado);
+				Optional<Project> project = projectRepository.findByIdAndUser(task.getProject().getId(), logged);
 				project.get().setProgressStatus(taskService
-						.setProjectFinishedStatusByTasks(taskRepository.findByProjectAndUser(project.get(), logado)));
+						.setProjectFinishedStatusByTasks(taskRepository.findByProjectAndUser(project.get(), logged)));
 				projectRepository.save(project.get());
 			}
 
@@ -245,12 +245,12 @@ public class TaskController {
 			@PageableDefault(sort = "title", page = 0, size = 10, direction = Direction.DESC) Pageable pageable,
 			@RequestBody @Valid TitleOrAndIdProjectQueryDTO taskQueryDto) {
 
-		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		Page<Task> tasks = taskRepository.findByTitleAndAndUser_IdAndProjectIsNullOrProjectIsEqualNative(
-				taskQueryDto.getTitle(), logado.getId(), taskQueryDto.getProjectId(), pageable);
+				taskQueryDto.getTitle(), logged.getId(), taskQueryDto.getProjectId(), pageable);
 
-		Page<TaskDto> tasksDto = Task.converter(tasks);
+		Page<TaskDto> tasksDto = Task.convert(tasks);
 
 		return ResponseEntity.ok().body(tasksDto);
 	}

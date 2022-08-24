@@ -38,15 +38,6 @@ public class TaskService {
 		return true;
 	}
 
-	/*
-	 * //método desnecessário private boolean
-	 * thereAreConflitctBetweenTasksHours(Task taskToCompare, Task taskElement) {
-	 * return
-	 * (taskToCompare.getDateTimeStart().isEqual(taskElement.getDateTimeStart())) ||
-	 * (taskToCompare.getDateTimeEnd().isEqual(taskElement.getDateTimeEnd())) ||
-	 * (taskToCompare.getDateTimeStart().isBefore(taskElement.getDateTimeStart()) );
-	 * }
-	 */
 
 	public boolean validTaskTime(Task task, Long userId, TaskRepository taskRepository, Long taskId) {
 		if (task.getDateTimeStart().isAfter(task.getDateTimeEnd()))
@@ -62,12 +53,7 @@ public class TaskService {
 			}
 		}
 
-		/*
-		 * for (Task t : tasksBack) { if (thereAreConflitctBetweenTasksHours(task,t) &&
-		 * t.getId() != taskId) { System.out.println(taskId != t.getId()); return false;
-		 * } }
-		 */
-
+	
 		return true;
 	}
 

@@ -66,7 +66,7 @@ public class ProjectController {
 			User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 			Page<Project> projects = projectRepository.findByUser(logged,pagination);
-			return Project.converter(projects);	
+			return Project.convert(projects);	
 	}
 	
 	@PostMapping("/list-by-title")
@@ -76,7 +76,7 @@ public class ProjectController {
 		
 		Page<Project> projects = projectRepository.findByTitleAndUser_IdNative(queryDto.getTitle(), logged.getId(), pagination);
 		
-		return Project.converter(projects);
+		return Project.convert(projects);
 	}
 	
 	@GetMapping("/{id}/tasks")
@@ -89,7 +89,7 @@ public class ProjectController {
 		if(project.isPresent()) {
 			Page<Task> tasks = taskRepository.findByProjectAndUser(project.get(), logged, pagination);
 			
-			return ResponseEntity.ok().body(Task.converter(tasks));
+			return ResponseEntity.ok().body(Task.convert(tasks));
 		}
 		
 		return ResponseEntity.notFound().build();
@@ -181,13 +181,13 @@ public class ProjectController {
 							.badRequest()
 							.body(new 
 							ProjectDto(optionalProject.get(),
-							"Verifique as datas de projeto. Final deve ser maior que inicial ou os momentos devem ser iguais."));
+									DefaultMessages.PROJECT_WRONG_DATE_TIMES.getMessage()));
 				} else {
 					return ResponseEntity
 							.badRequest()
 							.body(new 
 							ProjectDto(optionalProject.get(),
-							"Verifique as datas das tarefas escolhidas. Elas devem estar dentro das datas final e inicial de projeto."));
+									DefaultMessages.WRONG_TASKS_VINCULATED_TO_PROJECT.getMessage()));
 				}
 			
 			}
@@ -200,13 +200,13 @@ public class ProjectController {
 	@DeleteMapping("/{id}")
 	@Transactional
 	public ResponseEntity<?> delete(@PathVariable("id") Long id){
-		User logado = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		Optional<Project> project = projectRepository.findByIdAndUser(id,logado);
+		Optional<Project> project = projectRepository.findByIdAndUser(id,logged);
 		
 		if(project.isPresent()) {
-			projectService.deleteTasksByProjectOrDesvinculateAndUser(project.get(), logado, OperationType.DELETE);
-			projectRepository.deleteByIdAndUser(id,logado);
+			projectService.deleteTasksByProjectOrDesvinculateAndUser(project.get(), logged, OperationType.DELETE);
+			projectRepository.deleteByIdAndUser(id,logged);
 			return ResponseEntity.ok().build();
 		}
 		

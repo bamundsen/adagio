@@ -143,11 +143,11 @@ public class Project {
 		return user;
 	}
 	
-	public static Page<ProjectDto> converter(Page<Project> projects){
+	public static Page<ProjectDto> convert(Page<Project> projects){
 		return projects.map(ProjectDto::new);
 	}
 	
-	public static List<ProjectDto> converter(List<Project> projects){
+	public static List<ProjectDto> convertListToProjectsListDto(List<Project> projects){
 		List<ProjectDto> projectsDto = new ArrayList<>();
 		
 		for(Project task : projects) {

@@ -176,11 +176,11 @@ public class Task {
 		this.notifications = notifications;
 	}
 	
-	public static Page<TaskDto> converter(Page<Task> tasks){
+	public static Page<TaskDto> convert(Page<Task> tasks){
 		return tasks.map(TaskDto::new);
 	}
 
-	public static List<TaskDto> converter(List<Task> tasks){
+	public static List<TaskDto> convertListToListTaskDto(List<Task> tasks){
 		List<TaskDto> tasksDto = new ArrayList<>();
 		
 		for(Task task : tasks) {

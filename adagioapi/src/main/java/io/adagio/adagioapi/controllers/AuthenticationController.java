@@ -43,7 +43,7 @@ import io.adagio.adagioapi.services.UserService;
 
 @RestController
 @RequestMapping("${adagio.api.base_servico}/auth")
-public class AutenticacaoController {
+public class AuthenticationController {
 
 	@Autowired
 	private AuthenticationManager authManager;
