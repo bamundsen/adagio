@@ -141,8 +141,18 @@ const RelatoryModal = ({
     navigate(`/adagio/editar_tarefa/${task.id}`);
   };
 
+  const returnDayOfModal = () => {
+    const dateToSend = new Date(dateToSearch);
+    return `${
+      dateToSend.getFullYear() +
+      "-" +
+      String(dateToSend.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(dateToSend.getDate()).padStart(2, "0")
+    }`;
+  };
   const goToCreateTask = () => {
-    navigate(`/adagio/cadastrar_tarefa`);
+    navigate(`/adagio/cadastrar_tarefa/${returnDayOfModal()}`);
   };
 
   const returnSpinner = () => {

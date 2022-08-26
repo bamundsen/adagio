@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import io.adagio.adagioapi.dto.CadastroTarefaForm;
+import io.adagio.adagioapi.dto.RegisterTaskForm;
 import io.adagio.adagioapi.dto.TaskDto;
 import io.adagio.adagioapi.models.Category;
 import io.adagio.adagioapi.models.DefaultMessages;
@@ -89,7 +89,7 @@ public class TaskService {
 		return notificationsBack;
 	}
 
-	public LocalDateTime taskDateBuilder(CadastroTarefaForm taskForm) {
+	public LocalDateTime taskDateBuilder(RegisterTaskForm taskForm) {
 		return LocalDateTime.of(taskForm.getDateTimeStart().toLocalDate(), taskForm.getDateTimeEnd().toLocalTime());
 	}
 

@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import io.adagio.adagioapi.config.security.TokenService;
-import io.adagio.adagioapi.dto.CadastroForm;
+import io.adagio.adagioapi.dto.RegisterForm;
 import io.adagio.adagioapi.dto.LoginForm;
 import io.adagio.adagioapi.dto.LoginResponse;
 import io.adagio.adagioapi.dto.Token;

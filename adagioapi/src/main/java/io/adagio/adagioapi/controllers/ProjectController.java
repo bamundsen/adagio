@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import io.adagio.adagioapi.dto.CadastroProjetoForm;
+import io.adagio.adagioapi.dto.RegisterProjectForm;
 import io.adagio.adagioapi.dto.OperationType;
 import io.adagio.adagioapi.dto.ProjectDto;
 import io.adagio.adagioapi.dto.TaskDto;
@@ -110,7 +110,7 @@ public class ProjectController {
 	 
 	@PostMapping
 	@Transactional
-	public ResponseEntity<ProjectDto> register(@RequestBody @Valid CadastroProjetoForm projectForm, 
+	public ResponseEntity<ProjectDto> register(@RequestBody @Valid RegisterProjectForm projectForm, 
 			UriComponentsBuilder uriBuilder){
 		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
@@ -153,7 +153,7 @@ public class ProjectController {
 	
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<ProjectDto> update(@PathVariable("id") Long id, @RequestBody @Valid CadastroProjetoForm projectForm){
+	public ResponseEntity<ProjectDto> update(@PathVariable("id") Long id, @RequestBody @Valid RegisterProjectForm projectForm){
 		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	
 		Optional<Project> optionalProject = projectRepository.findByIdAndUser(id,logged);

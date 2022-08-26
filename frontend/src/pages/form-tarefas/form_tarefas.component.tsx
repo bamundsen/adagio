@@ -31,7 +31,7 @@ const FormTarefas = () => {
   const { isToRestartFormAgain, setIsToRestartFormAgain } =
     useContext(ProjectContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { id } = useParams();
+  const { id, date } = useParams();
   const [auxSelectedProject, setAuxSelectedProject] = useState<number | null>(
     Number
   );
@@ -62,7 +62,11 @@ const FormTarefas = () => {
   );
   const [finishedOrNot, setFinishedOrNot] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<any[]>([]);
-  const [arrayNotifications, setArrayNotifications] = useState([["POPUP","Popup"], ["SOUND","Sonoro"],[ "EMAIL","Email"]]);
+  const [arrayNotifications, setArrayNotifications] = useState([
+    ["POPUP", "Popup"],
+    ["SOUND", "Sonoro"],
+    ["EMAIL", "Email"],
+  ]);
 
   const equalizeAuxSelectedProjectToIdsProject = () => {
     setAuxSelectedProject(idProject);
@@ -85,10 +89,6 @@ const FormTarefas = () => {
   );
 
   useEffect(() => {
-    console.log(menssagerErro);
-  }, [menssagerErro]);
-
-  useEffect(() => {
     if (id !== undefined) {
       getTask(Number(id)).then((response: any) => {
         setTitle(response.title);
@@ -101,23 +101,49 @@ const FormTarefas = () => {
         setIdProject(response.idProject);
         setIsToEdit(true);
         setNameOfProjectToShow(response.nameProject);
-        setIdPRojectToChoose(response.idProject);
+
         setNotifications(response.notifications);
-        console.log(isToEdit);
       });
     } else {
-      setTitle("");
-      setDescription("");
-      setDateTAux(new Date());
-      setAuxStartHour(new Date());
-      setAuxEndHour(new Date(new Date().setHours(23, 59)));
-      setFinishedOrNot(false);
-      setIsToEdit(false);
-      setIdProject(null);
-      setPriority("LOW");
-      setNotifications([]);
+      onClearState(false, true);
     }
   }, [isToRestartFormAgain, setIsToRestartFormAgain, id]);
+
+  useEffect(() => {
+    setDateT(filterAndReturnDate(DateTAux));
+    setStartHour(filterAndReturnHour(startHourAux));
+    setEndHour(filterAndReturnHour(endHourAux));
+  }, [DateTAux, startHourAux, endHourAux]);
+
+  useEffect(() => {
+    setExportCalendarType(null);
+  }, []);
+
+  const onClearState = (isToEdit: boolean, isToResetAllStates?: boolean) => {
+    setTitle("");
+    setDescription("");
+
+    const dateToValid = new Date(`${date}T00:00:00`);
+
+    if (dateToValid.getDate()) {
+      setDateTAux(new Date(`${date}T00:00:00`));
+    } else {
+      setDateTAux(new Date());
+    }
+
+    setAuxStartHour(new Date());
+    setAuxEndHour(new Date(new Date().setHours(23, 59)));
+    setFinishedOrNot(false);
+
+    if (isToResetAllStates) {
+      setIsToEdit(false);
+      setIdProject(null);
+      setNameOfProjectToShow("");
+    }
+
+    setPriority("LOW");
+    setNotifications([]);
+  };
 
   const filterAndReturnDate = (date: Date) => {
     return `${String(date.getFullYear()).padStart(2, "0")}-${String(
@@ -130,16 +156,6 @@ const FormTarefas = () => {
       hour.getMinutes()
     ).padStart(2, "0")}:${String(hour.getSeconds()).padStart(2, "0")}`;
   };
-
-  useEffect(() => {
-    setDateT(filterAndReturnDate(DateTAux));
-    setStartHour(filterAndReturnHour(startHourAux));
-    setEndHour(filterAndReturnHour(endHourAux));
-  }, [DateTAux, startHourAux, endHourAux]);
-
-  useEffect(() => {
-    setExportCalendarType(null);
-  }, []);
 
   const onChangeDateT = (date: Date) => {
     setDateT(filterAndReturnDate(date));
@@ -188,17 +204,6 @@ const FormTarefas = () => {
     }
   };
 
-  const onClearState = (ev: any) => {
-    setTitle("");
-    setDescription("");
-    setDateTAux(new Date());
-    setAuxStartHour(new Date());
-    setAuxEndHour(new Date(new Date().setHours(23, 59)));
-    setFinishedOrNot(false);
-    setPriority("LOW");
-    setNotifications([]);
-  };
-
   const returnModalWarning = () => {
     return (
       <ConfirmationModal
@@ -216,11 +221,11 @@ const FormTarefas = () => {
     return (
       <ConfirmationModal
         colorFlagNegativeButton="primary"
-        titleConfirmationMessage="A Tarefas foi salva"
+        titleConfirmationMessage="A tarefa foi salva"
         setModalIsOpen={setModalRegisterWasSaveOpen}
         isModalOpen={modalRegisterWasSaveOpen}
         isBasicConfirmation={true}
-        explanationMessage="Você pode gerenciá-lo na área de Tarefas."
+        explanationMessage="Você pode gerenciá-la na área de tarefas."
       />
     );
   };
@@ -229,7 +234,7 @@ const FormTarefas = () => {
     return (
       <ConfirmationModal
         colorFlagNegativeButton="primary"
-        explanationMessage="Você pode gerenciá-lo na área de Tarefas"
+        explanationMessage="Você pode gerenciá-la na área de tarefas."
         setModalIsOpen={setModalRegisterWasEditedOpen}
         isModalOpen={modalRegisterWasEditedOpen}
         isBasicConfirmation={true}
@@ -238,9 +243,11 @@ const FormTarefas = () => {
     );
   };
 
-  const verifyNotification = (category: string) =>{
-     return notifications.find((notification)=>notification.category === category)
-  }
+  const verifyNotification = (category: string) => {
+    return notifications.find(
+      (notification) => notification.category === category
+    );
+  };
   const onChangeDescription = (e: any) => {
     if (e.target.value.trim() === "") {
       setIsToShowDescriptionWarning(true);
@@ -259,35 +266,42 @@ const FormTarefas = () => {
     setTitle(e.target.value);
   };
 
-  useEffect(()=>{
-    console.log(notifications);
-  },[notifications])
-
-  const onChangeListNotification = (ev: any) =>{
-    console.log(ev.target.checked, ev.target.value);
-    if(ev.target.checked === true && !notifications.find((obj:any)=>obj.category === ev.target.value)){
-        setNotifications([...notifications, {category:ev.target.value}])
-    }else{
-      setNotifications([...notifications.filter((item:any)=>item.category !== ev.target.value)])
+  const onChangeListNotification = (ev: any) => {
+    if (
+      ev.target.checked === true &&
+      !notifications.find((obj: any) => obj.category === ev.target.value)
+    ) {
+      setNotifications([...notifications, { category: ev.target.value }]);
+    } else {
+      setNotifications([
+        ...notifications.filter(
+          (item: any) => item.category !== ev.target.value
+        ),
+      ]);
     }
-  }
+  };
 
   const onSubmit = async (ev: any) => {
     ev.preventDefault();
-    console.log(notifications);
+
     const taskToRegisterOrEdit: Task = {
       title: titulo.trim(),
       description: description.trim(),
       dateTimeStart: `${returnCurrentDate()}T${startHour}`,
       dateTimeEnd: `${returnCurrentDate()}T${endHour}`,
       priority: priority,
-      projectId: idProjectToChoose,
+      projectId: idProject,
       finishedStatus: finishedOrNot,
-      notifications: [... notifications.map((notification)=>{
-        return {category: notification.category, dateTime: `${returnCurrentDate()}T${startHour}`}
-      })],
+      notifications: [
+        ...notifications.map((notification) => {
+          return {
+            category: notification.category,
+            dateTime: `${returnCurrentDate()}T${startHour}`,
+          };
+        }),
+      ],
     };
-    console.log(taskToRegisterOrEdit);
+
     if (
       !isToShowEndHourWarning &&
       !isToShowStartHourWarning &&
@@ -297,7 +311,7 @@ const FormTarefas = () => {
       try {
         if (isToEdit === false) {
           const responseToOperation = await createTask(taskToRegisterOrEdit);
-          console.log(responseToOperation);
+
           if (responseToOperation?.status === 201) {
             setModalRegisterWasSaveOpen(true);
           } else {
@@ -328,7 +342,7 @@ const FormTarefas = () => {
             taskToRegisterOrEdit,
             Number(id)
           );
-          console.log(responseToOperation);
+
           if (responseToOperation?.status === 200) {
             setModalRegisterWasEditedOpen(true);
           } else {
@@ -347,7 +361,7 @@ const FormTarefas = () => {
                 i++
               ) {
                 const error = responseToOperation?.response?.data[i];
-                console.log(error);
+
                 if (error.campo === "title") {
                   setIsToShowTitleWarning(true);
                 }
@@ -356,7 +370,6 @@ const FormTarefas = () => {
           }
         }
       } catch (erro) {
-        console.log(erro);
         setIsWarningToVerifiyOpen(true);
       }
     } else {
@@ -387,10 +400,10 @@ const FormTarefas = () => {
         equalizeAuxSelectedProjectToIdsProject={
           equalizeAuxSelectedProjectToIdsProject
         }
-        projectIdIfItIsToEdit={idProjectToChoose}
+        projectIdIfItIsToEdit={idProject}
         isOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
-        setIdPRojectToChoose={setIdPRojectToChoose}
+        setIdPRojectToChoose={setIdProject}
         setNameOfProjectToShow={setNameOfProjectToShow}
       />
     );
@@ -405,7 +418,7 @@ const FormTarefas = () => {
         }}
       >
         <h1 style={{ fontSize: "26px", marginLeft: "18px", marginTop: "10px" }}>
-        {isToEdit ? "EDITAR TAREFA:" : "CADASTRE UMA TAREFA:"}
+          {isToEdit ? "EDITAR TAREFA:" : "CADASTRE UMA TAREFA:"}
         </h1>
         <Container className={"mt-5 center"}>
           <Row>
@@ -414,7 +427,7 @@ const FormTarefas = () => {
                 <div
                   className={`${styles.set_tarefas_form}`}
                   style={{
-                    marginBottom:"50px",
+                    marginBottom: "50px",
                     flexDirection: `${
                       windowDimensions.width >= 768 ? "row" : "column"
                     }`,
@@ -459,7 +472,6 @@ const FormTarefas = () => {
                         </span>
                       ) : null}
                     </Form.Group>
-
                     <Form.Group
                       style={{
                         width: `${
@@ -489,7 +501,6 @@ const FormTarefas = () => {
                         </span>
                       ) : null}
                     </Form.Group>
-
                     <Form.Group
                       style={{
                         width: `${
@@ -524,50 +535,54 @@ const FormTarefas = () => {
                     Escolha o tipo de notificação:
                     <div
                       style={{
-                        display:"flex",
+                        display: "flex",
                         width: `${
                           windowDimensions.width > 580 ? "95%" : "100%"
                         }`,
                         marginTop: "20px",
                       }}
                     >
-                     {arrayNotifications.map((notifications: any[]) => {
+                      {arrayNotifications.map((notifications: any[]) => {
                         return (
                           <FormGroup
-                          key={notifications[0]}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            marginBottom: "0",
-                          }}
-                          className="mb-1"
+                            key={notifications[0]}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              marginBottom: "0",
+                            }}
+                            className="mb-1"
                           >
-                             <Form.Control
-                               id ={notifications[0]}
-                               type="checkbox"
-                               checked={notifications.length > 0 ? verifyNotification(notifications[0]) : false}
-                               value={notifications[0]}
-                               style={{
+                            <Form.Control
+                              id={notifications[0]}
+                              type="checkbox"
+                              checked={
+                                notifications.length > 0
+                                  ? verifyNotification(notifications[0])
+                                  : false
+                              }
+                              value={notifications[0]}
+                              style={{
                                 width: "22px",
                                 height: "18px",
-                                marginLeft:"18px",
+                                marginLeft: "18px",
                               }}
                               onChange={onChangeListNotification}
                             />
                             <Form.Label
-                             htmlFor={notifications[0]}
-                             style={{
-                               display: "flex",
-                               marginTop: "8px",
-                               marginLeft: "8px",
-                               alignItems: "center",
-                             }}>
+                              htmlFor={notifications[0]}
+                              style={{
+                                display: "flex",
+                                marginTop: "8px",
+                                marginLeft: "8px",
+                                alignItems: "center",
+                              }}
+                            >
                               {notifications[1]}
                             </Form.Label>
                           </FormGroup>
-                        )
-                      })
-                    }
+                        );
+                      })}
                     </div>
                   </div>
                   <div
@@ -686,7 +701,7 @@ const FormTarefas = () => {
                           }}
                         >
                           {`Clique aqui - ${
-                            idProjectToChoose === null
+                            idProject === null
                               ? "Nenhum projeto escolhido "
                               : `Projeto: ${nameOfProjectToShow} foi escolhido`
                           }`}
@@ -720,10 +735,10 @@ const FormTarefas = () => {
                       </Form.Group>
                     </Form.Group>
                     <div className={`${styles.buttons_area_register}`}>
-                    {!isToEdit ? (
+                      {!isToEdit ? (
                         <Button
                           onClick={() => {
-                            onClearState(isToEdit ? true : false);
+                            onClearState(isToEdit ? true : false, false);
                           }}
                           style={{
                             backgroundColor: "#f02",

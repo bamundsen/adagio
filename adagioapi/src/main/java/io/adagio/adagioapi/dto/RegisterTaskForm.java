@@ -16,7 +16,7 @@ import io.adagio.adagioapi.repositories.ProjectRepository;
 import io.adagio.adagioapi.repositories.TaskRepository;
 import io.adagio.adagioapi.services.TaskService;
 
-public class CadastroTarefaForm {
+public class RegisterTaskForm {
 
 	@NotNull @NotEmpty
 	private String title;
@@ -150,6 +150,8 @@ public class CadastroTarefaForm {
 			if(project.isPresent())
 				task.setProject(project.get());
 			
+		} else {
+			task.setProject(null);
 		}
 	
 		task.setDateTimeEnd(dateTimeEnd);

@@ -15,7 +15,7 @@ import io.adagio.adagioapi.validator.UniqueCpf;
 import io.adagio.adagioapi.validator.UniqueEmail;
 import io.adagio.adagioapi.validator.UniqueLogin;
 
-public class CadastroForm {
+public class RegisterForm {
 
 	@NotNull @NotEmpty @Size(min=8, max=30) @UniqueLogin
 	private String login;

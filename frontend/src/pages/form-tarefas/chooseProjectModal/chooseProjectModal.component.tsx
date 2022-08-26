@@ -11,7 +11,6 @@ import { extractFormattedDateTime } from "../../../utils/returnShowableDateAndHo
 import RegionPaginationButtons from "../../../components/region-pagination-buttons/region_pagination_buttons.component";
 import NegativeButtonModal from "../../../components/negative-button-modal/negative_button_modal.component";
 
-
 interface ChooseProjectModalProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isOpen: boolean;
@@ -66,12 +65,10 @@ const ChooseProjectModal = ({
         setRequestWasDone(true);
         if (response?.content) {
           setProjectToShow(response.content);
-          console.log(response);
         }
       });
     }
   }, [isOpen, page, size, searchString]);
-
 
   useEffect(() => {
     if (projectToShow.length > 0) {
@@ -80,6 +77,12 @@ const ChooseProjectModal = ({
       setIsLoaded(SpinnerState.There_is_no_content);
     }
   }, [projectToShow]);
+
+  useEffect(() => {
+    if (projectIdIfItIsToEdit === null) {
+      setAuxIdProjectChoose(projectIdIfItIsToEdit);
+    }
+  }, [projectIdIfItIsToEdit]);
 
   const decrementPage = () => {
     if (page > 0) {
@@ -190,7 +193,7 @@ const ChooseProjectModal = ({
                           width: "22px",
                           height: "18px",
                         }}
-                        onClick={(e: any) => {
+                        onChange={(e: any) => {
                           if (project.id !== undefined)
                             setAuxIdProjectChoose(project.id);
                           setAuxNameOfProjectToShow(project.title);

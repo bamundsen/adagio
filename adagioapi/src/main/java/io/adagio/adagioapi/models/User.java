@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import io.adagio.adagioapi.dto.CadastroForm;
+import io.adagio.adagioapi.dto.RegisterForm;
 
 @Entity
 @Table(name="usuarios")
@@ -56,7 +56,7 @@ public class User implements UserDetails {
 
 	public User() {}
 	
-	public User(CadastroForm cadastroForm) {
+	public User(RegisterForm cadastroForm) {
 		this.login = cadastroForm.getLogin();
 		this.email = cadastroForm.getEmail();
 		this.name = cadastroForm.getName();

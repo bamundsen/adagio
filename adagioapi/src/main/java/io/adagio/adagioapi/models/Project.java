@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import io.adagio.adagioapi.dto.CadastroProjetoForm;
+import io.adagio.adagioapi.dto.RegisterProjectForm;
 import io.adagio.adagioapi.dto.ProjectDto;
 import io.adagio.adagioapi.dto.TaskDto;
 
@@ -66,7 +66,7 @@ public class Project {
 
 	public Project () {}
 
-	public Project (CadastroProjetoForm cadastroProjectForm, List<Task> tasks, User user) {
+	public Project (RegisterProjectForm cadastroProjectForm, List<Task> tasks, User user) {
 		this.title = cadastroProjectForm.getTitle();
 		this.description = cadastroProjectForm.getDescription();
 		this.dateTimeStart = cadastroProjectForm.getDateTimeStart();

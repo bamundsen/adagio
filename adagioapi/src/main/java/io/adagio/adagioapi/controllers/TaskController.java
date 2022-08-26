@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import io.adagio.adagioapi.dto.CadastroTarefaForm;
+import io.adagio.adagioapi.dto.RegisterTaskForm;
 import io.adagio.adagioapi.dto.ColorThatIsToBeShowedBasedOnPriorityDto;
 import io.adagio.adagioapi.dto.StartAndEndDateDto;
 import io.adagio.adagioapi.dto.TaskDto;
@@ -77,7 +77,7 @@ public class TaskController {
 		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		List<Task> tasks = taskRepository
-				.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanAndProjectIsNull(logged,
+				.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeEndLessThanEqual(logged,
 						startDateDto.getDateTimeStart(), startDateDto.getDateTimeEnd());
 
 		List<TaskDto> tasksDto = Task.convertListToListTaskDto(tasks);
@@ -91,7 +91,7 @@ public class TaskController {
 		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		List<Task> tasks = taskRepository
-				.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeStartLessThanAndProjectIsNull(logged,
+				.findByUserAndDateTimeStartGreaterThanEqualAndDateTimeEndLessThanEqual(logged,
 						form.getDateTimeStart(), form.getDateTimeEnd());
 
 		ColorOfPriority hexadecimalOfColor = ColorThatIsToBeShowedBasedOnPriorityDto.defineColorThatIsToBeShowed(tasks);
@@ -102,7 +102,7 @@ public class TaskController {
 
 	@PostMapping
 	@Transactional
-	public ResponseEntity<TaskDto> save(@RequestBody @Valid CadastroTarefaForm taskForm,
+	public ResponseEntity<TaskDto> save(@RequestBody @Valid RegisterTaskForm taskForm,
 			UriComponentsBuilder uriBuilder) {
 
 		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -199,7 +199,7 @@ public class TaskController {
 	@PutMapping("/{id}")
 	@Transactional
 	public ResponseEntity<TaskDto> update(@PathVariable("id") Long id,
-			@RequestBody @Valid CadastroTarefaForm taskForm) {
+			@RequestBody @Valid RegisterTaskForm taskForm) {
 		User logged = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		Optional<Task> optionalTask = taskRepository.findByIdAndUser(id, logged);

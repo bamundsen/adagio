@@ -30,7 +30,7 @@ import org.springframework.validation.annotation.Validated;
 import io.adagio.adagioapi.config.security.TokenService;
 import io.adagio.adagioapi.config.utils.SecurityCipher;
 import io.adagio.adagioapi.dto.AccessData;
-import io.adagio.adagioapi.dto.CadastroForm;
+import io.adagio.adagioapi.dto.RegisterForm;
 import io.adagio.adagioapi.dto.LoginForm;
 import io.adagio.adagioapi.dto.LoginResponse;
 import io.adagio.adagioapi.dto.ResponseFeedbackMessage;
@@ -115,7 +115,7 @@ public class AuthenticationController {
 	
 	@PostMapping("/register")
 	@Transactional()
-	public ResponseEntity<ResponseFeedbackMessage> cadastrar(@RequestBody @Valid CadastroForm cadastroForm,
+	public ResponseEntity<ResponseFeedbackMessage> cadastrar(@RequestBody @Valid RegisterForm cadastroForm,
 			UriComponentsBuilder uriBuilder){
 		
 		try {

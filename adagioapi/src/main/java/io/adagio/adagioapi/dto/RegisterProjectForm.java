@@ -15,7 +15,7 @@ import io.adagio.adagioapi.repositories.ProjectRepository;
 import io.adagio.adagioapi.repositories.TaskRepository;
 import io.adagio.adagioapi.repositories.UserRepository;
 
-public class CadastroProjetoForm {
+public class RegisterProjectForm {
 	
 	@NotBlank(message="Não pode estar em branco")
 	private String title;

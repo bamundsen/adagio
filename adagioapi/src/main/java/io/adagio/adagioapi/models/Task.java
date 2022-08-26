@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import io.adagio.adagioapi.dto.CadastroTarefaForm;
+import io.adagio.adagioapi.dto.RegisterTaskForm;
 import io.adagio.adagioapi.dto.TaskDto;
 import io.adagio.adagioapi.dto.TodayTaskToBeAlertedDto;
 import io.adagio.adagioapi.services.TaskService;
@@ -80,7 +80,7 @@ public class Task {
 
 	public Task () {}
 
-	public Task (CadastroTarefaForm cadastroTaskForm, User user, Project project) {
+	public Task (RegisterTaskForm cadastroTaskForm, User user, Project project) {
 		this.title = cadastroTaskForm.getTitle();
 		this.description = cadastroTaskForm.getDescription();
 		this.dateTimeStart = cadastroTaskForm.getDateTimeStart();

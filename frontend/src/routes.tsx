@@ -34,6 +34,7 @@ const ApplicationRoutes = () => {
           <Route path="editar_tarefa/:id" element={<FormTarefas />} />
           <Route path="criar_projeto" element={<FormProjetos />} />
           <Route path="cadastrar_tarefa" element={<FormTarefas />} />
+          <Route path="cadastrar_tarefa/:date" element={<FormTarefas />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

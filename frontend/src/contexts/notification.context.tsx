@@ -61,7 +61,7 @@ export const NotificationProvider = ({
         const hour = dt.dateTimeStart.split("T")[1].split(":")[0];
         const minute = dt.dateTimeStart.split("T")[1].split(":")[1];
         setTitleTask(dt.title);
-        console.log(hourAndMinuteOfNow, `${hour}:${minute}`);
+
         if (hourAndMinuteOfNow === `${hour}:${minute}`) {
           setHourAndMinuteToCompare(`${hour}:${minute}`);
           break;
