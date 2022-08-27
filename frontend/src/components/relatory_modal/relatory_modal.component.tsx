@@ -156,14 +156,7 @@ const RelatoryModal = ({
   };
 
   const returnSpinner = () => {
-    return (
-      <AdagioSpinner
-        loadingState={isLoaded}
-        optionalDefinedText={
-          ". Talvez você tenha tarefas vinculadas a projetos."
-        }
-      />
-    );
+    return <AdagioSpinner loadingState={isLoaded} />;
   };
 
   const returnConfirmationModal = () => {
