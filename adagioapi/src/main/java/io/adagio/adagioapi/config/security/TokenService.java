@@ -35,7 +35,7 @@ public class TokenService {
 		Date hoje= new Date();
 		long duracao = hoje.getTime()+Long.parseLong(expiration);
 		Date dataExpiracao=new Date(duracao);
-		System.out.println("data expiração access: "+dataExpiracao);
+	
 		String token = Jwts.builder()
 				.setIssuer("API do Adagio")
 				.setSubject(login)

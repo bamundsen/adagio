@@ -206,6 +206,7 @@ public class TaskController {
 
 		if (optionalTask.isPresent()) {
 			Task taskValidator = taskForm.converter(logged, projectRepository);
+			Project previousProject = optionalTask.get().getProject() ;
 			TaskDto taskDtoValidator;
 
 			taskDtoValidator = taskService.taskValidator(taskValidator, logged, taskRepository, id);
@@ -214,10 +215,20 @@ public class TaskController {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 						.header("TimeConflict", DefaultMessages.TASK_BAD_REQUEST.getMessage()).body(taskDtoValidator);
 
+			
 			Task task = taskForm.update(id, taskRepository, projectRepository);
 
 			if (task.getProject() != null) {
 				Optional<Project> project = projectRepository.findByIdAndUser(task.getProject().getId(), logged);
+				project.get().setProgressStatus(taskService
+						.setProjectFinishedStatusByTasks(taskRepository.findByProjectAndUser(project.get(), logged)));
+				projectRepository.save(project.get());
+			} 
+			
+
+			if(previousProject != null) {
+				
+				Optional<Project> project = projectRepository.findByIdAndUser(previousProject.getId(), logged);
 				project.get().setProgressStatus(taskService
 						.setProjectFinishedStatusByTasks(taskRepository.findByProjectAndUser(project.get(), logged)));
 				projectRepository.save(project.get());

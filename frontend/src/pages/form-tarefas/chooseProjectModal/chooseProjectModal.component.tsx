@@ -10,6 +10,7 @@ import style from "./chooseProjectModal.module.scss";
 import { extractFormattedDateTime } from "../../../utils/returnShowableDateAndHour";
 import RegionPaginationButtons from "../../../components/region-pagination-buttons/region_pagination_buttons.component";
 import NegativeButtonModal from "../../../components/negative-button-modal/negative_button_modal.component";
+import { tabEnterClickEffect } from "../../../utils/acessibilityAux";
 
 interface ChooseProjectModalProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -153,6 +154,7 @@ const ChooseProjectModal = ({
                   }}
                 />
                 <Form.Label
+                  tabIndex={1}
                   htmlFor={`inputforNullProject`}
                   style={{
                     display: "flex",
@@ -200,6 +202,8 @@ const ChooseProjectModal = ({
                         }}
                       />
                       <Form.Label
+                        tabIndex={1}
+                        onKeyDown={tabEnterClickEffect}
                         htmlFor={`project-${project.id}`}
                         style={{
                           display: "flex",
